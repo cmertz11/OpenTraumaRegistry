@@ -15,6 +15,10 @@ namespace TraumaData
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Reference>()
+                .HasIndex(n => n.Name)
+                .IsUnique();
+
             modelBuilder.Entity<Reference>().ToTable("Reference");
             modelBuilder.Entity<ReferenceDetail>().ToTable("ReferenceDetail");
 

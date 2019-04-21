@@ -12,6 +12,7 @@ namespace TraumaData.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [MaxLength(200)]
+       
         public string Name { get; set; }
 
         public List<ReferenceDetail> ReferenceDetails { get; set; }
