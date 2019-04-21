@@ -8,11 +8,11 @@ namespace TraumaData
 {
     public class Context : DbContext
     {
-        public Context(){}
+        public Context() { }
         public DbSet<Reference> References { get; set; }
         public DbSet<ReferenceDetail> ReferenceDetails { get; set; }
-        public Context(DbContextOptions<Context> options) : base(options) {}
-        
+        public Context(DbContextOptions<Context> options) : base(options) { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Reference>().ToTable("Reference");

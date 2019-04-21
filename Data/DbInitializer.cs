@@ -36,13 +36,13 @@ namespace TraumaData
             context.SaveChanges();
 
             var race = context.References.Where(r => r.Name == "Race").Single();
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "A", Description = "", ReferenceId = race.Id });
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "B", Description = "", ReferenceId = race.Id });
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "H", Description = "", ReferenceId = race.Id });
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "I", Description = "", ReferenceId = race.Id });
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "O", Description = "", ReferenceId = race.Id });
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "W", Description = "", ReferenceId = race.Id });
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "P", Description = "", ReferenceId = race.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "A", Description = "Asian", ReferenceId = race.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "B", Description = "Black", ReferenceId = race.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "H", Description = "Hispanic", ReferenceId = race.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "I", Description = "Native American", ReferenceId = race.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "O", Description = "Other", ReferenceId = race.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "W", Description = "White", ReferenceId = race.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "P", Description = "Polinesian", ReferenceId = race.Id });
             context.SaveChanges();
 
             var injuryType = context.References.Where(r => r.Name == "Injury Type").Single();
