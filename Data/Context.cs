@@ -11,6 +11,11 @@ namespace TraumaData
         public Context() { }
         public DbSet<Reference> References { get; set; }
         public DbSet<ReferenceDetail> ReferenceDetails { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<Log> Logs { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Setting> Settings { get; set; }
+        public DbSet<Vitals> Vitals { get; set; }
         public Context(DbContextOptions<Context> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

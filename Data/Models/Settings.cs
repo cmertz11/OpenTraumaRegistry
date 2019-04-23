@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TraumaData.Models
 {
-    public class Settings
+    public class Setting
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
