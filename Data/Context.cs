@@ -27,6 +27,11 @@ namespace TraumaData
                 .WithMany(b => b.ReferenceDetails)
                 .HasForeignKey(p => p.ReferenceId)
                 .HasConstraintName("ForeignKey_Reference_ReferenceData");
+
+
+            modelBuilder.Entity<Log>()
+            .Property(b => b.TimeStamp)
+            .HasDefaultValueSql("getdate()");
         }
 
     }
