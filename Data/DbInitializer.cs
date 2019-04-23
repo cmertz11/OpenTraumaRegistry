@@ -22,7 +22,9 @@ namespace TraumaData
                 new Reference{Name = "Injury Type"},
                 new Reference{Name = "Safety Devices"},
                 new Reference{Name = "Risk Data (Comorbids)"},
-                new Reference{Name = "Location"}
+                new Reference{Name = "Location"},
+                new Reference{Name = "Transport"},
+                new Reference{Name = "Arrived From"}
             };
             foreach (Reference r in references)
             { 
@@ -61,14 +63,61 @@ namespace TraumaData
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "BLEEDING DISORDER", ReferenceId = riskData.Id });
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "DISSEM CANCER", ReferenceId = riskData.Id });
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "CHEMO", ReferenceId = riskData.Id });
-            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "CHF", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "CIRRHOSIS", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "COPD", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "CHRONIC RENAL FAILURE", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "CVA W NEURO DEFICIT", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "NTDB", Description = "DEMENTIA", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "NTDB", Description = "DEP HEALTH STATUS", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "DIALYSIS", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "NTDB", Description = "DIABETES", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "DRUG", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "NTDB", Description = "ETOH", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "NTDB", Description = "HTN", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "MI", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "PSYCH", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "PAD", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "NTDB", Description = "SMOKER", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "STEROID", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "WARFARIN", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "NTDB", Description = "ASA", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "PLAVIX", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "BETA", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "STATIN", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "DIRECT THROMBIN INHIBITOR", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "FACTOR XA INHIBITOR", ReferenceId = riskData.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "", Description = "ANTICOAGULATION THERAPY", ReferenceId = riskData.Id });
+
             context.SaveChanges();
+
             var location = context.References.Where(r => r.Name == "Location").Single();
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "ED", Description = "Emergency Department", ReferenceId = location.Id });
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "ICU", Description = "Intensive Care Unit", ReferenceId = location.Id });
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "TB1", Description = "Trauma Bay 1", ReferenceId = location.Id });
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "TB2", Description = "Trauma Bay 2", ReferenceId = location.Id });
+
             context.SaveChanges();
+
+            var transport = context.References.Where(r => r.Name == "Transport").Single();
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "POV", Description = "Privately Owned vehicle", ReferenceId = transport.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "EMS", Description = "Emergency Medical Service", ReferenceId = transport.Id });
+
+            context.SaveChanges();
+
+            var arrivedFrom = context.References.Where(r => r.Name == "Arrived From").Single();
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "SCENE", Description = "SCENE", ReferenceId = arrivedFrom.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "HOME", Description = "HOME", ReferenceId = arrivedFrom.Id });
+
+            context.SaveChanges();
+
+            var traumaLevel = context.References.Where(r => r.Name == "Truama Level").Single();
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "F", Description = "FULL", ReferenceId = traumaLevel.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "P", Description = "PARTIAL", ReferenceId = traumaLevel.Id });
+            context.ReferenceDetails.Add(new ReferenceDetail { Code = "C", Description = "CONSULT", ReferenceId = traumaLevel.Id });
+
+            context.SaveChanges();
+
+
         }
     }
 }
