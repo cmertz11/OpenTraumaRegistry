@@ -10,8 +10,6 @@ namespace TraumaData.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id  { get; set; }
 
-        public int EventId { get; set; }
-
         // Abreviated Injury Scale
         public string AISCode { get; set; }
 
@@ -22,6 +20,9 @@ namespace TraumaData.Models
 
         // Injury Severity Score 1-75
         public int ISS { get; set; }
+
+        public int EventId { get; set; }
+        public Event Event { get; set; }
 
     }
 }

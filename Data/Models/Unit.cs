@@ -11,5 +11,9 @@ namespace TraumaData.Models
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        //FK
+        public int ComplicationId { get; set; }
+        public Complication Complication { get; set; }
     }
 }

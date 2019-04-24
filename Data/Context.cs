@@ -38,9 +38,49 @@ namespace TraumaData
                 .HasForeignKey(p => p.ReferenceId)
                 .HasConstraintName("ForeignKey_Reference_ReferenceData");
 
+            modelBuilder.Entity<Vitals>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.Vitals)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_Vitals");
+
+            modelBuilder.Entity<Injury>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.Injuries)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_Injuries");
+
+            modelBuilder.Entity<Procedure>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.Procedures)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_Procedures");
+
+            modelBuilder.Entity<Complication>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.Complications)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_Complications");
+
+            modelBuilder.Entity<Event>()
+                .HasOne(p => p.Patient)
+                .WithMany(b => b.Events)
+                .HasForeignKey(p => p.PatientId)
+                .HasConstraintName("ForeignKey_Patient_Events");
+
+
+            modelBuilder.Entity<Unit>()
+                .HasOne(p => p.Complication)
+                .WithOne(b => b.Unit)
+                .HasForeignKey<Unit>(u => u.ComplicationId)
+                .HasConstraintName("ForeignKey_Complication_Unit");
 
             modelBuilder.Entity<Log>()
             .Property(b => b.TimeStamp)
+            .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Patient>()
+            .Property(b => b.Created)
             .HasDefaultValueSql("getdate()");
         }
 

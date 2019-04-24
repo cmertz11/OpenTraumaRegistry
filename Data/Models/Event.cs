@@ -13,9 +13,20 @@ namespace TraumaData.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int PatientId { get; set; }
-
         public DateTime InjuryDateTime { get; set; }
+      
+        //FK
+        public List<Vitals> Vitals { get; set; }
+
+        public List<Injury> Injuries { get; set; }
+
+        public List<Procedure> Procedures { get; set; }
+
+        public List<Complication> Complications { get; set; }
+
+        public int PatientId { get; set; }
+        public Patient Patient { get; set; }
+
 
     }
 }

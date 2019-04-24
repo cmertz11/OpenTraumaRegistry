@@ -11,10 +11,9 @@ namespace TraumaData.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         //FK
-        public string EventId { get; set; }
-        //FK
-        public string PatientId { get; set; }
+        public int PatientId { get; set; }
 
         //FK -> ReferenceDetail Where Reference.Name = "Location"
         public int Location { get; set; }
@@ -29,5 +28,9 @@ namespace TraumaData.Models
         public DateTime TimeTaken { get; set; }
 
         public DateTime TimeStamp { get; set; }
+        
+ //FK
+        public int EventId { get; set; } 
+        public Event Event { get; set; }
     }
 }

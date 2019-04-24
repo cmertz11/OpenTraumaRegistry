@@ -22,7 +22,17 @@ namespace TraumaData.Models
         public string MI { get; set; }
         public DateTime DOB { get; set; }
 
+        public DateTime Created { get; set; }
+
+        public DateTime LastUpdate { get; set; }
+
+
+        // Intending to link to asp identity table
+        public string LastUpdatedBy { get; set; }
+
         [MaxLength(11)]
         public string SSN { get; set; }
+
+        public List<Event> Events { get; set; }
     }
 }

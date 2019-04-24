@@ -24,7 +24,8 @@ namespace TraumaData
                 new Reference{Name = "Risk Data (Comorbids)"},
                 new Reference{Name = "Location"},
                 new Reference{Name = "Transport"},
-                new Reference{Name = "Arrived From"}
+                new Reference{Name = "Arrived From"},
+                new Reference{Name = "Trauma Level"}
             };
             foreach (Reference r in references)
             { 
@@ -110,7 +111,7 @@ namespace TraumaData
 
             context.SaveChanges();
 
-            var traumaLevel = context.References.Where(r => r.Name == "Truama Level").Single();
+            var traumaLevel = context.References.Where(r => r.Name == "Trauma Level").Single();
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "F", Description = "FULL", ReferenceId = traumaLevel.Id });
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "P", Description = "PARTIAL", ReferenceId = traumaLevel.Id });
             context.ReferenceDetails.Add(new ReferenceDetail { Code = "C", Description = "CONSULT", ReferenceId = traumaLevel.Id });

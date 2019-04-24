@@ -15,7 +15,7 @@ namespace TraumaRegistryAdmin.Pages.References
         private readonly TraumaData.Context _context;
 
         public CreateModel(TraumaData.Context context)
-        {
+        { 
             _context = context;
         }
 

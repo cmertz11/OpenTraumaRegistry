@@ -41,14 +41,12 @@ namespace TraumaRegistryAdmin
             services.AddMvc()
                 .AddNewtonsoftJson();
 
-
-
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
             optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                       
             using (Context ctx = new Context(optionsBuilder.Options))
             {
-                      DbInitializer.Initialize(ctx);
+               //DbInitializer.Initialize(ctx);
             }                                                                                                                             
         }
 

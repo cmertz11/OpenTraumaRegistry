@@ -10,8 +10,6 @@ namespace TraumaData.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int EventId { get; set; }
-
         public int Location { get; set; }
 
         public string ProcedureNote { get; set; }
@@ -21,6 +19,10 @@ namespace TraumaData.Models
         public int ProviderNo { get; set; }
 
         public DateTime Timestamp { get; set; }
+
+        //FK
+        public int EventId { get; set; }
+        public Event Event { get; set; }
 
     }
 }
