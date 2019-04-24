@@ -17,6 +17,9 @@ namespace TraumaData
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Vitals> Vitals { get; set; }
         public DbSet<Injury> Injuries { get; set; }
+        public DbSet<Procedure> Procedures { get; set; }
+        public DbSet<Complication> Complications { get; set; }
+        public DbSet<Unit> Units { get; set; }
 
         public Context(DbContextOptions<Context> options) : base(options) { }
 
