@@ -8,7 +8,6 @@ namespace TraumaData
 {
     public class Context : DbContext
     {
-        public Context() { }
         public DbSet<Reference> References { get; set; }
         public DbSet<ReferenceDetail> ReferenceDetails { get; set; }
         public DbSet<Event> Events { get; set; }
@@ -20,7 +19,11 @@ namespace TraumaData
         public DbSet<Procedure> Procedures { get; set; }
         public DbSet<Complication> Complications { get; set; }
         public DbSet<Unit> Units { get; set; }
+        public DbSet<Flag> Flags { get; set; }
+        public DbSet<FlagReminder> FlagReminders { get; set; }
+        public DbSet<FlagType> FlagTypes { get; set; }
 
+        public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -74,15 +77,14 @@ namespace TraumaData
                 .WithOne(b => b.Unit)
                 .HasForeignKey<Unit>(u => u.ComplicationId)
                 .HasConstraintName("ForeignKey_Complication_Unit");
-
+                
             modelBuilder.Entity<Log>()
-            .Property(b => b.TimeStamp)
-            .HasDefaultValueSql("getdate()");
+                .Property(b => b.TimeStamp)
+                .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Patient>()
-            .Property(b => b.Created)
-            .HasDefaultValueSql("getdate()");
+                .Property(b => b.Created)
+                .HasDefaultValueSql("getdate()");
         }
-
     }
 }
