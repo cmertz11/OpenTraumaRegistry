@@ -13,8 +13,9 @@ namespace TraumaData.Models
         public Event Event { get; set; }
 
         public int FlagTypeId { get; set; }
+        public FlagType FlagType {get; set;}
 
-        public List<FlagReminder> Reminders { get; set; }
+        public List<FlagReminder> FlagReminders { get; set; }
 
     }
 }

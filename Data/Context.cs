@@ -71,13 +71,24 @@ namespace TraumaData
                 .HasForeignKey(p => p.PatientId)
                 .HasConstraintName("ForeignKey_Patient_Events");
 
-
             modelBuilder.Entity<Unit>()
                 .HasOne(p => p.Complication)
                 .WithOne(b => b.Unit)
                 .HasForeignKey<Unit>(u => u.ComplicationId)
                 .HasConstraintName("ForeignKey_Complication_Unit");
-                
+
+            modelBuilder.Entity<Flag>()
+                .HasOne(p => p.FlagType)
+                .WithOne(b => b.Flag)
+                .HasForeignKey<Flag>(u => u.FlagTypeId)
+                .HasConstraintName("ForeignKey_Flag_FlagType");
+
+            modelBuilder.Entity<FlagReminder>()
+                .HasOne(p => p.Flag)
+                .WithMany(b => b.FlagReminders)
+                .HasForeignKey(p => p.FlagId)
+                .HasConstraintName("ForeignKey_Flag_FlagReminders");
+
             modelBuilder.Entity<Log>()
                 .Property(b => b.TimeStamp)
                 .HasDefaultValueSql("getdate()");

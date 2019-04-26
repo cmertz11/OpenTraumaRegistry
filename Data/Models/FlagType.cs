@@ -11,5 +11,8 @@ namespace TraumaData.Models
         public int Id { get; set; }
       
         public string Name { get; set; }
+
+        public int FlagId { get; set; }
+        public Flag Flag { get; set; }
     }
 }

@@ -13,5 +13,8 @@ namespace TraumaData.Models
         public string NotifyEmailList { get; set; }
         public string CronTab { get; set; }
 
+        public int FlagId { get; set; }
+        public Flag Flag { get; set; }
+
     }
 }
