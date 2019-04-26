@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TraumaData.Models
+namespace TraumaRegistry.Data.Models
 {
     public class Injury
     {

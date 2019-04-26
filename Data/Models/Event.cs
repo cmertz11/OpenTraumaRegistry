@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace TraumaData.Models
+namespace TraumaRegistry.Data.Models
 {
     public class Event
     {
@@ -26,7 +26,6 @@ namespace TraumaData.Models
 
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
-
 
     }
 }

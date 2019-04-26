@@ -1,10 +1,10 @@
-﻿using TraumaData.Models;
+﻿using TraumaRegistry.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TraumaData
+namespace TraumaRegistry.Data
 {
     public class Context : DbContext
     {
