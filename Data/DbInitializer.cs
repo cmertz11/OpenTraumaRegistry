@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TraumaData.Models;
+using TraumaRegistry.Data.Models;
 
-namespace TraumaData
+namespace TraumaRegistry.Data
 {
     public static class DbInitializer
     {
@@ -27,6 +27,7 @@ namespace TraumaData
                 new Reference{Name = "Arrived From"},
                 new Reference{Name = "Trauma Level"}
             };
+
             foreach (Reference r in references)
             { 
                 context.Add(r); 
