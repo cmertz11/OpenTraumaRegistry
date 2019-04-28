@@ -22,6 +22,11 @@ namespace TraumaRegistry.Data.Models
         public string MI { get; set; }
         public DateTime DOB { get; set; }
 
+        public int GenderReferenceId { get; set; }
+
+        public int RaceReferenceId { get; set; }
+
+
         public DateTime Created { get; set; }
 
         public DateTime LastUpdate { get; set; }
