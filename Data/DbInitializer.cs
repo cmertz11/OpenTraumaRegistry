@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TraumaRegistry.Data.Models;
 
@@ -119,6 +120,20 @@ namespace TraumaRegistry.Data
 
             context.SaveChanges();
 
+            LoadTestData(context);
+        }
+
+        private static void LoadTestData(Context context)
+        {
+            context.Patients.Add(new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28) });
+            context.Patients.Add(new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4) });
+            context.Patients.Add(new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12) });
+            context.Patients.Add(new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29) });
+            context.Patients.Add(new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14) });
+            context.Patients.Add(new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21) });
+            context.Patients.Add(new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2) });
+
+            context.SaveChanges();
 
         }
     }
