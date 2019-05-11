@@ -14,7 +14,7 @@ namespace TraumaRegistry.Data.Models
 
         [MaxLength(200)]
         public string Name { get; set; }
-        TraumaRegistry.Data.Models
+      
         [MaxLength(1000  )]
         public string Value { get; set; }
 

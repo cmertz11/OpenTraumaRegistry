@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static TraumaData.Models.RefModels;
 
 namespace TraumaRegistry.Data
 {
     public class Context : DbContext
     {
-        public DbSet<Reference> References { get; set; }
-        public DbSet<ReferenceDetail> ReferenceDetails { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<Patient> Patients { get; set; }
@@ -22,7 +21,15 @@ namespace TraumaRegistry.Data
         public DbSet<Flag> Flags { get; set; }
         public DbSet<FlagReminder> FlagReminders { get; set; }
         public DbSet<FlagType> FlagTypes { get; set; }
-
+        public DbSet<RefGender> RefGender { get; set; }
+        public DbSet<RefRace> RefRace { get; set; }
+        public DbSet<RefInjuryType> RefInjuryType { get; set; }
+        public DbSet<RefSafetyDevices> RefSafetyDevices { get; set; }
+        public DbSet<RefRiskData> RefRiskData { get; set; }
+        public DbSet<RefLocation> RefLocation { get; set; }
+        public DbSet<RefTransport> RefTransport { get; set; }
+        public DbSet<RefArrivedFrom> RefArrivedFrom { get; set; }
+        public DbSet<RefTraumaLevel> RefTraumaLevel { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 

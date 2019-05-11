@@ -17,7 +17,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\TraumaData.csproj" />
+    <ProjectReference Include="..\Data\TraumaRegistry.Data.csproj" />
   </ItemGroup>
 
 </Project>
