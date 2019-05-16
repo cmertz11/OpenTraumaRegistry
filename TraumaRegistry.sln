@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Notes.txt = Notes.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraumaRegistry.Api", "TraumaRegistry.Api\TraumaRegistry.Api.csproj", "{6593C437-CFD7-49A4-AD22-42E8B024FA63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{80F258CA-B79B-4B10-95DA-F8C5EBD1B8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80F258CA-B79B-4B10-95DA-F8C5EBD1B8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80F258CA-B79B-4B10-95DA-F8C5EBD1B8EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6593C437-CFD7-49A4-AD22-42E8B024FA63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6593C437-CFD7-49A4-AD22-42E8B024FA63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6593C437-CFD7-49A4-AD22-42E8B024FA63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6593C437-CFD7-49A4-AD22-42E8B024FA63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

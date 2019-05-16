@@ -6,15 +6,16 @@ using System.Text;
 
 namespace TraumaRegistry.Data.Models
 {
-    public class Reference
+    public class RefArrivedFrom
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        [MaxLength(200)]
-       
-        public string Name { get; set; }
 
-        public List<ReferenceDetail> ReferenceDetails { get; set; }
+        public int Id { get; set; }
+
+        [MaxLength(20)]
+        public string Code { get; set; }
+        [MaxLength(200)]
+        public string Description { get; set; }
     }
 }

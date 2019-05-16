@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static TraumaData.Models.RefModels;
+
 
 namespace TraumaRegistry.Data
 {
@@ -21,7 +21,7 @@ namespace TraumaRegistry.Data
         public DbSet<Flag> Flags { get; set; }
         public DbSet<FlagReminder> FlagReminders { get; set; }
         public DbSet<FlagType> FlagTypes { get; set; }
-        public DbSet<RefGender> RefGender { get; set; }
+        public DbSet<Models.RefGender> RefGender { get; set; }
         public DbSet<RefRace> RefRace { get; set; }
         public DbSet<RefInjuryType> RefInjuryType { get; set; }
         public DbSet<RefSafetyDevices> RefSafetyDevices { get; set; }
@@ -35,18 +35,6 @@ namespace TraumaRegistry.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Reference>()
-                .HasIndex(n => n.Name)
-                .IsUnique();
-
-            modelBuilder.Entity<Reference>().ToTable("Reference");
-            modelBuilder.Entity<ReferenceDetail>().ToTable("ReferenceDetail");
-
-            modelBuilder.Entity<ReferenceDetail>()
-                .HasOne(p => p.Reference)
-                .WithMany(b => b.ReferenceDetails)
-                .HasForeignKey(p => p.ReferenceId)
-                .HasConstraintName("ForeignKey_Reference_ReferenceData");
 
             modelBuilder.Entity<Vitals>()
                 .HasOne(p => p.Event)

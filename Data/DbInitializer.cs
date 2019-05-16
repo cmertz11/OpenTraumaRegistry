@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TraumaRegistry.Data.Models;
-using static TraumaData.Models.RefModels;
+
 
 namespace TraumaRegistry.Data
 {
@@ -14,8 +14,8 @@ namespace TraumaRegistry.Data
 
             if(!context.RefGender.Any()) {  
                 
-                context.RefGender.Add(new RefGender { Code = "M", Description = "Male" });
-                context.RefGender.Add(new RefGender { Code = "F", Description = "Female"});
+                context.RefGender.Add(new Models.RefGender { Code = "M", Description = "Male" });
+                context.RefGender.Add(new Models.RefGender { Code = "F", Description = "Female"});
                 context.SaveChanges();
             }
 

@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace TraumaRegistry.Data.Models
 {
-    public class ReferenceDetail
+    public class RefInjuryType
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,9 +17,5 @@ namespace TraumaRegistry.Data.Models
         public string Code { get; set; }
         [MaxLength(200)]
         public string Description { get; set; }
-
-        public int ReferenceId { get; set; }
-        public Reference Reference { get; set; }
-
     }
 }
