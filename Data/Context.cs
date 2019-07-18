@@ -86,11 +86,15 @@ namespace TraumaRegistry.Data
 
             modelBuilder.Entity<Log>()
                 .Property(b => b.TimeStamp)
-                .HasDefaultValueSql("getdate()");
+                .HasDefaultValueSql("getdate()") ;
 
             modelBuilder.Entity<Patient>()
                 .Property(b => b.Created)
                 .HasDefaultValueSql("getdate()");
+
+ 
+                
+                
         }
     }
 }
