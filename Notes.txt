@@ -1,2 +1,7 @@
 Microsoft.EntityFrameworkCore.SqlServer
 https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.SqlServer/
+
+https://www.youtube.com/watch?v=lF9ZZ8p2Ciw NSwag Demo video
+https://github.com/RicoSuter/NSwag/wiki/NSwagStudio NSwag Studio Download
+
+
