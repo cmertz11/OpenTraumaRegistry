@@ -14,15 +14,15 @@ namespace TraumaRegistry.Data.Models
         public int Id { get; set; }
 
         public DateTime InjuryDateTime { get; set; }
-      
+
         //FK
-        public List<Vitals> Vitals { get; set; }
+        public List<Vitals> Vitals { get; set; } = new List<Vitals>();
 
-        public List<Injury> Injuries { get; set; }
+        public List<Injury> Injuries { get; set; } = new List<Injury>();
 
-        public List<Procedure> Procedures { get; set; }
+        public List<Procedure> Procedures { get; set; } = new List<Procedure>();
 
-        public List<Complication> Complications { get; set; }
+        public List<Complication> Complications { get; set; } = new List<Complication>();
 
         public int PatientId { get; set; }
         public Patient Patient { get; set; }

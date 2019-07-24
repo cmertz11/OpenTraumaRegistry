@@ -35,8 +35,6 @@ namespace TraumaRegistry.Data.Models
         // Intending to link to asp identity table
         public string LastUpdatedBy { get; set; }
 
-        [MaxLength(11)]
-        public string SSN { get; set; }
 
         public List<Event> Events { get; set; } = new List<Event>();
     }

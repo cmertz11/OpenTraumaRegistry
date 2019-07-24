@@ -114,17 +114,37 @@ namespace TraumaRegistry.Data
 
         private static void LoadTestData(Context context)
         {
-            var patient1 = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28) };
+            var patient1 = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
+            //context.Patients.Add(patient1);  // <--Test if this is needed!
+             var eventp1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
+            var injuryp1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
+            eventp1.Injuries.Add(injuryp1);
+            patient1.Events.Add(eventp1);
             context.Patients.Add(patient1);
-            
-            patient1.Events.Add(new Event { InjuryDateTime = DateTime.Now.AddYears(-2) });
- 
-            context.Patients.Add(new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4) });
-            context.Patients.Add(new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12) });
-            context.Patients.Add(new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29) });
-            context.Patients.Add(new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14) });
-            context.Patients.Add(new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21) });
-            context.Patients.Add(new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2) });
+
+            var patient2 = (new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 });
+            patient2.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
+            context.Patients.Add(patient2);
+
+            var patient3 = (new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12), GenderReferenceId = 2, RaceReferenceId = 6 });
+            patient3.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
+            context.Patients.Add(patient3);
+
+            var patient4 = (new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29), GenderReferenceId = 1, RaceReferenceId = 6 });
+            patient4.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
+            context.Patients.Add(patient4);
+
+            var patient5 = (new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14), GenderReferenceId = 2, RaceReferenceId = 6 });
+            patient5.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
+            context.Patients.Add(patient5);
+
+            var patient6 = (new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 });
+            patient6.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
+            context.Patients.Add(patient6);
+
+            var patient7 = (new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId= 1, RaceReferenceId = 6 });
+            patient7.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
+            context.Patients.Add(patient7);
 
             context.SaveChanges();
 
