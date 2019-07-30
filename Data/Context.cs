@@ -30,6 +30,7 @@ namespace TraumaRegistry.Data
         public DbSet<RefTransport> RefTransport { get; set; }
         public DbSet<RefArrivedFrom> RefArrivedFrom { get; set; }
         public DbSet<RefTraumaLevel> RefTraumaLevel { get; set; }
+        public DbSet<RefICD10> RefICD10Codes { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 
@@ -41,6 +42,12 @@ namespace TraumaRegistry.Data
                 .WithMany(b => b.Vitals)
                 .HasForeignKey(p => p.EventId)
                 .HasConstraintName("ForeignKey_Event_Vitals");
+
+            modelBuilder.Entity<RiskData>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.Risks)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_RiskData");
 
             modelBuilder.Entity<Injury>()
                 .HasOne(p => p.Event)
@@ -92,8 +99,12 @@ namespace TraumaRegistry.Data
                 .Property(b => b.Created)
                 .HasDefaultValueSql("getdate()");
 
- 
-                
+
+            modelBuilder.Entity<RiskData>()
+                .HasOne(r => r.RefRiskData)
+                .WithOne(b => b.RiskData)
+                .HasForeignKey<RiskData>(u => u.RefRiskDataId)
+                .HasConstraintName("ForeignKey_RiskData_RefRiskData");
                 
         }
     }

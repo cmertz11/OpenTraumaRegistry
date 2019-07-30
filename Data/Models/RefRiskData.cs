@@ -17,5 +17,7 @@ namespace TraumaRegistry.Data.Models
         public string Code { get; set; }
         [MaxLength(200)]
         public string Description { get; set; }
+
+        public RiskData RiskData { get; set;}
     }
 }

@@ -24,6 +24,8 @@ namespace TraumaRegistry.Data.Models
 
         public List<Complication> Complications { get; set; } = new List<Complication>();
 
+        public List<RiskData> Risks { get; set; } = new List<RiskData>();
+
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
 

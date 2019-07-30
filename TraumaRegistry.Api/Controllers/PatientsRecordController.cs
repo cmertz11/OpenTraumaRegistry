@@ -26,7 +26,13 @@ namespace TraumaRegistry.Api.Controllers
         public ActionResult<Patient> GetPatientRecord(int id)
         {
             var patientRecord = _context.Patients
-                .Include(e => e.Events).ThenInclude(e => e.Injuries).ToList()
+                .Include(events => events.Events)
+                .ThenInclude(events => events.Injuries) 
+                .Include(events => events.Events)
+                .ThenInclude(events => events.Vitals)
+                .Include(events => events.Events)
+                .ThenInclude(events => events.Risks)
+                .ThenInclude(risks => risks.RefRiskData)
                 .FirstOrDefault(i => i.Id == id);
 
             if (patientRecord == null)

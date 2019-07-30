@@ -101,7 +101,7 @@ namespace TraumaRegistry.Data
                 context.SaveChanges();
             }
 
-            if (!context.RefGender.Any())
+            if (!context.RefTraumaLevel.Any())
             {
                 context.RefTraumaLevel.Add(new RefTraumaLevel { Code = "F", Description = "FULL"});
                 context.RefTraumaLevel.Add(new RefTraumaLevel { Code = "P", Description = "PARTIAL"});
@@ -109,18 +109,71 @@ namespace TraumaRegistry.Data
 
                 context.SaveChanges();
             }
+
+
+            LoadICD10Codes(context);
             LoadTestData(context);
+        }
+
+        private static void LoadICD10Codes(Context context)
+        {
+            string filePath = @"C:\Users\cmert\Source\Repos\TraumaRegistry\Data\DBLoadFiles\icd10cm_codes_2020.txt";
+            string line;
+            System.IO.StreamReader file = new System.IO.StreamReader(filePath);
+            while ((line = file.ReadLine()) != null)
+            {
+                var rec = line.Split('|');
+                context.RefICD10Codes.Add(new RefICD10 { Code = rec[0].Trim(), Description = rec[1].Trim() });
+            }
         }
 
         private static void LoadTestData(Context context)
         {
+            loadTestUnits(context);
+            loadTestPatients(context);
+
+
+
+
+
+
+        }
+
+        private static void loadTestUnits(Context context)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private static void loadTestPatients(Context context)
+        {
             var patient1 = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
-            //context.Patients.Add(patient1);  // <--Test if this is needed!
-             var eventp1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
-            var injuryp1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
-            eventp1.Injuries.Add(injuryp1);
-            patient1.Events.Add(eventp1);
+            var event1p1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
+
+            var injury1p1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
+            var injury2p1 = new Injury { AISCode = "541822.2", ICD10 = 106, Diagnosis = "Laceration of liver, unspecified degree, initial encounter" };
+
+            event1p1.Injuries.Add(injury1p1);
+            event1p1.Injuries.Add(injury2p1);
+
+            var vitals1p1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 22, 06, 8) };
+            var vitals2p1 = new Vitals { Diastolic = 81, Systolic = 121, Pulse = 99, RespiratoryRate = 25, SPO2 = 93, Temperature = "98.1", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 23, 06, 8) };
+            var vitals3p1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 02, 36, 10) };
+            var vitals4p1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 03, 05, 23) };
+
+            event1p1.Vitals.Add(vitals1p1);
+            event1p1.Vitals.Add(vitals2p1);
+            event1p1.Vitals.Add(vitals3p1);
+            event1p1.Vitals.Add(vitals4p1);
+
+            var risk1p1 = new RiskData { RefRiskDataId = 9 };
+            var risk2p1 = new RiskData { RefRiskDataId = 30 };
+
+            event1p1.Risks.Add(risk1p1);
+            event1p1.Risks.Add(risk2p1);
+
+            patient1.Events.Add(event1p1);
             context.Patients.Add(patient1);
+            context.SaveChanges();
 
             var patient2 = (new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 });
             patient2.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
@@ -142,14 +195,11 @@ namespace TraumaRegistry.Data
             patient6.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
             context.Patients.Add(patient6);
 
-            var patient7 = (new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId= 1, RaceReferenceId = 6 });
+            var patient7 = (new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId = 1, RaceReferenceId = 6 });
             patient7.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
             context.Patients.Add(patient7);
 
             context.SaveChanges();
-
-
-
         }
     }
 }
