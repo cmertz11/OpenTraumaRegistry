@@ -22,9 +22,6 @@ namespace TraumaRegistry.Data.Models
         public string MI { get; set; }
         public DateTime DOB { get; set; }
 
-        public int GenderReferenceId { get; set; }
-
-        public int RaceReferenceId { get; set; }
 
 
         public DateTime Created { get; set; }
@@ -35,7 +32,15 @@ namespace TraumaRegistry.Data.Models
         // Intending to link to asp identity table
         public string LastUpdatedBy { get; set; }
 
+        public int GenderReferenceId { get; set; }
 
+        [ForeignKey("GenderReferenceId")]
+        public RefGender Gender { get; set; }
+
+        public int RaceReferenceId { get; set; }
+
+        [ForeignKey("RaceReferenceId")]
+        public RefRace Race { get; set; }
         public List<Event> Events { get; set; } = new List<Event>();
     }
 }

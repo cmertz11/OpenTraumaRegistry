@@ -131,12 +131,6 @@ namespace TraumaRegistry.Data
         {
             loadTestUnits(context);
             loadTestPatients(context);
-
-
-
-
-
-
         }
 
         private static void loadTestUnits(Context context)

@@ -37,6 +37,12 @@ namespace TraumaRegistry.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<Flag>()
+                .HasOne(p => p.FlagType)
+                .WithOne(b => b.Flag)
+                .HasForeignKey<Flag>(u => u.FlagTypeId)
+                .HasConstraintName("ForeignKey_Flag_FlagType");
+
             modelBuilder.Entity<Vitals>()
                 .HasOne(p => p.Event)
                 .WithMany(b => b.Vitals)
@@ -78,12 +84,6 @@ namespace TraumaRegistry.Data
                 .WithOne(b => b.Unit)
                 .HasForeignKey<Unit>(u => u.ComplicationId)
                 .HasConstraintName("ForeignKey_Complication_Unit");
-
-            modelBuilder.Entity<Flag>()
-                .HasOne(p => p.FlagType)
-                .WithOne(b => b.Flag)
-                .HasForeignKey<Flag>(u => u.FlagTypeId)
-                .HasConstraintName("ForeignKey_Flag_FlagType");
 
             modelBuilder.Entity<FlagReminder>()
                 .HasOne(p => p.Flag)

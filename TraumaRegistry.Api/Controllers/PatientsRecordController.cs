@@ -26,6 +26,8 @@ namespace TraumaRegistry.Api.Controllers
         public ActionResult<Patient> GetPatientRecord(int id)
         {
             var patientRecord = _context.Patients
+                .Include(p => p.Gender)
+                .Include(p => p.Race)
                 .Include(events => events.Events)
                 .ThenInclude(events => events.Injuries) 
                 .Include(events => events.Events)

@@ -16,6 +16,6 @@ namespace TraumaRegistry.Data.Models
         [MaxLength(20)]
         public string Code { get; set; }
         [MaxLength(200)]
-        public string Description { get; set; }
+        public string Description { get; set; } 
     }
 }
