@@ -155,43 +155,7 @@ namespace TraumaRegistry.Data
 
         private static void loadTestPatients(Context context)
         {
-            var patient1 = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
-            var event1p1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
-
-            var injury1p1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
-            var injury2p1 = new Injury { AISCode = "541822.2", ICD10 = 106, Diagnosis = "Laceration of liver, unspecified degree, initial encounter" };
-
-            event1p1.Injuries.Add(injury1p1);
-            event1p1.Injuries.Add(injury2p1);
-
-            var vitals1p1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 22, 06, 8) };
-            var vitals2p1 = new Vitals { Diastolic = 81, Systolic = 121, Pulse = 99, RespiratoryRate = 25, SPO2 = 93, Temperature = "98.1", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 23, 06, 8) };
-            var vitals3p1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 02, 36, 10) };
-            var vitals4p1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 03, 05, 23) };
-
-            event1p1.Vitals.Add(vitals1p1);
-            event1p1.Vitals.Add(vitals2p1);
-            event1p1.Vitals.Add(vitals3p1);
-            event1p1.Vitals.Add(vitals4p1);
-
-            var risk1p1 = new RiskData { RefRiskDataId = 9 };
-            var risk2p1 = new RiskData { RefRiskDataId = 30 };
-
-            event1p1.Risks.Add(risk1p1);
-            event1p1.Risks.Add(risk2p1);
-
-            var sd1p1 = new SafetyDevices { RefSafetyDeviceId = 1 };
-            var sd2p1 = new SafetyDevices { RefSafetyDeviceId = 2 };
-
-            event1p1.SafetyDevices.Add(sd1p1);
-            event1p1.SafetyDevices.Add(sd2p1);
-
-            var it1p1 = new InjuryTypes { RefInjuryTypeId = 2 };
-            event1p1.InjuryTypes.Add(it1p1);
-
-            patient1.Events.Add(event1p1);
-            context.Patients.Add(patient1);
-            context.SaveChanges();
+            AddPatient1(context);
 
             var patient2 = (new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 });
             patient2.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
@@ -217,6 +181,49 @@ namespace TraumaRegistry.Data
             patient7.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
             context.Patients.Add(patient7);
 
+            context.SaveChanges();
+        }
+
+        private static void AddPatient1(Context context)
+        {
+            var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
+            var event1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
+
+            var injury1p1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
+            var injury2p1 = new Injury { AISCode = "541822.2", ICD10 = 106, Diagnosis = "Laceration of liver, unspecified degree, initial encounter" };
+
+            event1.Injuries.Add(injury1p1);
+            event1.Injuries.Add(injury2p1);
+
+            var vitals1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 22, 06, 8) };
+            var vitals2 = new Vitals { Diastolic = 81, Systolic = 121, Pulse = 99, RespiratoryRate = 25, SPO2 = 93, Temperature = "98.1", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 23, 06, 8) };
+            var vitals3 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 02, 36, 10) };
+            var vitals4 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 03, 05, 23) };
+
+            event1.Vitals.Add(vitals1);
+            event1.Vitals.Add(vitals2);
+            event1.Vitals.Add(vitals3);
+            event1.Vitals.Add(vitals4);
+
+            var risk1 = new RiskData { RefRiskDataId = 9 };
+            var risk2 = new RiskData { RefRiskDataId = 30 };
+
+            event1.Risks.Add(risk1);
+            event1.Risks.Add(risk2);
+
+            var safetyDevice1 = new SafetyDevices { RefSafetyDeviceId = 1 };
+            var safetyDevice2 = new SafetyDevices { RefSafetyDeviceId = 2 };
+
+            event1.SafetyDevices.Add(safetyDevice1);
+            event1.SafetyDevices.Add(safetyDevice2);
+            event1.ArrivedFromId = 2;
+            event1.TransportId = 1;
+
+            var injuryType1 = new InjuryTypes { RefInjuryTypeId = 2 };
+            event1.InjuryTypes.Add(injuryType1);
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
             context.SaveChanges();
         }
     }
