@@ -75,6 +75,21 @@ namespace TraumaRegistry.Data
                 context.SaveChanges();
             }
 
+            if(!context.RefSafetyDevices.Any())
+            {
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Airbag" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Lap belt" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Shoulder belt" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Child restraint" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Eye protection" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Pads" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Helmet" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Protective clothing" });
+                context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "None/unknown" });
+
+                context.SaveChanges();
+            }
+
             if (!context.RefLocation.Any())
             {
                 context.RefLocation.Add(new RefLocation { Code = "ED", Description = "Emergency Department" });
@@ -164,6 +179,15 @@ namespace TraumaRegistry.Data
 
             event1p1.Risks.Add(risk1p1);
             event1p1.Risks.Add(risk2p1);
+
+            var sd1p1 = new SafetyDevices { RefSafetyDeviceId = 1 };
+            var sd2p1 = new SafetyDevices { RefSafetyDeviceId = 2 };
+
+            event1p1.SafetyDevices.Add(sd1p1);
+            event1p1.SafetyDevices.Add(sd2p1);
+
+            var it1p1 = new InjuryTypes { RefInjuryTypeId = 2 };
+            event1p1.InjuryTypes.Add(it1p1);
 
             patient1.Events.Add(event1p1);
             context.Patients.Add(patient1);

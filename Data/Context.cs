@@ -55,6 +55,18 @@ namespace TraumaRegistry.Data
                 .HasForeignKey(p => p.EventId)
                 .HasConstraintName("ForeignKey_Event_RiskData");
 
+            modelBuilder.Entity<InjuryTypes>()
+                .HasOne(p => p.Event)
+                .WithMany(i => i.InjuryTypes)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_InjuryTypes");
+
+            modelBuilder.Entity<SafetyDevices>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.SafetyDevices)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_SafetyDevices");
+
             modelBuilder.Entity<Injury>()
                 .HasOne(p => p.Event)
                 .WithMany(b => b.Injuries)

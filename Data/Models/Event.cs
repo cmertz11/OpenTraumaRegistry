@@ -13,9 +13,25 @@ namespace TraumaRegistry.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [MaxLength(200)]
+        public string PositionInVehicle { get; set; }
+
+        public string LocationOfOccuranceDescription { get; set; }
+        public string OccuranceZipCode { get; set; }
         public DateTime InjuryDateTime { get; set; }
 
         //FK
+        public int ArrivedFromId { get; set; }
+
+        [ForeignKey("ArrivedFromId")]
+        public RefArrivedFrom ArrivedFrom { get; set; }
+
+        public int TransportId { get; set; }
+        [ForeignKey("TransportId")]
+        public RefTransport Transport { get; set; }
+
+        public List<InjuryTypes> InjuryTypes { get; set; } = new List<InjuryTypes>();
+        public List<SafetyDevices> SafetyDevices { get; set; } = new List<SafetyDevices>();
         public List<Vitals> Vitals { get; set; } = new List<Vitals>();
 
         public List<Injury> Injuries { get; set; } = new List<Injury>();
