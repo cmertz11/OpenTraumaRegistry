@@ -20,7 +20,9 @@ namespace TraumaRegistry.Data.Models
         public string OccuranceZipCode { get; set; }
         public DateTime InjuryDateTime { get; set; }
 
-        //FK
+        [MaxLength(1000)]
+        public string InjuryDetailsNarrative { get; set; }
+ 
         public int ArrivedFromId { get; set; }
 
         [ForeignKey("ArrivedFromId")]
@@ -29,6 +31,18 @@ namespace TraumaRegistry.Data.Models
         public int TransportId { get; set; }
         [ForeignKey("TransportId")]
         public RefTransport Transport { get; set; }
+
+        public int AgencyId { get; set; }
+        [ForeignKey("AgencyId")]
+        public RefAgency AgencyPreHospital { get; set; }
+
+        public DateTime AgencyDispatchDateTime { get; set; }
+
+        public DateTime AgencyArriveSceneDateTime { get; set;}
+
+        public DateTime AgencyDepartSceneDateTime { get; set; }
+
+        public DateTime AgencySceneDateTime { get; set; }
 
         public List<InjuryTypes> InjuryTypes { get; set; } = new List<InjuryTypes>();
         public List<SafetyDevices> SafetyDevices { get; set; } = new List<SafetyDevices>();

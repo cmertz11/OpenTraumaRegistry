@@ -12,6 +12,8 @@ namespace TraumaRegistry.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public string MRN { get; set; }
+
         [MaxLength(100)]
         public string FirstName { get; set; }
 
