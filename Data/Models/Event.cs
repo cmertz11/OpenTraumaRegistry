@@ -8,7 +8,6 @@ namespace TraumaRegistry.Data.Models
 {
     public class Event
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -23,18 +22,6 @@ namespace TraumaRegistry.Data.Models
         [MaxLength(1000)]
         public string InjuryDetailsNarrative { get; set; }
  
-        public int ArrivedFromId { get; set; }
-
-        [ForeignKey("ArrivedFromId")]
-        public RefArrivedFrom ArrivedFrom { get; set; }
-
-        public int TransportId { get; set; }
-        [ForeignKey("TransportId")]
-        public RefTransport Transport { get; set; }
-
-        public int AgencyId { get; set; }
-        [ForeignKey("AgencyId")]
-        public RefAgency AgencyPreHospital { get; set; }
 
         public DateTime AgencyDispatchDateTime { get; set; }
 
@@ -43,6 +30,24 @@ namespace TraumaRegistry.Data.Models
         public DateTime AgencyDepartSceneDateTime { get; set; }
 
         public DateTime AgencySceneDateTime { get; set; }
+
+        #region ForeignKey Id's Single
+            public int TraumaLevelId { get; set; }
+            [ForeignKey("TraumaLevelId")]
+            public RefTraumaLevel TraumaLevel { get; set; }
+
+            public int ArrivedFromId { get; set; }
+            [ForeignKey("ArrivedFromId")]
+            public RefArrivedFrom ArrivedFrom { get; set; }
+
+            public int TransportId { get; set; }
+            [ForeignKey("TransportId")]
+            public RefTransport Transport { get; set; }
+
+            public int AgencyPreHospitalId { get; set; }
+            [ForeignKey("AgencyPreHospitalId")]
+            public RefAgency AgencyPreHospital { get; set; }  
+        #endregion
 
         public List<InjuryTypes> InjuryTypes { get; set; } = new List<InjuryTypes>();
         public List<SafetyDevices> SafetyDevices { get; set; } = new List<SafetyDevices>();

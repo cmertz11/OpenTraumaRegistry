@@ -29,7 +29,7 @@ namespace TraumaRegistry.Data
             optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TraumaRegistryData;Trusted_Connection=True;ConnectRetryCount=0");
 
             using (Context ctx = new Context(optionsBuilder.Options))
-             {
+            {
                  DbInitializer.Initialize(ctx);
             }
         }

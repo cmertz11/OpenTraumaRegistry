@@ -27,14 +27,30 @@ namespace TraumaRegistry.Api.Controllers
         {
             var patientRecord = _context.Patients
                 .Include(p => p.Gender)
-                .Include(p => p.Race)
+                .Include(p => p.Race) 
+
                 .Include(events => events.Events)
                 .ThenInclude(events => events.Injuries) 
+
                 .Include(events => events.Events)
                 .ThenInclude(events => events.Vitals)
+
                 .Include(events => events.Events)
                 .ThenInclude(events => events.Risks)
                 .ThenInclude(risks => risks.RefRiskData)
+
+                .Include(events => events.Events)
+                .ThenInclude(events => events.TraumaLevel)
+
+                .Include(events => events.Events)
+                .ThenInclude(events => events.ArrivedFrom)
+
+                .Include(events => events.Events)
+                .ThenInclude(events => events.Transport)
+
+                .Include(events => events.Events)
+                .ThenInclude(events => events.AgencyPreHospital)
+
                 .FirstOrDefault(i => i.Id == id);
 
             if (patientRecord == null)
