@@ -32,6 +32,8 @@ namespace TraumaRegistry.Data
         public DbSet<RefTraumaLevel> RefTraumaLevel { get; set; }
         public DbSet<RefAgency> RefAgency { get; set; }
         public DbSet<RefICD10> RefICD10Codes { get; set; }
+
+        public DbSet<RefPhysician> Physicians { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 

@@ -27,22 +27,15 @@ namespace TraumaRegistry.Data.Models
 
         public bool? FastExamPositive { get; set; }
         #region Key Event DateTimes
-        public DateTime? AgencyDispatchDateTime { get; set; }
-
+            public DateTime? AgencyDispatchDateTime { get; set; }
             public DateTime? AgencyArriveSceneDateTime { get; set; }
-
             public DateTime? AgencyDepartSceneDateTime { get; set; }
-
             public DateTime? AgencySceneDateTime { get; set; }
-
             public DateTime? EDArrivalDateTime { get; set; }
-
             public DateTime? EDDischargeDateTime { get; set; }
-
             public DateTime? EDDispoEDOrderTime { get; set; }
             public DateTime? ActivationDateTime { get; set; }
             public DateTime? HospitalDischargeOrder { get; set; }
-
             public DateTime? AnesthesiaArrivalTime { get; set; } 
         #endregion
 
@@ -61,7 +54,14 @@ namespace TraumaRegistry.Data.Models
 
             public int? AgencyPreHospitalId { get; set; }
             [ForeignKey("AgencyPreHospitalId")]
-            public RefAgency AgencyPreHospital { get; set; }  
+            public RefAgency AgencyPreHospital { get; set; }
+
+            public int? ERPhysicianId { get; set; }
+            [ForeignKey("ERPhysicianId")]
+            public RefPhysician ERPhysician { get; set; }
+            public int? AdmitPhysicianId { get; set; }
+            [ForeignKey("AdmitPhysicianId")]
+            public RefPhysician AdmitPhysician { get; set; }
         #endregion
 
         public List<InjuryTypes> InjuryTypes { get; set; } = new List<InjuryTypes>();

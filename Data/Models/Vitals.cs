@@ -16,7 +16,7 @@ namespace TraumaRegistry.Data
         //FK
         public int PatientId { get; set; }
 
-        //FK -> ReferenceDetail Where Reference.Name = "Location"
+        //FK -> Not configured needs to point to RefLocation
         public int Location { get; set; }
         public int Systolic { get; set; }
         public int Diastolic { get; set; }
