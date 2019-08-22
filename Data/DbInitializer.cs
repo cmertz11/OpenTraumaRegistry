@@ -249,6 +249,8 @@ namespace TraumaRegistry.Data
 
             event1.ArrivedFromId = 2;
             event1.TransportId = 1;
+            event1.AgencyPreHospitalId = 1;
+            event1.TraumaLevelId = 1;
 
             var injuryType1 = new InjuryTypes { RefInjuryTypeId = 2 };
             event1.InjuryTypes.Add(injuryType1);

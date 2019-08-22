@@ -21,18 +21,33 @@ namespace TraumaRegistry.Data.Models
 
         [MaxLength(1000)]
         public string InjuryDetailsNarrative { get; set; }
- 
 
-        public DateTime AgencyDispatchDateTime { get; set; }
+        public bool? TimeInERHolder { get; set; }
+        public bool? FastExam { get; set; }
 
-        public DateTime AgencyArriveSceneDateTime { get; set;}
+        public bool? FastExamPositive { get; set; }
+        #region Key Event DateTimes
+        public DateTime? AgencyDispatchDateTime { get; set; }
 
-        public DateTime AgencyDepartSceneDateTime { get; set; }
+            public DateTime? AgencyArriveSceneDateTime { get; set; }
 
-        public DateTime AgencySceneDateTime { get; set; }
+            public DateTime? AgencyDepartSceneDateTime { get; set; }
+
+            public DateTime? AgencySceneDateTime { get; set; }
+
+            public DateTime? EDArrivalDateTime { get; set; }
+
+            public DateTime? EDDischargeDateTime { get; set; }
+
+            public DateTime? EDDispoEDOrderTime { get; set; }
+            public DateTime? ActivationDateTime { get; set; }
+            public DateTime? HospitalDischargeOrder { get; set; }
+
+            public DateTime? AnesthesiaArrivalTime { get; set; } 
+        #endregion
 
         #region ForeignKey Id's Single
-            public int TraumaLevelId { get; set; }
+        public int TraumaLevelId { get; set; }
             [ForeignKey("TraumaLevelId")]
             public RefTraumaLevel TraumaLevel { get; set; }
 
@@ -44,7 +59,7 @@ namespace TraumaRegistry.Data.Models
             [ForeignKey("TransportId")]
             public RefTransport Transport { get; set; }
 
-            public int AgencyPreHospitalId { get; set; }
+            public int? AgencyPreHospitalId { get; set; }
             [ForeignKey("AgencyPreHospitalId")]
             public RefAgency AgencyPreHospital { get; set; }  
         #endregion
