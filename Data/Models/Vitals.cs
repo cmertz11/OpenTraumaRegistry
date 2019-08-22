@@ -25,6 +25,9 @@ namespace TraumaRegistry.Data
         public int SPO2 { get; set; }
         public string Temperature { get; set; }
 
+        public decimal Height { get; set; }
+        public decimal Weight { get; set; }
+
         public string Note { get; set; }
         public DateTime TimeTaken { get; set; }
 
