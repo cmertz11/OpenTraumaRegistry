@@ -76,6 +76,8 @@ namespace TraumaRegistry.Data.Models
 
         public List<RiskData> Risks { get; set; } = new List<RiskData>();
 
+        public List<Consult> Consults { get; set; } = new List<Consult>();
+
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
 

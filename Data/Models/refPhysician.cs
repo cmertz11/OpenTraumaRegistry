@@ -17,6 +17,9 @@ namespace TraumaRegistry.Data.Models
 
         [MaxLength(200)]
         public string FirstName { get; set; }
+
+        [MaxLength(200)]
+        public string MI { get; set; }
         public string CellPhone { get; set; }
         public string OfficePhone { get; set; }
         public string OfficeAddress1 { get; set; }

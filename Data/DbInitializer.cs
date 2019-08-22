@@ -136,6 +136,14 @@ namespace TraumaRegistry.Data
                     context.SaveChanges();
                 }
 
+                print("Loading RefPhysicians");
+                if (!context.RefPhysicians.Any())
+                {
+                    context.RefPhysicians.Add(new RefPhysician { LastName = "Strange", FirstName = "Stephen", MI = "V"});
+
+                    context.SaveChanges();
+                }
+
 
                 print("Begin load of larger or advanced data sets.  This may take a while.");
                 LoadTestData(context);
@@ -216,6 +224,7 @@ namespace TraumaRegistry.Data
 
         private static void AddPatient1(Context context)
         {
+            print("Adding Test Patient 1");
             var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
             var event1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
 
@@ -234,6 +243,8 @@ namespace TraumaRegistry.Data
             event1.Vitals.Add(vitals2);
             event1.Vitals.Add(vitals3);
             event1.Vitals.Add(vitals4);
+            var consult1 = new Consult { ConsultPhysicianId = 1 };
+            event1.Consults.Add(consult1);
 
             var risk1 = new RiskData { RefRiskDataId = 9 };
             var risk2 = new RiskData { RefRiskDataId = 30 };

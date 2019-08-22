@@ -32,8 +32,8 @@ namespace TraumaRegistry.Data
         public DbSet<RefTraumaLevel> RefTraumaLevel { get; set; }
         public DbSet<RefAgency> RefAgency { get; set; }
         public DbSet<RefICD10> RefICD10Codes { get; set; }
-
-        public DbSet<RefPhysician> Physicians { get; set; }
+        public DbSet<RefPhysician> RefPhysicians { get; set; }
+        public DbSet<Consult> Consults { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 
@@ -51,6 +51,12 @@ namespace TraumaRegistry.Data
                 .WithMany(b => b.Vitals)
                 .HasForeignKey(p => p.EventId)
                 .HasConstraintName("ForeignKey_Event_Vitals");
+
+            modelBuilder.Entity<Consult>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.Consults)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_Consults");
 
             modelBuilder.Entity<RiskData>()
                 .HasOne(p => p.Event)
