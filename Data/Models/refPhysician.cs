@@ -28,7 +28,6 @@ namespace TraumaRegistry.Data.Models
         public string OfficeState { get; set; }
         public string OfficeZip { get; set; }
         public string OfficeZip4 { get; set; }
-
-       
+  
     }
 }

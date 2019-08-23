@@ -8,3 +8,6 @@ https://www.youtube.com/watch?v=lF9ZZ8p2Ciw NSwag Demo video
 https://github.com/RicoSuter/NSwag/wiki/NSwagStudio NSwag Studio Download
 
 http://dotnetdetail.net/how-to-add-nswag-to-asp-net-core-3-0-and-generate-client-code-using-nswagstudio/
+
+EF Core Relationship examples
+https://entityframeworkcore.com/knowledge-base/53275214/one-to-one-multiple-foreign-key-from-same-table-ef-core

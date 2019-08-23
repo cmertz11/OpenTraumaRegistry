@@ -6064,36 +6064,44 @@ namespace TraumaRegistry.Client
         [System.ComponentModel.DataAnnotations.StringLength(1000)]
         public string InjuryDetailsNarrative { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("agencyDispatchDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset AgencyDispatchDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("timeInERHolder", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? TimeInERHolder { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("agencyArriveSceneDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset AgencyArriveSceneDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("fastExam", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? FastExam { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("agencyDepartSceneDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset AgencyDepartSceneDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("fastExamPositive", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? FastExamPositive { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("agencySceneDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset AgencySceneDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("agencyDispatchDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? AgencyDispatchDateTime { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("edArrivalDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset EdArrivalDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("agencyArriveSceneDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? AgencyArriveSceneDateTime { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("edDischargeDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset EdDischargeDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("agencyDepartSceneDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? AgencyDepartSceneDateTime { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("activationDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset ActivationDateTime { get; set; }
+        [Newtonsoft.Json.JsonProperty("agencySceneDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? AgencySceneDateTime { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("edArrivalDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? EdArrivalDateTime { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("edDischargeDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? EdDischargeDateTime { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("edDispoEDOrderTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? EdDispoEDOrderTime { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("activationDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? ActivationDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("hospitalDischargeOrder", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string HospitalDischargeOrder { get; set; }
+        public System.DateTimeOffset? HospitalDischargeOrder { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("anesthesiaArrivalTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? AnesthesiaArrivalTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("traumaLevelId", Required = Newtonsoft.Json.Required.Always)]
         public int TraumaLevelId { get; set; }
@@ -6119,6 +6127,18 @@ namespace TraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("agencyPreHospital", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public RefAgency AgencyPreHospital { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("erPhysicianId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? ErPhysicianId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("erPhysician", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public RefPhysician ErPhysician { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("admitPhysicianId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? AdmitPhysicianId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("admitPhysician", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public RefPhysician AdmitPhysician { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("injuryTypes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<InjuryTypes> InjuryTypes { get; set; }
     
@@ -6139,6 +6159,9 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("risks", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<RiskData> Risks { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("consults", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<Consult> Consults { get; set; }
     
         [Newtonsoft.Json.JsonProperty("patientId", Required = Newtonsoft.Json.Required.Always)]
         public int PatientId { get; set; }
@@ -6235,6 +6258,51 @@ namespace TraumaRegistry.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.21.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class RefPhysician 
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("lastName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string LastName { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("firstName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string FirstName { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("mi", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Mi { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("cellPhone", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CellPhone { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("officePhone", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OfficePhone { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("officeAddress1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OfficeAddress1 { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("officeAddress2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OfficeAddress2 { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("officeCity", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OfficeCity { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("officeState", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OfficeState { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("officeZip", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OfficeZip { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("officeZip4", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OfficeZip4 { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.21.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class InjuryTypes 
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
@@ -6316,9 +6384,6 @@ namespace TraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
         public int Id { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("patientId", Required = Newtonsoft.Json.Required.Always)]
-        public int PatientId { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("location", Required = Newtonsoft.Json.Required.Always)]
         public int Location { get; set; }
     
@@ -6339,6 +6404,12 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("temperature", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Temperature { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("height", Required = Newtonsoft.Json.Required.Always)]
+        public decimal Height { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("weight", Required = Newtonsoft.Json.Required.Always)]
+        public decimal Weight { get; set; }
     
         [Newtonsoft.Json.JsonProperty("note", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Note { get; set; }
@@ -6501,6 +6572,27 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("riskData", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public RiskData RiskData { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.21.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Consult 
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("consultPhysicianId", Required = Newtonsoft.Json.Required.Always)]
+        public int ConsultPhysicianId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("consultPhysician", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public RefPhysician ConsultPhysician { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("eventId", Required = Newtonsoft.Json.Required.Always)]
+        public int EventId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("event", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Event Event { get; set; }
     
     
     }

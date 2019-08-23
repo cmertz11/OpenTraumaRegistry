@@ -226,10 +226,23 @@ namespace TraumaRegistry.Data
         {
             print("Adding Test Patient 1");
             var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
+
+            print("Adding Test Event 1 for Patient 1");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static Event AddPatientEvent1()
+        {
             var event1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
 
             var injury1p1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
             var injury2p1 = new Injury { AISCode = "541822.2", ICD10 = 106, Diagnosis = "Laceration of liver, unspecified degree, initial encounter" };
+
+            
 
             event1.Injuries.Add(injury1p1);
             event1.Injuries.Add(injury2p1);
@@ -265,10 +278,7 @@ namespace TraumaRegistry.Data
 
             var injuryType1 = new InjuryTypes { RefInjuryTypeId = 2 };
             event1.InjuryTypes.Add(injuryType1);
-
-            patient.Events.Add(event1);
-            context.Patients.Add(patient);
-            context.SaveChanges();
+            return event1;
         }
     }
 }
