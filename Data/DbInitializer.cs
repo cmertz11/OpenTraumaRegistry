@@ -140,6 +140,7 @@ namespace TraumaRegistry.Data
                 if (!context.RefPhysicians.Any())
                 {
                     context.RefPhysicians.Add(new RefPhysician { LastName = "Strange", FirstName = "Stephen", MI = "V"});
+                    context.RefPhysicians.Add(new RefPhysician { LastName = "Robert", FirstName = "Banner", MI = "B" });
 
                     context.SaveChanges();
                 }
@@ -194,31 +195,12 @@ namespace TraumaRegistry.Data
         private static void loadTestPatients(Context context)
         {
             AddPatient1(context);
-
-            //var patient2 = (new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 });
-            //patient2.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
-            //context.Patients.Add(patient2);
-
-            //var patient3 = (new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12), GenderReferenceId = 2, RaceReferenceId = 6 });
-            //patient3.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
-            //context.Patients.Add(patient3);
-
-            //var patient4 = (new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29), GenderReferenceId = 1, RaceReferenceId = 6 });
-            //patient4.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
-            //context.Patients.Add(patient4);
-
-            //var patient5 = (new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14), GenderReferenceId = 2, RaceReferenceId = 6 });
-            //patient5.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
-            //context.Patients.Add(patient5);
-
-            //var patient6 = (new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 });
-            //patient6.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
-            //context.Patients.Add(patient6);
-
-            //var patient7 = (new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId = 1, RaceReferenceId = 6 });
-            //patient7.Events.Add(new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) });
-            //context.Patients.Add(patient7);
-
+            AddPatient2(context);
+            AddPatient3(context);
+            AddPatient4(context);
+            AddPatient5(context);
+            AddPatient6(context);
+            AddPatient7(context);
             context.SaveChanges();
         }
 
@@ -228,6 +210,123 @@ namespace TraumaRegistry.Data
             var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
 
             print("Adding Test Event 1 for Patient 1");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient2(Context context)
+        {
+            print("Adding Test Patient 2");
+            var patient = new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 };
+
+            print("Adding Test Event 1 for Patient 2");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient3(Context context)
+        {
+            print("Adding Test Patient 3");
+            var patient = new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12), GenderReferenceId = 2, RaceReferenceId = 6 };
+
+            print("Adding Test Event 1 for Patient 3");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient4(Context context)
+        {
+            print("Adding Test Patient 4");
+            var patient = new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29), GenderReferenceId = 1, RaceReferenceId = 6 };
+
+            print("Adding Test Event 1 for Patient 4");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient5(Context context)
+        {
+            print("Adding Test Patient 5");
+            var patient = new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14), GenderReferenceId = 2, RaceReferenceId = 6 };
+
+            print("Adding Test Event 1 for Patient 5");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient6(Context context)
+        {
+            print("Adding Test Patient 6");
+            var patient = new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId = 1, RaceReferenceId = 6 }; 
+
+            print("Adding Test Event 1 for Patient 6");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient7(Context context)
+        {
+            print("Adding Test Patient 7");
+                var patient = new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
+
+            print("Adding Test Event 1 for Patient 7");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient8(Context context)
+        {
+            print("Adding Test Patient 8");
+            var patient = new Patient { FirstName = "Clint", LastName = "Barton", MI = "", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
+
+            print("Adding Test Event 1 for Patient 8");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient9(Context context)
+        {
+            print("Adding Test Patient 9");
+            var patient = new Patient { FirstName = "Clint", LastName = "Barton", MI = "", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 6 };
+
+            print("Adding Test Event 1 for Patient 9");
+            Event event1 = AddPatientEvent1();
+
+            patient.Events.Add(event1);
+            context.Patients.Add(patient);
+            context.SaveChanges();
+        }
+
+        private static void AddPatient10(Context context)
+        {
+            print("Adding Test Patient 10");
+            var patient = new Patient { FirstName = "James", LastName = "Rhodes", MI = "", DOB = new DateTime(1968, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
+
+            print("Adding Test Event 1 for Patient 10");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
