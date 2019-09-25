@@ -201,6 +201,10 @@ namespace TraumaRegistry.Data
             AddPatient5(context);
             AddPatient6(context);
             AddPatient7(context);
+            AddPatient8(context);
+            AddPatient9(context);
+            AddPatient10(context);
+
             context.SaveChanges();
         }
 
@@ -298,7 +302,7 @@ namespace TraumaRegistry.Data
         private static void AddPatient8(Context context)
         {
             print("Adding Test Patient 8");
-            var patient = new Patient { FirstName = "Clint", LastName = "Barton", MI = "", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
+            var patient = new Patient { FirstName = "Samuel", LastName = "Wilson", MI = "T", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
 
             print("Adding Test Event 1 for Patient 8");
             Event event1 = AddPatientEvent1();
@@ -340,9 +344,7 @@ namespace TraumaRegistry.Data
 
             var injury1p1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
             var injury2p1 = new Injury { AISCode = "541822.2", ICD10 = 106, Diagnosis = "Laceration of liver, unspecified degree, initial encounter" };
-
-            
-
+ 
             event1.Injuries.Add(injury1p1);
             event1.Injuries.Add(injury2p1);
 
@@ -357,6 +359,8 @@ namespace TraumaRegistry.Data
             event1.Vitals.Add(vitals4);
             var consult1 = new Consult { ConsultPhysicianId = 1 };
             event1.Consults.Add(consult1);
+
+          
 
             var risk1 = new RiskData { RefRiskDataId = 9 };
             var risk2 = new RiskData { RefRiskDataId = 30 };

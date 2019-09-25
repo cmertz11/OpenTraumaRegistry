@@ -11,3 +11,7 @@ http://dotnetdetail.net/how-to-add-nswag-to-asp-net-core-3-0-and-generate-client
 
 EF Core Relationship examples
 https://entityframeworkcore.com/knowledge-base/53275214/one-to-one-multiple-foreign-key-from-same-table-ef-core
+
+https://www.ryadel.com/en/current-net-sdk-not-support-net-core-3-0-fix/
+
+https://ankitsharmablogs.com/single-page-application-using-server-side-blazor/

@@ -1,0 +1,47 @@
+﻿@page "/patients"
+
+@using TraumaRegistry.UI.Data
+
+
+<h1>Patients</h1>
+
+<p></p>
+
+@if (patients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>DOB</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in patients)
+            {
+                <tr>
+                    <td>@patient.Id</td>
+                    <td>@patient.FirstName</td>
+                    <td>@patient.LastName</td>
+                    <td>@patient.Dob.ToString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    ICollection<Patient> patients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = new PatientsClient();
+        patients = await client.GetPatientsAsync();
+    }
+}

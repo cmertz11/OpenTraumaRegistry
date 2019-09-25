@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.Api", "Traum
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.Client", "TraumaRegistry.Client\TraumaRegistry.Client.csproj", "{635A3509-DBB4-412F-A3C4-F16A76498CA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraumaRegistry.UI", "TraumaRegistry.UI\TraumaRegistry.UI.csproj", "{BF71DCFF-01B4-4D92-8895-FF92A7D484BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{635A3509-DBB4-412F-A3C4-F16A76498CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{635A3509-DBB4-412F-A3C4-F16A76498CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{635A3509-DBB4-412F-A3C4-F16A76498CA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF71DCFF-01B4-4D92-8895-FF92A7D484BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF71DCFF-01B4-4D92-8895-FF92A7D484BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF71DCFF-01B4-4D92-8895-FF92A7D484BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF71DCFF-01B4-4D92-8895-FF92A7D484BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
