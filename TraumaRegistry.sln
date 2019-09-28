@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.Api", "Traum
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.Client", "TraumaRegistry.Client\TraumaRegistry.Client.csproj", "{635A3509-DBB4-412F-A3C4-F16A76498CA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraumaRegistry.UI", "TraumaRegistry.UI\TraumaRegistry.UI.csproj", "{BF71DCFF-01B4-4D92-8895-FF92A7D484BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.UI", "TraumaRegistry.UI\TraumaRegistry.UI.csproj", "{BF71DCFF-01B4-4D92-8895-FF92A7D484BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

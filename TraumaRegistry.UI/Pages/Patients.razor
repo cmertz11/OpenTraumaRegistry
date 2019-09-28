@@ -3,7 +3,7 @@
 @using TraumaRegistry.UI.Data
 
 
-<h1>Patients</h1>
+<h2><i class="fas fa-user-injured"></i>Patients</h2>
 
 <p></p>
 
@@ -13,12 +13,37 @@
 }
 else
 {
+<form class="form-inline">
+    
+        <label for="searchFilter">Search Filter</label>
+        &nbsp;
+        <input class="form-control" id="searchFilter" type="text" @bind="query.Filter" />
+        <button type="button" class="btn btn-primary" @onclick="SearchAsync">Search</button>
+        
+        <label for="pageSizeSelect">Page Size</label>
+        <select class="form-control" style="width: 80px" id="pageSizeSelect" @bind="query.PageSize">
+            <option value="5">5</option>
+            <option selected="selected" value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+ 
+</form>
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <th>
+                    First Name
+                    <button class="btn" @onclick="@(() => SetOrderByColumn("FirstName"))"><i class="@sortIcon"></i></button>
+
+
+                </th>
+                <th>
+                    Last Name
+                    <button class="btn" @onclick="@(() => SetOrderByColumn("LastName"))"><i class="@sortIcon"></i></button>
+
+                </th>
                 <th>DOB</th>
             </tr>
         </thead>
@@ -29,7 +54,7 @@ else
                     <td>@patient.Id</td>
                     <td>@patient.FirstName</td>
                     <td>@patient.LastName</td>
-                    <td>@patient.Dob.ToString()</td>
+                    <td>@patient.Dob.ToString("MM/dd/yyyy")</td>
                 </tr>
             }
         </tbody>
@@ -37,11 +62,39 @@ else
 }
 
 @code {
+
     ICollection<Patient> patients;
+    PatientsPagedClient client = new PatientsPagedClient();
+    string sortIcon = "fa fa-sort-up";
+
+    UrlQuery query = new UrlQuery { PageNumber = 1, PageSize = 10, FilterColumn = "Patients.LastName", OrderBy = "LastName", OrderByDirection = "asc" };
+
+    protected async Task SearchAsync()
+    {
+        patients = await client.GetPatientsAsync(query);
+    }
+
+    async Task SetOrderByColumn(string orderBy)
+    {
+        query.OrderBy = orderBy;
+
+        if (query.OrderByDirection == "asc")
+        {
+            query.OrderByDirection = "desc";
+            sortIcon = "fa fa-sort-down";
+        }
+        else
+        {
+            query.OrderByDirection = "asc";
+            sortIcon = "fa fa-sort-up";
+        }
+        await SearchAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        var client = new PatientsClient();
-        patients = await client.GetPatientsAsync();
+        await SearchAsync();
     }
+
+
 }

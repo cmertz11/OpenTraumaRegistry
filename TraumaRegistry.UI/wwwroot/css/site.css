@@ -148,3 +148,7 @@ app {
         display: block;
     }
 }
+
+.form-inline > * {
+    margin: 5px 3px;
+}
