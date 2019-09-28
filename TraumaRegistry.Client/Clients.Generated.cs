@@ -996,14 +996,14 @@ namespace TraumaRegistry.Client
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Patient>> GetPatientsAsync(UrlQuery urlQuery)
+        public System.Threading.Tasks.Task<PagedData> GetPatientsAsync(UrlQuery urlQuery)
         {
             return GetPatientsAsync(urlQuery, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Patient>> GetPatientsAsync(UrlQuery urlQuery, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<PagedData> GetPatientsAsync(UrlQuery urlQuery, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/PatientsPaged");
@@ -1039,7 +1039,7 @@ namespace TraumaRegistry.Client
                         var status_ = ((int)response_.StatusCode).ToString();
                         if (status_ == "200") 
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Patient>>(response_, headers_).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<PagedData>(response_, headers_).ConfigureAwait(false);
                             return objectResponse_.Object;
                         }
                         else
@@ -1049,7 +1049,7 @@ namespace TraumaRegistry.Client
                             throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(System.Collections.Generic.ICollection<Patient>);
+                        return default(PagedData);
                     }
                     finally
                     {
@@ -6785,6 +6785,18 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("event", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Event Event { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.21.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class PagedData 
+    {
+        [Newtonsoft.Json.JsonProperty("records", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<Patient> Records { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("recordCount", Required = Newtonsoft.Json.Required.Always)]
+        public int RecordCount { get; set; }
     
     
     }

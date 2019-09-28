@@ -22,17 +22,20 @@ namespace TraumaRegistry.Api.Controllers
         {
             _context = context;
         }
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatients(UrlQuery urlQuery)
+        public ActionResult<pagedData> GetPatients(UrlQuery urlQuery)
         {
+            pagedData data = new pagedData();
             var pageNumber = Convert.ToInt32(urlQuery.PageNumber);
-            IQueryable<Patient> query = null;
+
 
             string sql = "SELECT * FROM dbo.Patients";
 
             if (!string.IsNullOrEmpty(urlQuery.filterColumn) && !string.IsNullOrEmpty(urlQuery.filter))
             {
                 sql += string.Format(" WHERE {0} Like '{1}%'", urlQuery.filterColumn, urlQuery.filter);
-            } 
+            }
+            data.recordCount = _context.Patients.FromSqlRaw(sql).Count();
+
             if (!string.IsNullOrEmpty(urlQuery.orderBy))
             {
                 string orderby = string.Format(" Order By {0} {1}", urlQuery.orderBy, urlQuery.orderByDirection);
@@ -41,12 +44,18 @@ namespace TraumaRegistry.Api.Controllers
                 sql += string.Format(" OFFSET {0} * ({1} - 1) ROWS FETCH NEXT {0} ROWS ONLY OPTION(RECOMPILE); ", urlQuery.PageSize, urlQuery.PageNumber);
             }
 
+            data.records = _context.Patients.FromSqlRaw(sql).ToList();
 
-            query = _context.Patients.FromSqlRaw(sql); 
- 
-            return await query.ToListAsync();
+
+            return data;
         }
     } 
+    public class pagedData
+    {
+        public IEnumerable<Patient> records { get; set; }
+        public int recordCount { get; set; }
+    }
+
     public class UrlQuery
     {
         private const int maxPageSize = 100;
