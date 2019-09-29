@@ -89,8 +89,9 @@ else
                 @{
                     string previousButtonClass = query.PageNumber == 1 ? "page-item disabled" : "page-item";
                     string nextButtonClass = query.PageNumber == pageCount ? "page-item disabled" : "page-item";
+
                  }
-               <li class="@previousButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) + 1))">Previous</a></li>
+               <li class="@previousButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) - 1))">Previous</a></li>
 
                 @for (int i = 1; i < pageCount + 1; i++)
                 {
@@ -98,7 +99,7 @@ else
                     string pageItemClass = query.PageNumber == i  ? "page-item active" : "page-item";
                     <li class="@pageItemClass"><a class="page-link" @onclick="@(() => SetPage(local_i))"> @i</a></li>
                 }
-                <li class="@nextButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) - 1))">Next</a></li>
+                <li class="@nextButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) + 1))">Next</a></li>
             </ul>
         </nav>
     }
