@@ -404,6 +404,26 @@ namespace TraumaRegistry.Data
         {
             var event1 = new Event { InjuryDateTime = new DateTime(2004, 7, 2, 21, 35, 1) };
 
+            event1.PositionInVehicle = "Passenger seat";
+            event1.LocationOfOccuranceDescription = "The intersection of M24 and Coulter Rd. north of Lapeer Michigan.";
+            event1.InjuryDetailsNarrative = "MVA - Car vs Tree";
+            event1.OccuranceZipCode = "48446";
+
+            event1.TimeInERHolder = true;
+            event1.FastExam = false;
+            event1.FastExamPositive = false;
+
+            event1.AgencyDispatchDateTime = new DateTime(2004, 7, 2, 22, 05, 4);
+            event1.AgencyArriveSceneDateTime = new DateTime(2004, 7, 22, 20, 05, 2);
+            event1.AgencyDepartSceneDateTime = new DateTime(2004, 7, 2, 22, 35, 4);
+            event1.EDArrivalDateTime = new DateTime(2004, 7, 2, 22, 53, 1);
+
+            event1.ActivationDateTime = new DateTime(2004, 7, 2, 22, 05, 4);  // Talk to Pam about timing of this timestamp.
+              
+            event1.EDDischargeDateTime = new DateTime(2004, 7, 3, 3, 05, 4); // Talk to Pam about timing of this timestamp.
+
+            event1.HospitalDischargeOrder = new DateTime(2004, 7, 3, 16, 55, 7); // Talk to Pam about timing of this timestamp.
+
             var injury1p1 = new Injury { AISCode = "541820.2", ICD10 = 102, Diagnosis = "Accidental puncture and laceration of the spleen during a procedure on the spleen" };
             var injury2p1 = new Injury { AISCode = "541822.2", ICD10 = 106, Diagnosis = "Laceration of liver, unspecified degree, initial encounter" };
  
