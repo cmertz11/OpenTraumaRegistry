@@ -1,0 +1,45 @@
+﻿@page "/events"
+@page "/events/{PatientId:int}"
+
+@using TraumaRegistry.UI.Data
+@using System.Diagnostics
+@using System.Threading
+
+<h2><i class="fas fa-user-injured"></i>Events</h2>
+
+@if (events == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    @foreach (var e in events)
+    {
+        <div class="card">
+            <div class="card-header">
+                <b>Injury Date:</b> @e.InjuryDateTime  <b>Activation Time:</b> @e.ActivationDateTime
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@e.InjuryDetailsNarrative</h5>
+                <p class="card-text">Location: @e.LocationOfOccuranceDescription</p>
+                <a href="#" class="btn btn-primary">View</a>
+            </div>
+        </div>
+    }
+}
+
+
+    @code {
+        [Parameter]
+        public int PatientId { get; set; }
+   
+        EventsClient client = new EventsClient();
+        ICollection<TraumaRegistry.Client.Event> events;
+
+        protected override async Task OnInitializedAsync()
+        {
+            events = await client.GetEventsAsync(PatientId);
+        }
+
+    }

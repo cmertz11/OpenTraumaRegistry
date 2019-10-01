@@ -207,7 +207,7 @@ namespace TraumaRegistry.Data
             AddPatient10(context);
 
             context.SaveChanges();
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 20; i++)
             {
                 AddPatientRND(context , i);
                 context.SaveChanges();
