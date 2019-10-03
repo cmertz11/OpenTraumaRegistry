@@ -36,11 +36,16 @@ namespace TraumaRegistry.Data.Models
             public DateTime? EDDispoEDOrderTime { get; set; }
             public DateTime? ActivationDateTime { get; set; }
             public DateTime? HospitalDischargeOrder { get; set; }
-            public DateTime? AnesthesiaArrivalTime { get; set; } 
+            public DateTime? AnesthesiaArrivalTime { get; set; }
         #endregion
 
         #region ForeignKey Id's Single
-        public int TraumaLevelId { get; set; }
+
+        [ForeignKey("OutcomeId")]
+        public int? OutcomeId { get; set; }
+            public RefOutcome Outcome { get; set; }
+            public int TraumaLevelId { get; set; }
+
             [ForeignKey("TraumaLevelId")]
             public RefTraumaLevel TraumaLevel { get; set; }
 

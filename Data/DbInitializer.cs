@@ -128,6 +128,14 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
+                print("Loading RefOutcome");
+                if (!context.RefOutcome.Any())
+                {
+                    context.RefOutcome.Add(new RefOutcome { Code = "A", Description = "Alive" });
+                    context.RefOutcome.Add(new RefOutcome { Code = "D", Description = "Dead" });
+
+                    context.SaveChanges();
+                }
                 print("Loading RefAgency");
                 if (!context.RefAgency.Any())
                 {
