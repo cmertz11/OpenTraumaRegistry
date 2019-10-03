@@ -21,15 +21,22 @@ namespace TraumaRegistry.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Events
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents(int PatientId)
+        // GET: api/Patients/5
+        [HttpGet("{PatientId}")]
+        public async Task<ActionResult<Patient>> GetPatientWithEvents(int PatientId)
         {
-            var recs = _context.Events.Where(e => e.Patient.Id == PatientId).ToListAsync();
-            return await recs;
+            var patient = await _context.Patients.Where(p => p.Id == PatientId)
+                .Include(p => p.Events).FirstOrDefaultAsync();
+
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return patient;
         }
 
- 
+
 
         // PUT: api/Events/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for

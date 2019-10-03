@@ -42,6 +42,10 @@ namespace TraumaRegistry.Api.Controllers
             return patient;
         }
 
+
+
+
+
         // PUT: api/Patients/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPatient(int id, Patient patient)

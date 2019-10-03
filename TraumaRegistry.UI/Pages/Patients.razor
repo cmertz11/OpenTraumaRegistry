@@ -3,6 +3,7 @@
 @using TraumaRegistry.UI.Data
 @using System.Diagnostics
 @using System.Threading
+@inject NavigationManager NavigationManager
 
 
 <h2><i class="fas fa-user-injured"></i>Patients</h2>
@@ -77,7 +78,7 @@ else
                     <td>@patient.LastName</td>
                     <td>@patient.Mi</td>
                     <td>@patient.Dob.ToString("MM/dd/yyyy")</td>
-                    <td><button class="btn btn-primary" @onclick="@(() => ViewRecord(patient.Id))">View <i class="fas fa-info"></i></button></td>
+                    <td><button class="btn btn-primary btn-sm" @onclick="@(() => ViewRecord(patient.Id))">View <i class="fas fa-info"></i></button></td>
                 </tr>
             }
         </tbody>
@@ -90,13 +91,13 @@ else
                     string previousButtonClass = query.PageNumber == 1 ? "page-item disabled" : "page-item";
                     string nextButtonClass = query.PageNumber == pageCount ? "page-item disabled" : "page-item";
 
-                 }
-               <li class="@previousButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) - 1))">Previous</a></li>
+                }
+                <li class="@previousButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) - 1))">Previous</a></li>
 
                 @for (int i = 1; i < pageCount + 1; i++)
                 {
                     var local_i = i;
-                    string pageItemClass = query.PageNumber == i  ? "page-item active" : "page-item";
+                    string pageItemClass = query.PageNumber == i ? "page-item active" : "page-item";
                     <li class="@pageItemClass"><a class="page-link" @onclick="@(() => SetPage(local_i))"> @i</a></li>
                 }
                 <li class="@nextButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) + 1))">Next</a></li>
@@ -128,15 +129,15 @@ else
 
     protected async Task ViewRecord(int Id)
     {
-
+        NavigationManager.NavigateTo("/events/" + Id);
     }
-    
+
     async Task SetPage(int page)
     {
         query.PageNumber = page;
         await SearchAsync();
     }
-    
+
     async Task SetOrderByColumn(string orderBy)
     {
         query.OrderBy = orderBy;
