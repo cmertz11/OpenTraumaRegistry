@@ -41,8 +41,8 @@ namespace TraumaRegistry.Data.Models
 
         #region ForeignKey Id's Single
 
-        [ForeignKey("OutcomeId")]
-        public int? OutcomeId { get; set; }
+            [ForeignKey("OutcomeId")]
+            public int? OutcomeId { get; set; }
             public RefOutcome Outcome { get; set; }
             public int TraumaLevelId { get; set; }
 

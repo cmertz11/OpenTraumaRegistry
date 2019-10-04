@@ -26,7 +26,11 @@ namespace TraumaRegistry.Api.Controllers
         public async Task<ActionResult<Patient>> GetPatientWithEvents(int PatientId)
         {
             var patient = await _context.Patients.Where(p => p.Id == PatientId)
-                .Include(p => p.Events).FirstOrDefaultAsync();
+                .Include(events => events.Events)
+                .ThenInclude(events => events.Outcome)
+                .Include(events => events.Events)
+                .ThenInclude(events => events.TraumaLevel)
+                .FirstOrDefaultAsync();
 
             if (patient == null)
             {

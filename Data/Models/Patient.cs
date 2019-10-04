@@ -14,8 +14,6 @@ namespace TraumaRegistry.Data.Models
 
         public string MRN { get; set; }
 
-        public string PatientID { get; set; }
-
         [MaxLength(100)]
         public string FirstName { get; set; }
 
