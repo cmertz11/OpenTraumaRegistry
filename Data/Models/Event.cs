@@ -44,7 +44,7 @@ namespace TraumaRegistry.Data.Models
             [ForeignKey("OutcomeId")]
             public int? OutcomeId { get; set; }
             public RefOutcome Outcome { get; set; }
-            public int TraumaLevelId { get; set; }
+            public int? TraumaLevelId { get; set; }
 
             [ForeignKey("TraumaLevelId")]
             public RefTraumaLevel TraumaLevel { get; set; }

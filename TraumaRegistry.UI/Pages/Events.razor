@@ -16,6 +16,7 @@ else
     var lName = patient.LastName == null ? "" : patient.LastName + ",";
     var mName = patient.Mi == null ? "" : patient.Mi;
 
+
     <div class="page-header" style="display: inline-block;"> 
          <h2><i class="fas fa-user-injured"></i> Truamatic Event(s): </h2>
          <h4 style="vertical-align: middle"><b>Patient:</b> @lName @fName @mName </h4>
@@ -23,11 +24,12 @@ else
     
     @foreach (var e in patient.Events)
     {
+        var activationDate = e.ActivationDateTime.HasValue ? e.ActivationDateTime.Value.ToString("dd/MM/yyyy hh:mm tt") : "<not available>";
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="col">
-                        <b>Injury Date:</b> @e.InjuryDateTime.ToString("dd/MM/yyyy hh:mm tt")  <b>Activation Time:</b> @e.ActivationDateTime
+                    <div class="col-10">
+                        <b>Trauma Level:</b> @e.TraumaLevel.Description &nbsp;<b>Injury Date:</b> @e.InjuryDateTime.ToString("dd/MM/yyyy hh:mm tt") &nbsp;<b>Activation Time:</b> @activationDate  &nbsp;<b>Outcome:</b> @e.Outcome.Description
                     </div>
                     <div class="col">
                         <div class="float-lg-right">

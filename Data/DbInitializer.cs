@@ -394,6 +394,9 @@ namespace TraumaRegistry.Data
             event1.FastExam = false;
             event1.FastExamPositive = false;
 
+            event1.TransportId = 1;
+            event1.OutcomeId = 1;
+
             event1.AgencyDispatchDateTime = new DateTime(2004, 7, 2, 22, 05, 4);
             event1.AgencyArriveSceneDateTime = new DateTime(2004, 7, 22, 20, 05, 2);
             event1.AgencyDepartSceneDateTime = new DateTime(2004, 7, 2, 22, 35, 4);
@@ -453,12 +456,15 @@ namespace TraumaRegistry.Data
 
             event1.PositionInVehicle = "";
             event1.LocationOfOccuranceDescription = "Home - 342 S. Main St. Lapeer MI";
-            event1.InjuryDetailsNarrative = "Slip and fal on ice in parking lot of apartment building.";
+            event1.InjuryDetailsNarrative = "Slip and fall on ice in parking lot of apartment building.";
             event1.OccuranceZipCode = "48446";
 
             event1.TimeInERHolder = true;
             event1.FastExam = false;
             event1.FastExamPositive = false;
+
+            event1.TransportId = 1;
+            event1.OutcomeId = 3;
 
             event1.AgencyDispatchDateTime = new DateTime(2010, 7, 2, 22, 05, 4);
             event1.AgencyArriveSceneDateTime = new DateTime(2010, 7, 22, 20, 05, 2);
