@@ -1,4 +1,6 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject NavigationManager NavigationManager
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Trauma Registry <i class="fas fa-notes-medical"></i></a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -17,10 +19,30 @@
                 <span class="fas fa-user-injured" aria-hidden="true"></span> &nbsp; &nbsp; Patients
             </NavLink>
         </li>
+        @if (refTables.Count > 0)
+        {
+
+            @foreach (var item in refTables)
+                {
+                    var local_Table = item; <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="" @onclick="@(()=>ViewTable(item))" >
+                        <span class="fas fa-cogs" aria-hidden="true"></span> &nbsp; &nbsp; @item
+                    </NavLink>
+                </li>
+            }
+
+        }
+
+
     </ul>
 </div>
 
 @code {
+
+    ReferenceTableClient client = new ReferenceTableClient();
+    ICollection<String> refTables = new List<string>();
+
+
     bool collapseNavMenu = true;
 
     string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -28,5 +50,16 @@
     void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        refTables = await client.GetRefTableListAsync();
+
+    }
+
+    protected async Task ViewTable(string tableName)
+    {
+        NavigationManager.NavigateTo("/referencetables/" + tableName);
     }
 }
