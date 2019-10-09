@@ -1,17 +1,23 @@
 ﻿@page "/referencetables"
 @page "/referencetables/{tableName}"
 
-
 @inject NavigationManager NavigationManager
+@inject IModalService Modal
+
 
 @if (table == null)
 {
-    <h2><i class="fas fa-table"></i>System Data Table</h2>
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table table-striped table-hover table-sm">
+ 
+    <h3><i class="fas fa-table"></i>&nbsp; System Reference Data: @tableName</h3>
+ 
+
+   <div class="row">
+       <div class="col-5">
+            <table class="table table-striped table-hover table-sm">
         <thead>
             <tr>
                 <th>
@@ -24,25 +30,32 @@ else
                     Description
                 </th>
 
-                <th></th>
-                <th></th>
+                <th>
+                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#refFormModal" @onclick="@AddRecord">Add New <i class="fas fa-plus"></i></button>
+                </th>
+
 
             </tr>
         </thead>
         <tbody>
             @foreach (var rec in table.TableData)
             {
-            <tr>
-                <td>@rec.Id</td>
-                <td>@rec.Code</td>
-                <td>@rec.Description</td>
-                <td><button class="btn btn-secondary btn-sm" @onclick="@(() => EditRecord(rec.Id))">View <i class="fas fa-pencil"></i></button></td>
-                <td><button class="btn btn-danger btn-sm" @onclick="@(() => DeleteRecord(rec.Id))">View <i class="fas fa-trash"></i></button></td>
-            </tr>
+                <tr>
+                    <td>@rec.Id</td>
+                    <td>@rec.Code</td>
+                    <td>@rec.Description</td>
+                    <td>
+                        <button class="btn btn-outline-success btn-sm" @onclick="@(() => EditRecord(rec.Id, rec.Code, rec.Description))">Edit <i class="fas fa-pen"></i></button>
+                        <button class="btn btn-outline-danger btn-sm" @onclick="@(() => DeleteRecord(rec.Id))">Delete <i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
+       </div>
+   </div>
 }
+
 @code {
     [Parameter]
     public string tableName { get; set; }
@@ -50,19 +63,36 @@ else
     ReferenceTableClient client = new ReferenceTableClient();
     RefTableDTO table = null;
 
+    RefTable tableRec = new RefTable();
+
+
 
     protected override async Task OnInitializedAsync()
     {
         table = await client.GetRefTableDataAsync(tableName);
     }
 
-    async Task EditRecord(int Id)
+    async Task AddRecord()
     {
-        
+
+        var parameters = new ModalParameters();
+        parameters.Add("mode", "add");
+        Modal.Show("Add New Record", typeof(AddEditRefTable), parameters);
+    }
+
+    async Task EditRecord(int Id, string Code, string Description)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("mode", "edit");
+        parameters.Add("Id", Id);
+        parameters.Add("Code", Code);
+        parameters.Add("Description", Description);
+
+        Modal.Show(string.Format("Edit Record {0}", Id), typeof(AddEditRefTable), parameters);
     }
 
     async Task DeleteRecord(int Id)
     {
-        
+
     }
 }

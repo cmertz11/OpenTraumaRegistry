@@ -1,0 +1,59 @@
+﻿@inject IModalService ModalService
+
+ 
+    <form>
+    @if (mode=="edit")
+    {
+        <div class="form-group">
+            <label for="txtId">Id</label>
+            <input type="text"  id="txtId" class="form-control" @bind=@Id />
+        </div> 
+    }
+        <div class="form-group">
+            <label for="txtCode">Code</label>
+            <input type="text" id="txtCode" class="form-control" @bind=@Code />
+        </div>
+        <div class="form-group">
+            <label for="txtDescription">Description</label>
+            <input type="text" id="txtDescription" class="form-control" @bind=@Description />
+        </div>
+        <button @onclick="@SaveRecord" class="btn btn-primary">Save</button>
+        <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button> 
+    </form>
+
+ 
+ 
+
+@code {
+
+    [CascadingParameter] ModalParameters Parameters { get; set; }
+
+    RefTable tableRec = new RefTable();
+    public string tableName { get; set; }
+    string mode { get; set; }
+    int Id { get; set; }
+    string Code { get; set; }
+    string Description { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        mode = Parameters.Get<string>("mode");
+
+        if (mode=="edit")
+        {
+            Id = Parameters.Get<int>("Id");
+            Code = Parameters.Get<string>("Code");
+            Description = Parameters.Get<string>("Description");
+        }
+    }
+
+    void SaveRecord()
+    {
+
+    }
+
+    void Cancel()
+    {
+
+    }
+}
