@@ -5,7 +5,7 @@
 @inject IModalService Modal
 
 
-@if (table == null)
+@if (table== null)
 {
     <p><em>Loading...</em></p>
 }
@@ -46,7 +46,7 @@ else
                     <td>@rec.Description</td>
                     <td>
                         <button class="btn btn-outline-success btn-sm" @onclick="@(() => EditRecord(rec.Id, rec.Code, rec.Description))">Edit <i class="fas fa-pen"></i></button>
-                        <button class="btn btn-outline-danger btn-sm" @onclick="@(() => DeleteRecord(rec.Id))">Delete <i class="fas fa-trash"></i></button>
+                        <button class="btn btn-outline-danger btn-sm" @onclick="@(() => DeleteRecord(rec.Id, rec.Code, rec.Description))">Delete <i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             }
@@ -73,10 +73,10 @@ else
     }
 
     async Task AddRecord()
-    {
-
+    { 
         var parameters = new ModalParameters();
         parameters.Add("mode", "add");
+        parameters.Add("tableName", tableName);
         Modal.Show("Add New Record", typeof(AddEditRefTable), parameters);
     }
 
@@ -84,6 +84,7 @@ else
     {
         var parameters = new ModalParameters();
         parameters.Add("mode", "edit");
+        parameters.Add("tableName", tableName);
         parameters.Add("Id", Id);
         parameters.Add("Code", Code);
         parameters.Add("Description", Description);
@@ -91,8 +92,15 @@ else
         Modal.Show(string.Format("Edit Record {0}", Id), typeof(AddEditRefTable), parameters);
     }
 
-    async Task DeleteRecord(int Id)
+    async Task DeleteRecord(int Id, string Code, string Description)
     {
+        var parameters = new ModalParameters();
+        parameters.Add("mode", "delete");
+        parameters.Add("tableName", tableName);
+        parameters.Add("Id", Id);
+        parameters.Add("Code", Code);
+        parameters.Add("Description", Description);
 
+        Modal.Show(string.Format("Delete Record {0}", Id), typeof(AddEditRefTable), parameters);
     }
 }

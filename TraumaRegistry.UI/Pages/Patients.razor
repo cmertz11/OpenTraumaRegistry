@@ -103,7 +103,7 @@ else
             </ul>
         </nav>
     }
-    <label>@elapsed</label>
+    <label>@metrics</label>
 }
 
 @code {
@@ -111,7 +111,7 @@ else
     PagedData pagedData;
     PatientsPagedClient client = new PatientsPagedClient();
     string sortIcon = "fa fa-sort-up";
-    string elapsed = "";
+    string metrics = "";
     int pageCount = 0;
 
     UrlQuery query = new UrlQuery { PageNumber = 1, PageSize = 10, FilterColumn = "Patients.LastName", OrderBy = "Id", OrderByDirection = "asc" };
@@ -123,8 +123,8 @@ else
         pagedData = await client.GetPatientsAsync(query);
         pageCount = (pagedData.RecordCount + query.PageSize - 1) / query.PageSize;
         sw.Stop();
-        elapsed = "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
-    }
+        metrics = "Total Patients: " + pagedData.RecordCount + "." + Environment.NewLine + "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
+    } 
 
     protected async Task ViewRecord(int Id)
     {

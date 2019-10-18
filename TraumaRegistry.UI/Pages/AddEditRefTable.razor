@@ -28,7 +28,8 @@
 
     [CascadingParameter] ModalParameters Parameters { get; set; }
 
-    RefTable tableRec = new RefTable();
+    ReferenceTableClient client = new ReferenceTableClient();
+
     public string tableName { get; set; }
     string mode { get; set; }
     int Id { get; set; }
@@ -38,9 +39,10 @@
     protected override async Task OnInitializedAsync()
     {
         mode = Parameters.Get<string>("mode");
-
+        tableName = Parameters.Get<string>("tableName"); 
+        
         if (mode=="edit")
-        {
+        { 
             Id = Parameters.Get<int>("Id");
             Code = Parameters.Get<string>("Code");
             Description = Parameters.Get<string>("Description");
@@ -49,6 +51,14 @@
 
     void SaveRecord()
     {
+        if(mode=="edit")
+        {
+
+        }
+        else
+        {
+            var result = client.AddRefTableRecordAsync(tableName, new RefTable { Code = Code, Description = Description });
+        }
 
     }
 
