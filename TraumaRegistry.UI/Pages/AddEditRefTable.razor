@@ -39,10 +39,10 @@
     protected override async Task OnInitializedAsync()
     {
         mode = Parameters.Get<string>("mode");
-        tableName = Parameters.Get<string>("tableName"); 
-        
+        tableName = Parameters.Get<string>("tableName");
+
         if (mode=="edit")
-        { 
+        {
             Id = Parameters.Get<int>("Id");
             Code = Parameters.Get<string>("Code");
             Description = Parameters.Get<string>("Description");
@@ -53,7 +53,7 @@
     {
         if(mode=="edit")
         {
-
+            var result = client.EditRefTableRecordAsync(tableName, new RefTable { Id = Id, Code = Code, Description = Description });
         }
         else
         {

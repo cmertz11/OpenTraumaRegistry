@@ -100,11 +100,14 @@ namespace TraumaRegistry.Api.Controllers
             try
             {
                 string sql = string.Format("UPDATE dbo.{0} ", tableName);
-                sql += "SET (Code = @Code, Description =  WHERE Id = @Description;";
+                sql += "SET Code = @Code, Description = @Description WHERE Id = @Id;";
+
+                var Id = new SqlParameter("@Id", updatedRec.Id);
                 var code = new SqlParameter("@Code", updatedRec.Code);
                 var description = new SqlParameter("@Description", updatedRec.Description);
 
-                _context.Database.ExecuteSqlRaw(sql, code, description);
+                _context.Database.ExecuteSqlRaw(sql, code, description, Id);
+                
                 return true;
             }
             catch (Exception ex)
