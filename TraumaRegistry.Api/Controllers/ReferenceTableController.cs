@@ -118,6 +118,27 @@ namespace TraumaRegistry.Api.Controllers
              
         }
 
+        [HttpPatch]
+        [ActionName("DeleteRefTableRecord")]
+        public bool DeleteRefTableRecord(string tableName, int Id)
+        {
+            try
+            {
+                string sql = string.Format("DELETE FROM dbo.{0} ", tableName);
+                sql += "WHERE Id = @Id;";
+
+                var IdParm = new SqlParameter("@Id", Id); 
+
+                _context.Database.ExecuteSqlRaw(sql, IdParm);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            } 
+        }
+
         public class refTableDTO
         {
             public string Name { get; set; }

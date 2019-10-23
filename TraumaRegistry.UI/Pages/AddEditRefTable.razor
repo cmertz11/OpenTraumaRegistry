@@ -2,13 +2,15 @@
 
  
     <form>
-    @if (mode=="edit")
+    @if (mode != "delete")
     {
-        <div class="form-group">
-            <label for="txtId">Id</label>
-            <input type="text"  id="txtId" class="form-control" @bind=@Id />
-        </div> 
-    }
+        @if (mode == "edit")
+        {
+            <div class="form-group">
+                <label for="txtId">Id</label>
+                <input type="text"  id="txtId" class="form-control" @bind=@Id />
+            </div> 
+        }
         <div class="form-group">
             <label for="txtCode">Code</label>
             <input type="text" id="txtCode" class="form-control" @bind=@Code />
@@ -17,8 +19,17 @@
             <label for="txtDescription">Description</label>
             <input type="text" id="txtDescription" class="form-control" @bind=@Description />
         </div>
+
         <button @onclick="@SaveRecord" class="btn btn-primary">Save</button>
-        <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button> 
+    }
+    else
+    {
+        <h3>Are you sure you want to delete record @Id?</h3>
+        <br />
+        <button @onclick="@DeleteRecord" class="btn btn-primary">Delete</button>
+    }
+        <button @onclick="@Cancel" class="btn btn-secondary">Cancel</button>
+        
     </form>
 
  
@@ -41,7 +52,7 @@
         mode = Parameters.Get<string>("mode");
         tableName = Parameters.Get<string>("tableName");
 
-        if (mode=="edit")
+        if (mode=="edit" || mode == "delete")
         {
             Id = Parameters.Get<int>("Id");
             Code = Parameters.Get<string>("Code");
@@ -55,11 +66,15 @@
         {
             var result = client.EditRefTableRecordAsync(tableName, new RefTable { Id = Id, Code = Code, Description = Description });
         }
-        else
+        else if (mode == "add")
         {
             var result = client.AddRefTableRecordAsync(tableName, new RefTable { Code = Code, Description = Description });
-        }
+        }  
+    }
 
+    void DeleteRecord()
+    {
+         var result = client.DeleteRefTableRecordAsync(tableName, Id);
     }
 
     void Cancel()
