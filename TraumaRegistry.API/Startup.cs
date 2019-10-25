@@ -32,8 +32,8 @@ namespace TraumaRegistry.Api
         {
 
             services.AddDbContext<Context>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql("Host=localhost;Database=TraumaRegistryData;Username=postgres;Password=Jeremy11"));
             services.AddControllers()
                         .AddNewtonsoftJson(options => 
                         options.SerializerSettings.ReferenceLoopHandling = 
