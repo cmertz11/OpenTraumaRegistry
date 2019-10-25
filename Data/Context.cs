@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MySql.Data.EntityFrameworkCore.Extensions;
 
 
 namespace TraumaRegistry.Data
@@ -113,13 +114,13 @@ namespace TraumaRegistry.Data
                 .HasForeignKey(p => p.FlagId)
                 .HasConstraintName("ForeignKey_Flag_FlagReminders");
 
-            modelBuilder.Entity<Log>()
-                .Property(b => b.TimeStamp)
-                .HasDefaultValueSql("getdate()") ;
+            //modelBuilder.Entity<Log>()
+            //    .Property(b => b.TimeStamp)
+            //    .HasDefaultValueSql("getdate()") ;
 
-            modelBuilder.Entity<Patient>()
-                .Property(b => b.Created)
-                .HasDefaultValueSql("getdate()");
+            //modelBuilder.Entity<Patient>()
+            //    .Property(b => b.Created)
+            //    .HasDefaultValueSql("getdate()");
 
 
             modelBuilder.Entity<RiskData>()

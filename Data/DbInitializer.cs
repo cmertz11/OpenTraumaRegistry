@@ -464,7 +464,7 @@ namespace TraumaRegistry.Data
             event1.FastExamPositive = false;
 
             event1.TransportId = 1;
-            event1.OutcomeId = 3;
+            event1.OutcomeId = 2;
 
             event1.AgencyDispatchDateTime = new DateTime(2010, 7, 2, 22, 05, 4);
             event1.AgencyArriveSceneDateTime = new DateTime(2010, 7, 22, 20, 05, 2);
