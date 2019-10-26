@@ -36,6 +36,7 @@ namespace TraumaRegistry.Data
         public DbSet<RefPhysician> RefPhysicians { get; set; }
         public DbSet<Consult> Consults { get; set; }
         public DbSet<RefOutcome> RefOutcome { get; set; }
+        public DbSet<ReferenceTables> ReferenceTables { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 
@@ -113,15 +114,6 @@ namespace TraumaRegistry.Data
                 .WithMany(b => b.FlagReminders)
                 .HasForeignKey(p => p.FlagId)
                 .HasConstraintName("ForeignKey_Flag_FlagReminders");
-
-            //modelBuilder.Entity<Log>()
-            //    .Property(b => b.TimeStamp)
-            //    .HasDefaultValueSql("getdate()") ;
-
-            //modelBuilder.Entity<Patient>()
-            //    .Property(b => b.Created)
-            //    .HasDefaultValueSql("getdate()");
-
 
             modelBuilder.Entity<RiskData>()
                 .HasOne(r => r.RefRiskData)

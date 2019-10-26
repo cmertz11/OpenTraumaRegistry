@@ -12,26 +12,39 @@ namespace TraumaRegistry.Data
 {
     public class Program
     {
- 
-
         public IConfiguration Configuration { get; }
        
         static void Main(string[] args)
         {
             var builder = new ConfigurationBuilder()
                           .SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile("appsettings.json");
+                          .AddJsonFile("appsettings.json").Build();
 
-            IConfiguration Configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
+            IConfiguration Configuration = builder;
+
+            var dbProvider = Configuration.GetSection("TraumaRegistrySettings")["dbProvider"];
+            var connectionString = Configuration.GetSection("TraumaRegistrySettings")["connectionString"];
 
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-             //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TraumaRegistryData;Trusted_Connection=True;ConnectRetryCount=0");
-            //https://bugs.mysql.com/bug.php?id=96990
-            //optionsBuilder.UseMySQL("server=localhost;database=TraumaRegistryData;user=root;password=Jeremy11");
 
-            optionsBuilder.UseNpgsql("Host=localhost;Database=TraumaRegistryData;Username=postgres;Password=Jeremy11");
+            switch (dbProvider)
+            {
+                case "sqlserver":
+                        optionsBuilder.UseSqlServer(connectionString);
+                    break;
+
+                case "postgres":
+                        optionsBuilder.UseNpgsql(connectionString);
+                    break;
+
+                case "mysql": 
+                        optionsBuilder.UseMySQL(connectionString);
+                        //https://bugs.mysql.com/bug.php?id=96990
+                        throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
+                default:
+                    break;
+            }
+
             using (Context ctx = new Context(optionsBuilder.Options))
             {
                  DbInitializer.Initialize(ctx);
