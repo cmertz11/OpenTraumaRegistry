@@ -8,20 +8,21 @@ namespace TraumaRegistry.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(Context context)
+
+        public static void Initialize(Context context, ref string OutputString)
         {
             try
             {
                 context.Database.EnsureCreated();
-                print("Database Created Successfully.  Starting data load process...");
-                print("Loading RefGender");
+                print("Database Created Successfully.  Starting data load process...", ref OutputString);
+                print("Loading RefGender", ref OutputString);
                 if (!context.RefGender.Any())
                 {
                     context.RefGender.Add(new Models.RefGender { Code = "M", Description = "Male" });
                     context.RefGender.Add(new Models.RefGender { Code = "F", Description = "Female" });
                     context.SaveChanges();
                 }
-                print("Loading RefRace");
+                print("Loading RefRace", ref OutputString);
                 if (!context.RefRace.Any())
                 {
                     context.RefRace.Add(new RefRace { Code = "A", Description = "Asian" });
@@ -33,7 +34,7 @@ namespace TraumaRegistry.Data
                     context.RefRace.Add(new RefRace { Code = "P", Description = "Polinesian" });
                     context.SaveChanges();
                 }
-                print("Loading RefInjuryType");
+                print("Loading RefInjuryType", ref OutputString);
                 if (!context.RefInjuryType.Any())
                 {
                     context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Blunt" });
@@ -41,7 +42,7 @@ namespace TraumaRegistry.Data
                     context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Burn" });
                     context.SaveChanges();
                 }
-                print("Loading RefRiskData");
+                print("Loading RefRiskData", ref OutputString);
                 if (!context.RefRiskData.Any())
                 {
                     context.RefRiskData.Add(new RefRiskData { Code = "", Description = "Advanced Directive LC" });
@@ -78,7 +79,7 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefSafetyDevices");
+                print("Loading RefSafetyDevices", ref OutputString);
                 if (!context.RefSafetyDevices.Any())
                 {
                     context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Airbag" });
@@ -93,7 +94,7 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefLocation");
+                print("Loading RefLocation", ref OutputString);
                 if (!context.RefLocation.Any())
                 {
                     context.RefLocation.Add(new RefLocation { Code = "ED", Description = "Emergency Department" });
@@ -103,7 +104,7 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefTransport");
+                print("Loading RefTransport", ref OutputString);
                 if (!context.RefTransport.Any())
                 {
                     context.RefTransport.Add(new RefTransport { Code = "POV", Description = "Privately Owned vehicle" });
@@ -111,7 +112,7 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefArrivedFrom");
+                print("Loading RefArrivedFrom", ref OutputString);
                 if (!context.RefArrivedFrom.Any())
                 {
                     context.RefArrivedFrom.Add(new RefArrivedFrom { Code = "SCENE", Description = "SCENE" });
@@ -119,7 +120,7 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefTraumaLevel");
+                print("Loading RefTraumaLevel", ref OutputString);
                 if (!context.RefTraumaLevel.Any())
                 {
                     context.RefTraumaLevel.Add(new RefTraumaLevel { Code = "F", Description = "FULL" });
@@ -128,7 +129,7 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefOutcome");
+                print("Loading RefOutcome", ref OutputString);
                 if (!context.RefOutcome.Any())
                 {
                     context.RefOutcome.Add(new RefOutcome { Code = "A", Description = "Alive" });
@@ -136,7 +137,7 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefAgency");
+                print("Loading RefAgency", ref OutputString);
                 if (!context.RefAgency.Any())
                 {
                     context.RefAgency.Add(new RefAgency { AgencyName = "Mackinaw Emergency Transport", Address1 = "115 Ducharme St.", Address2 = "", City = "Mackinaw City", Phone = "555-889-4765", Zip = "49701", Zip4 = "4586" });
@@ -144,7 +145,7 @@ namespace TraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefPhysicians");
+                print("Loading RefPhysicians", ref OutputString);
                 if (!context.RefPhysicians.Any())
                 {
                     context.RefPhysicians.Add(new RefPhysician { LastName = "Strange", FirstName = "Stephen", MI = "V" });
@@ -153,21 +154,39 @@ namespace TraumaRegistry.Data
                     context.SaveChanges();
                 }
 
+                print("Loading Reference Table List with Id, Code, Description Schema", ref OutputString);
+                if(!context.ReferenceTables.Any())
+                {
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefArrivedFrom", Description = "Arrived From" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefGender", Description = "Gender" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefInjuryType", Description = "Injury Types" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefLocation", Description = "Locations" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefOutcome", Description = "Outcomes" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefRace", Description = "Race" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefRiskData", Description = "Risk Data" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefSafetyDevices", Description = "Safety Devices" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefTransport", Description = "Transport" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefTraumaLevel", Description = "Trauma Level" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "ReferenceTables", Description = "Reference Tables" });
 
-                print("Begin load of larger or advanced data sets.  This may take a while.");
-                LoadTestData(context);
-                print("Data has been successfully loaded.");
+                    context.SaveChanges();
+                }
+
+                print("Begin load of larger or advanced data sets.  This may take a while.", ref OutputString);
+                LoadTestData(context, ref OutputString);
+                print("Data has been successfully loaded.", ref OutputString);
             }
             catch (Exception ex)
             {
-                print(ex.ToString());
+                print(ex.ToString(), ref OutputString);
                 throw;
             }
         }
 
-        private static void print(string message)
+        private static void print(string message, ref string outputString)
         {
-            Console.WriteLine(System.DateTime.Now.ToString() + " - " + message);
+            //Console.WriteLine(System.DateTime.Now.ToString() + " - " + message);
+            outputString += message + Environment.NewLine;
         }
 
         private static void LoadICD10Codes(Context context)
@@ -182,57 +201,57 @@ namespace TraumaRegistry.Data
             }
         }
 
-        private static void LoadTestData(Context context)
+        private static void LoadTestData(Context context, ref string OutputString)
         {
-            print("Loading ICD10 Codes");
+            print("Loading ICD10 Codes", ref OutputString);
             LoadICD10Codes(context);
 
-            print("Loading Units");
-            loadTestUnits(context);
+            print("Loading Units", ref OutputString);
+            loadTestUnits(context, ref OutputString);
 
-            print("Loading Test Patients");
-            loadTestPatients(context);
+            print("Loading Test Patients", ref OutputString);
+            loadTestPatients(context, ref OutputString);
         }
 
-        private static void loadTestUnits(Context context)
+        private static void loadTestUnits(Context context, ref string OutputString)
         {
             //throw new NotImplementedException();
-            print("NOT IMPLEMENTED");
+            print("NOT IMPLEMENTED", ref OutputString);
         }
 
-        private static void loadTestPatients(Context context)
+        private static void loadTestPatients(Context context, ref string OutputString)
         {
 
-            AddPatient1(context);
-            AddPatient2(context);
-            AddPatient3(context);
-            AddPatient4(context);
-            AddPatient5(context);
-            AddPatient6(context);
-            AddPatient7(context);
-            AddPatient8(context);
-            AddPatient9(context);
-            AddPatient10(context);
+            AddPatient1(context, ref  OutputString);
+            AddPatient2(context, ref  OutputString);
+            AddPatient3(context, ref  OutputString);
+            AddPatient4(context, ref  OutputString);
+            AddPatient5(context, ref  OutputString);
+            AddPatient6(context, ref  OutputString);
+            AddPatient7(context, ref  OutputString);
+            AddPatient8(context, ref  OutputString);
+            AddPatient9(context, ref  OutputString);
+           AddPatient10(context, ref  OutputString);
 
             context.SaveChanges();
             for (int i = 0; i < 20; i++)
             {
-                AddPatientRND(context, i);
+                AddPatientRND(context, i, ref OutputString);
                 context.SaveChanges();
             }
 
         }
 
-        private static void AddPatient1(Context context)
+        private static void AddPatient1(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 1");
+            print("Adding Test Patient 1", ref OutputString);
             var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
 
-            print("Adding Test Event 1 for Patient 1");
+            print("Adding Test Event 1 for Patient 1", ref OutputString);
             Event event1 = AddPatientEvent1();
             patient.Events.Add(event1);
 
-            print("Adding Test Event 2 for Patient 1");
+            print("Adding Test Event 2 for Patient 1", ref OutputString);
             Event event2 = AddPatientEvent2();
             patient.Events.Add(event2);
 
@@ -240,12 +259,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient2(Context context)
+        private static void AddPatient2(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 2");
+            print("Adding Test Patient 2", ref OutputString);
             var patient = new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 };
 
-            print("Adding Test Event 1 for Patient 2");
+            print("Adding Test Event 1 for Patient 2", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -253,12 +272,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient3(Context context)
+        private static void AddPatient3(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 3");
+            print("Adding Test Patient 3", ref OutputString);
             var patient = new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12), GenderReferenceId = 2, RaceReferenceId = 6 };
 
-            print("Adding Test Event 1 for Patient 3");
+            print("Adding Test Event 1 for Patient 3", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -266,12 +285,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient4(Context context)
+        private static void AddPatient4(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 4");
+            print("Adding Test Patient 4", ref OutputString);
             var patient = new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29), GenderReferenceId = 1, RaceReferenceId = 6 };
 
-            print("Adding Test Event 1 for Patient 4");
+            print("Adding Test Event 1 for Patient 4", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -279,12 +298,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient5(Context context)
+        private static void AddPatient5(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 5");
+            print("Adding Test Patient 5", ref OutputString);
             var patient = new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14), GenderReferenceId = 2, RaceReferenceId = 6 };
 
-            print("Adding Test Event 1 for Patient 5");
+            print("Adding Test Event 1 for Patient 5", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -292,12 +311,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient6(Context context)
+        private static void AddPatient6(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 6");
+            print("Adding Test Patient 6", ref OutputString);
             var patient = new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId = 1, RaceReferenceId = 6 };
 
-            print("Adding Test Event 1 for Patient 6");
+            print("Adding Test Event 1 for Patient 6", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -305,12 +324,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient7(Context context)
+        private static void AddPatient7(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 7");
+            print("Adding Test Patient 7", ref OutputString);
             var patient = new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
 
-            print("Adding Test Event 1 for Patient 7");
+            print("Adding Test Event 1 for Patient 7", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -318,12 +337,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient8(Context context)
+        private static void AddPatient8(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 8");
+            print("Adding Test Patient 8", ref OutputString);
             var patient = new Patient { FirstName = "Samuel", LastName = "Wilson", MI = "T", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
 
-            print("Adding Test Event 1 for Patient 8");
+            print("Adding Test Event 1 for Patient 8", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -331,12 +350,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient9(Context context)
+        private static void AddPatient9(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 9");
+            print("Adding Test Patient 9", ref OutputString);
             var patient = new Patient { FirstName = "Clint", LastName = "Barton", MI = "", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 6 };
 
-            print("Adding Test Event 1 for Patient 9");
+            print("Adding Test Event 1 for Patient 9", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -344,12 +363,12 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient10(Context context)
+        private static void AddPatient10(Context context, ref string OutputString)
         {
-            print("Adding Test Patient 10");
+            print("Adding Test Patient 10", ref OutputString);
             var patient = new Patient { FirstName = "James", LastName = "Rhodes", MI = "", DOB = new DateTime(1968, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
 
-            print("Adding Test Event 1 for Patient 10");
+            print("Adding Test Event 1 for Patient 10", ref OutputString);
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -357,7 +376,7 @@ namespace TraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatientRND(Context context, int count)
+        private static void AddPatientRND(Context context, int count, ref string OutputString)
         {
             RandomPatientGenerator ngen = new RandomPatientGenerator();
             Random rnd = new Random();
@@ -370,10 +389,10 @@ namespace TraumaRegistry.Data
             string FirstName = f == 2 ? ngen.GenRandomFirstNameFemale() : ngen.GenRandomFirstNameMale();
             string LastName = ngen.GenRandomLastName();
             string MI = ngen.GenRandomMI();
-            print("Adding Test Patient " + count);
+            print("Adding Test Patient " + count, ref OutputString);
             var patient = new Patient { FirstName = FirstName, LastName = LastName, MI = MI, DOB = dob, GenderReferenceId = f, RaceReferenceId = 1 };
 
-            print("Adding Test Event 1 for Patient " + (count + 10).ToString()); // the + 10 is to account for the first 10 patients added.
+            print("Adding Test Event 1 for Patient " + (count + 10).ToString(), ref OutputString); // the + 10 is to account for the first 10 patients added.
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);

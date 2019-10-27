@@ -47,7 +47,8 @@ namespace TraumaRegistry.Data
 
             using (Context ctx = new Context(optionsBuilder.Options))
             {
-                 DbInitializer.Initialize(ctx);
+                string outputString = "";
+                 DbInitializer.Initialize(ctx, ref outputString);
             }
         }
     }

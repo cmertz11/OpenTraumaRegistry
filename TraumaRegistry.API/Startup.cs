@@ -30,15 +30,32 @@ namespace TraumaRegistry.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+         
+            var dbProvider = Configuration.GetSection("TraumaRegistrySettings")["dbProvider"];
+            var connectionString = Configuration.GetSection("TraumaRegistrySettings")["connectionString"];
 
-            services.AddDbContext<Context>(options =>
-            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            options.UseNpgsql("Host=localhost;Database=TraumaRegistryData;Username=postgres;Password=Jeremy11"));
+            switch (dbProvider)
+            {
+                case "sqlserver":
+                    services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
+                    break;
+
+                case "postgres":
+                    services.AddDbContext<Context>(options => options.UseNpgsql(connectionString)); 
+                    break;
+
+                case "mysql":
+                    services.AddDbContext<Context>(options => options.UseMySQL(connectionString)); 
+                    //https://bugs.mysql.com/bug.php?id=96990
+                    throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
+                default:
+                    break;
+            } 
+
             services.AddControllers()
                         .AddNewtonsoftJson(options => 
                         options.SerializerSettings.ReferenceLoopHandling = 
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
 
             services.AddSwaggerDocument();
         }
@@ -56,16 +73,11 @@ namespace TraumaRegistry.Api
                 // app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
+            app.UseHttpsRedirection(); 
+            app.UseRouting(); 
+            app.UseAuthorization(); 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
-
-
+            app.UseSwaggerUi3(); 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

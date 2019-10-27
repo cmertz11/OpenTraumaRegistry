@@ -5,6 +5,8 @@ using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using TraumaRegistry.Data;
 using TraumaRegistry.Data.Models;
 
@@ -15,45 +17,21 @@ namespace TraumaRegistry.Api.Controllers
     public class ReferenceTableController : ControllerBase
     {
         private readonly Context _context;
-
-        public ReferenceTableController(Context context)
+        private IConfiguration _configuration;
+        public ReferenceTableController(Context context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpGet]
         [ActionName("GetRefTableData")]
         public ActionResult<refTableDTO> GetRefTableData(string tableName)
         {
+            tableName = AdjustTableNameForProvider(tableName);
             refTableDTO table = new refTableDTO { Name = tableName };
-            string sql = string.Format("SELECT * FROM dbo.{0}", tableName);
-
-
-            using (var command = _context.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = sql;
-                _context.Database.OpenConnection();
-                using (var result = command.ExecuteReader())
-                {
-                    while( result.Read())
-                    {
-                         table.tableData.Add(new refTableDTO.refTable { 
-                            Id = Convert.ToInt32(result["Id"]), 
-                            Code = result["Code"].ToString(), 
-                            Description = result["Description"].ToString() });          
-                    }
-                 }
-            }
-            return table;
-        }
-
-        [HttpGet]
-        [ActionName("GetRefTableList")]
-        public ActionResult<List<String>> GetRefTableList()
-        {
-            string sql = string.Format("SELECT name FROM Sys.Tables where name LIKE 'Ref%'");
-
-            List<String> refTables = new List<string>();
+            string sql = string.Format("SELECT * FROM {0} ", tableName);
+ 
             using (var command = _context.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandText = sql;
@@ -62,18 +40,41 @@ namespace TraumaRegistry.Api.Controllers
                 {
                     while (result.Read())
                     {
-                        refTables.Add(result[0].ToString());
-                    } 
+                        table.tableData.Add(new refTableDTO.refTable
+                        {
+                            Id = Convert.ToInt32(result["Id"]),
+                            Code = result["Code"].ToString(),
+                            Description = result["Description"].ToString()
+                        });
+                    }
                 }
             }
-            return refTables;
+            return table;
+        }
+
+
+        [HttpGet]
+        [ActionName("GetRefTableList")]
+        public ActionResult<List<ReferenceTables>> GetRefTableList()
+        {
+            try
+            {
+                return _context.ReferenceTables.ToList();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+           
         }
 
         [HttpPatch]
         [ActionName("AddRefTableRecord")]
         public int AddRefTableRecord(string tableName, refTableDTO.refTable newRec)
         {
-            string sql = string.Format("INSERT INTO dbo.{0} (Code, Description) VALUES ('{1}', '{2}'); SELECT SCOPE_IDENTITY() AS Id;", tableName, newRec.Code, newRec.Description);
+            tableName = AdjustTableNameForProvider(tableName);
+            string sql = string.Format("INSERT INTO {0} (Code, Description) VALUES ('{1}', '{2}'); SELECT SCOPE_IDENTITY() AS Id;", tableName, newRec.Code, newRec.Description);
             int NewId = 0;
             using (var command = _context.Database.GetDbConnection().CreateCommand())
             {
@@ -99,7 +100,8 @@ namespace TraumaRegistry.Api.Controllers
         {
             try
             {
-                string sql = string.Format("UPDATE dbo.{0} ", tableName);
+                tableName = AdjustTableNameForProvider(tableName);
+                string sql = string.Format("UPDATE {0} ", tableName);
                 sql += "SET Code = @Code, Description = @Description WHERE Id = @Id;";
 
                 var Id = new SqlParameter("@Id", updatedRec.Id);
@@ -124,7 +126,7 @@ namespace TraumaRegistry.Api.Controllers
         {
             try
             {
-                string sql = string.Format("DELETE FROM dbo.{0} ", tableName);
+                string sql = string.Format("DELETE FROM {0} ", tableName);
                 sql += "WHERE Id = @Id;";
 
                 var IdParm = new SqlParameter("@Id", Id); 
@@ -139,6 +141,15 @@ namespace TraumaRegistry.Api.Controllers
             } 
         }
 
+        private string AdjustTableNameForProvider(string tableName)
+        {
+            if (_configuration.GetSection("TraumaRegistrySettings")["dbProvider"] == "postgres")
+            {
+                tableName = "\"" + tableName + "\"";
+            }
+
+            return tableName;
+        }
         public class refTableDTO
         {
             public string Name { get; set; }

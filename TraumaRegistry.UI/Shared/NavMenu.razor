@@ -19,14 +19,14 @@
                 <span class="fas fa-user-injured" aria-hidden="true"></span> &nbsp; &nbsp; Patients
             </NavLink>
         </li>
-        @if (refTables.Count > 0)
+        @if (refTables != null)
         {
 
             @foreach (var item in refTables)
                 {
                     var local_Table = item; <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="" @onclick="@(()=>ViewTable(item))" >
-                        <span class="fas fa-cogs" aria-hidden="true"></span> &nbsp; &nbsp; @item
+                    <NavLink class="nav-link" href="" @onclick="@(()=>ViewTable(item.Code))" >
+                        <span class="fas fa-cogs" aria-hidden="true"></span> &nbsp; &nbsp; @item.Description
                     </NavLink>
                 </li>
             }
@@ -40,7 +40,7 @@
 @code {
 
     ReferenceTableClient client = new ReferenceTableClient();
-    ICollection<String> refTables = new List<string>();
+    ICollection<ReferenceTables> refTables = null;
 
 
     bool collapseNavMenu = true;
@@ -54,8 +54,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        refTables = await client.GetRefTableListAsync();
 
+        //refTables = await client.GetRefTableListAsync();
+        //if(refTables == null)
+        //{
+        //    NavigationManager.NavigateTo("/setup");
+        //}
     }
 
     protected async Task ViewTable(string tableName)
