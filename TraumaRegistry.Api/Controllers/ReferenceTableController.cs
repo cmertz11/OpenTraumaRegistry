@@ -143,7 +143,7 @@ namespace TraumaRegistry.Api.Controllers
 
         private string AdjustTableNameForProvider(string tableName)
         {
-            if (_configuration.GetSection("TraumaRegistrySettings")["dbProvider"] == "postgres")
+            if (_configuration.GetSection("TraumaRegistrySettings")["dbProvider"] == "postgresql")
             {
                 tableName = "\"" + tableName + "\"";
             }

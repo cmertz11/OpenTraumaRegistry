@@ -40,7 +40,7 @@ namespace TraumaRegistry.Api
                     services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
                     break;
 
-                case "postgres":
+                case "postgresql":
                     services.AddDbContext<Context>(options => options.UseNpgsql(connectionString)); 
                     break;
 
