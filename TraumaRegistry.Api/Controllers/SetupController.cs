@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using TraumaRegistry.Data;
 
@@ -16,25 +18,27 @@ namespace TraumaRegistry.Api.Controllers
     [ApiController]
     public class SetupController : ControllerBase
     {
-        private IConfiguration _configuration;
-
+        private IConfiguration _configuration; 
+        string outputString = "";
         public SetupController(IConfiguration configuration)
         {
             _configuration = configuration;
+  
         }
 
         [HttpGet]
         [ActionName("SetupDatabase")]
         public string SetupDatabase(string dbProvider, string connectionString)
         {
+            if (string.IsNullOrEmpty(dbProvider) || (string.IsNullOrEmpty(connectionString)))
+            {
+                return "Please provide the Database Provider and Database Connection String.";
+            }
             var builder = new ConfigurationBuilder()
                      .SetBasePath(Directory.GetCurrentDirectory())
                      .AddJsonFile("appsettings.json").Build();
 
             IConfiguration Configuration = builder;
-            //http://localhost:44392/api/setup/SetupDatabase?dbProvider=sql&connectionString=constr
-            //Configuration.GetSection("TraumaRegistrySettings")["dbProvider"] = dbProvider;
-            //Configuration.GetSection("TraumaRegistrySettings")["connectionString"] = connectionString;
 
             SaveToAppSettings(dbProvider, connectionString);
 
@@ -43,11 +47,11 @@ namespace TraumaRegistry.Api.Controllers
             switch (dbProvider)
             {
                 case "sqlserver":
-                    optionsBuilder.UseSqlServer(connectionString);
-                    break;
+                    optionsBuilder.UseSqlServer(connectionString); 
+                     break;
 
                 case "postgresql":
-                    optionsBuilder.UseNpgsql(connectionString);
+                    optionsBuilder.UseNpgsql(connectionString); 
                     break;
 
                 case "mysql":
@@ -59,13 +63,13 @@ namespace TraumaRegistry.Api.Controllers
                      
             }
             try
-            {
+            { 
                 using (Context ctx = new Context(optionsBuilder.Options))
-                {
-                    string outputString = "";
+                { 
                     DbInitializer.Initialize(ctx, ref outputString);
+                    return outputString;
                 }
-                return "Trauma Registry database successfully created!";
+                
             }
             catch (Exception ex)
             {

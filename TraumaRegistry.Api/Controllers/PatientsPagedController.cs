@@ -25,7 +25,7 @@ namespace TraumaRegistry.Api.Controllers
             var pageNumber = Convert.ToInt32(urlQuery.PageNumber);
 
 
-            string sql = "SELECT * FROM dbo.Patients";
+            string sql = "SELECT * FROM Patients";
 
             if (!string.IsNullOrEmpty(urlQuery.filterColumn) && !string.IsNullOrEmpty(urlQuery.filter))
             {

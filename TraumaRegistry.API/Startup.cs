@@ -1,18 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
- 
+
 
 using TraumaRegistry.Data;
 
@@ -30,12 +24,13 @@ namespace TraumaRegistry.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-         
+ 
             var dbProvider = Configuration.GetSection("TraumaRegistrySettings")["dbProvider"];
             var connectionString = Configuration.GetSection("TraumaRegistrySettings")["connectionString"];
-
+           
             switch (dbProvider)
             {
+                
                 case "sqlserver":
                     services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
                     break;
@@ -49,7 +44,9 @@ namespace TraumaRegistry.Api
                     //https://bugs.mysql.com/bug.php?id=96990
                     throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
                 default:
+                    services.AddDbContext<Context>();
                     break;
+                    
             } 
 
             services.AddControllers()

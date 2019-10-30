@@ -13,18 +13,27 @@ namespace TraumaRegistry.Data
         {
             try
             {
-                context.Database.EnsureCreated();
-                print("Database Created Successfully.  Starting data load process...", ref OutputString);
-                print("Loading RefGender", ref OutputString);
+                if(!context.Database.EnsureCreated())
+                {
+                   print ("The database was not created.  Check if a database with that name already exsist.", ref OutputString);
+                   return;
+                }
+                else
+                {
+                   print("Database Created Successfully.  Starting data load process...", ref OutputString);
+                   print("Starting data load process...", ref OutputString);
+                } 
+
                 if (!context.RefGender.Any())
                 {
+                    print("Loading RefGender", ref OutputString);
                     context.RefGender.Add(new Models.RefGender { Code = "M", Description = "Male" });
                     context.RefGender.Add(new Models.RefGender { Code = "F", Description = "Female" });
                     context.SaveChanges();
                 }
-                print("Loading RefRace", ref OutputString);
                 if (!context.RefRace.Any())
                 {
+                    print("Loading RefRace", ref OutputString);
                     context.RefRace.Add(new RefRace { Code = "A", Description = "Asian" });
                     context.RefRace.Add(new RefRace { Code = "B", Description = "Black" });
                     context.RefRace.Add(new RefRace { Code = "H", Description = "Hispanic" });
@@ -34,17 +43,18 @@ namespace TraumaRegistry.Data
                     context.RefRace.Add(new RefRace { Code = "P", Description = "Polinesian" });
                     context.SaveChanges();
                 }
-                print("Loading RefInjuryType", ref OutputString);
                 if (!context.RefInjuryType.Any())
                 {
+                    print("Loading RefInjuryType", ref OutputString); 
                     context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Blunt" });
                     context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Penetrating" });
                     context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Burn" });
                     context.SaveChanges();
                 }
-                print("Loading RefRiskData", ref OutputString);
+                
                 if (!context.RefRiskData.Any())
                 {
+                    print("Loading RefRiskData", ref OutputString);
                     context.RefRiskData.Add(new RefRiskData { Code = "", Description = "Advanced Directive LC" });
                     context.RefRiskData.Add(new RefRiskData { Code = "", Description = "ADD_ADHD" });
                     context.RefRiskData.Add(new RefRiskData { Code = "", Description = "ANGINA" });
@@ -79,9 +89,9 @@ namespace TraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefSafetyDevices", ref OutputString);
                 if (!context.RefSafetyDevices.Any())
                 {
+                    print("Loading RefSafetyDevices", ref OutputString);
                     context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Airbag" });
                     context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Lap belt" });
                     context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Shoulder belt" });
@@ -173,8 +183,11 @@ namespace TraumaRegistry.Data
                 }
 
                 print("Begin load of larger or advanced data sets.  This may take a while.", ref OutputString);
-                LoadTestData(context, ref OutputString);
-                print("Data has been successfully loaded.", ref OutputString);
+                print("Loading ICD10 Codes", ref OutputString);
+                LoadICD10Codes(context);
+
+                //LoadTestData(context, ref OutputString);
+                print("Database has been successfully Created.", ref OutputString);
             }
             catch (Exception ex)
             {
@@ -183,11 +196,6 @@ namespace TraumaRegistry.Data
             }
         }
 
-        private static void print(string message, ref string outputString)
-        {
-            //Console.WriteLine(System.DateTime.Now.ToString() + " - " + message);
-            outputString += message + Environment.NewLine;
-        }
 
         private static void LoadICD10Codes(Context context)
         {
@@ -202,9 +210,7 @@ namespace TraumaRegistry.Data
         }
 
         private static void LoadTestData(Context context, ref string OutputString)
-        {
-            print("Loading ICD10 Codes", ref OutputString);
-            LoadICD10Codes(context);
+        { 
 
             print("Loading Units", ref OutputString);
             loadTestUnits(context, ref OutputString);
@@ -231,14 +237,14 @@ namespace TraumaRegistry.Data
             AddPatient7(context, ref  OutputString);
             AddPatient8(context, ref  OutputString);
             AddPatient9(context, ref  OutputString);
-           AddPatient10(context, ref  OutputString);
+            AddPatient10(context, ref  OutputString);
 
             context.SaveChanges();
-            for (int i = 0; i < 20; i++)
-            {
-                AddPatientRND(context, i, ref OutputString);
-                context.SaveChanges();
-            }
+            //for (int i = 0; i < 20; i++)
+            //{
+            //    AddPatientRND(context, i, ref OutputString);
+            //    context.SaveChanges();
+            //}
 
         }
 
@@ -538,6 +544,11 @@ namespace TraumaRegistry.Data
             return event1;
         }
 
+        private static void print(string message, ref string outputString)
+        {
+            //Console.WriteLine(System.DateTime.Now.ToString() + " - " + message);
+            outputString += message + Environment.NewLine;
+        }
 
     }
 }

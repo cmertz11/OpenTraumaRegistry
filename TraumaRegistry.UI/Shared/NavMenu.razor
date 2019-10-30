@@ -40,18 +40,18 @@
  }
     @code {
 
-            ReferenceTableClient client = new ReferenceTableClient();
-            ICollection<ReferenceTables> refTables = null;
+        ReferenceTableClient client = new ReferenceTableClient();
+        ICollection<ReferenceTables> refTables = null;
 
 
-            bool collapseNavMenu = true;
+        bool collapseNavMenu = true;
 
-            string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+        string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-            void ToggleNavMenu()
-            {
-                collapseNavMenu = !collapseNavMenu;
-            }
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -61,15 +61,19 @@
 
             if (!NavigationManager.Uri.Contains("/setup"))
             {
-                bool.TryParse(await setupClient.IsDatabaseConfiguredAsync(), out IsDatabaseConfigured); 
+                bool.TryParse(await setupClient.IsDatabaseConfiguredAsync(), out IsDatabaseConfigured);
                 if (IsDatabaseConfigured)
-                { 
+                {
                     refTables = await client.GetRefTableListAsync();
 
                     if (refTables == null)
                     {
                         NavigationManager.NavigateTo("/setup");
                     }
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/setup");
                 }
             }
         }

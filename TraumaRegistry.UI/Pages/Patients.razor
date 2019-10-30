@@ -15,29 +15,30 @@
 }
 else
 {
-    <form class="form-inline">
+<form class="form-inline">
 
-        <label for="filterColumn">Filter Column</label>
-        <select class="form-control" style="width: 200px" id="filterColumn" @bind="query.FilterColumn">
-            <option selected="selected" value="Id">Id</option>
-            <option value="FirstName">First Name</option>
-            <option value="LastName">Last Name</option>
-            <option value="MI">MI</option>
-        </select>
+    <label for="filterColumn">Filter Column</label>
+    <select class="form-control" style="width: 200px" id="filterColumn" @bind="query.FilterColumn">
+        <option selected="selected" value="Id">Id</option>
+        <option value="FirstName">First Name</option>
+        <option value="LastName">Last Name</option>
+        <option value="MI">MI</option>
+    </select>
 
-        <label for="searchFilter">Search Filter</label>
-        <input class="form-control" id="searchFilter" type="text" @bind="query.Filter" />
-        <button type="button" class="btn btn-primary" @onclick="SearchAsync">Search <i class="fas fa-search"></i></button>
+    <label for="searchFilter">Search Filter</label>
+    <input class="form-control" id="searchFilter" type="text" @bind="query.Filter" />
+    <button type="button" class="btn btn-primary" @onclick="SearchAsync">Search <i class="fas fa-search"></i></button>
 
-        <label for="pageSizeSelect">Page Size</label>
-        <select class="form-control" style="width: 80px" id="pageSizeSelect" @bind="query.PageSize">
-            <option value="5">5</option>
-            <option selected="selected" value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-        </select>
+    <label for="pageSizeSelect">Page Size</label>
+    <select class="form-control" style="width: 80px" id="pageSizeSelect" @bind="query.PageSize">
+        <option value="5">5</option>
+        <option selected="selected" value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+    </select>
 
-    </form>
+</form>
+
     <table class="table table-striped table-hover table-sm">
         <thead>
             <tr>
@@ -64,7 +65,7 @@ else
                     <button class="btn" @onclick="@(() => SetOrderByColumn("DOB"))"><i class="@sortIcon"></i></button>
                 </th>
                 <th>
-
+                    <button class="btn btn-outline-primary" @onclick="@AddNewPatient">Add New <i class="fas fa-plus"></i></button>
                 </th>
             </tr>
         </thead>
@@ -129,6 +130,11 @@ else
     protected async Task ViewRecord(int Id)
     {
         NavigationManager.NavigateTo("/events/" + Id);
+    }
+
+    protected async Task AddNewPatient()
+    {
+        NavigationManager.NavigateTo("/addpatient");
     }
 
     async Task SetPage(int page)
