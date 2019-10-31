@@ -1,0 +1,166 @@
+﻿@page "/referencetables"
+@page "/referencetables/{tableName}"
+
+@inject NavigationManager NavigationManager
+
+
+@if (table == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <h3><i class="fas fa-table"></i>&nbsp; System Reference Data: @tableName</h3>
+
+
+    <div class="row">
+        <div class="col-5">
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>
+                            Id
+                        </th>
+                        <th>
+                            Code
+                        </th>
+                        <th>
+                            Description
+                        </th>
+
+                        <th>
+                            <MatButton OnClick="@AddRecord" Raised="true">Add New</MatButton>
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rec in table.TableData)
+                    {
+                        <tr>
+                            <td>@rec.Id</td>
+                            <td>@rec.Code</td>
+                            <td>@rec.Description</td>
+                            <td>
+                                <MatButton Icon="edit" @onclick="@(() => EditRecord(rec.Id, rec.Code, rec.Description))">Edit</MatButton>
+                                <MatButton Icon="delete" @onclick="@(() => DeleteRecord(rec.Id, rec.Code, rec.Description))">Delete </MatButton>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<MatDialog @bind-IsOpen="@dialogIsOpen">
+    <MatDialogTitle>Add New @dialogHeader</MatDialogTitle>
+    @if (mode != "delete")
+    {
+    <MatDialogContent>
+        @if (mode != "add")
+        {
+            <p>Id</p>
+            <MatTextField @bind-Value="@strId" PlaceHolder="Code"></MatTextField>
+        }
+        <p>Code</p>
+        <MatTextField @bind-Value="@tableRec.Code" PlaceHolder="Code"></MatTextField>
+        <p>Description</p>
+        <MatTextField @bind-Value="@tableRec.Description" PlaceHolder="Description"></MatTextField>
+    </MatDialogContent>
+    }
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+        <MatButton OnClick="@SaveRecord">OK</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+
+@code {
+    [Parameter]
+    public string tableName { get; set; }
+    string mode = "List";
+    string strId = "";
+
+
+
+    bool dialogIsOpen = false;
+    string dialogHeader = "";
+
+
+    ReferenceTableClient client = new ReferenceTableClient();
+    RefTableDTO table = null;
+
+    RefTable tableRec = new RefTable();
+
+
+ 
+
+    void OpenDialog()
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //table = await client.GetRefTableDataAsync(tableName);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        table = await client.GetRefTableDataAsync(tableName);
+    }
+
+    async Task AddRecord()
+    {
+        mode = "add";
+        dialogHeader = "Add new " + tableName + " record.";
+        dialogIsOpen = true;
+    }
+
+    async Task EditRecord(int Id, string Code, string Description)
+    {
+        mode = "edit";
+
+        dialogHeader = "Edit " + tableName + " record ";
+        strId = Id.ToString();  // <MatTextField can't bind to anything but a string.
+        tableRec.Id = Id;
+        tableRec.Code = Code;
+        tableRec.Description = Description;
+        dialogIsOpen = true;
+    }
+
+    async Task DeleteRecord(int Id, string Code, string Description)
+    {
+        mode = "delete";
+        
+        strId = Id.ToString();  // <MatTextField can't bind to anything but a string.
+        tableRec.Id = Id;
+        tableRec.Code = Code;
+        tableRec.Description = Description;
+        dialogHeader = string.Format("Delete {0} record {1}?", tableName, strId);
+        dialogIsOpen = true;
+    }
+
+    void SaveRecord()
+    {
+        if(mode=="edit")
+        {
+            var result = client.EditRefTableRecordAsync(tableName, tableRec);
+        }
+        else if (mode == "add")
+        {
+            var result = client.AddRefTableRecordAsync(tableName, tableRec);
+        }
+        else
+        {
+            var result = client.DeleteRefTableRecordAsync(tableName, tableRec.Id);
+        }
+         
+           table = await client.GetRefTableDataAsync(tableName);
+        dialogIsOpen = false;
+    }
+ 
+}

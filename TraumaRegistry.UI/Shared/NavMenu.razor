@@ -44,15 +44,6 @@
         ICollection<ReferenceTables> refTables = null;
 
 
-        bool collapseNavMenu = true;
-
-        string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-        void ToggleNavMenu()
-        {
-            collapseNavMenu = !collapseNavMenu;
-        }
-
         protected override async Task OnInitializedAsync()
         {
             var setupClient = new SetupClient();
@@ -82,4 +73,14 @@
         {
             NavigationManager.NavigateTo("/referencetables/" + tableName);
         }
+
+        bool collapseNavMenu = true;
+
+        string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+        void ToggleNavMenu()
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
+
     }

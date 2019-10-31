@@ -1,0 +1,102 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using TraumaRegistry.Client
+@inject NavigationManager NavigationManager
+
+@if (refTables != null)
+{
+    <MatNavMenu Multi="true" Class="app-sidebar">
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri(" ").AbsoluteUri">
+            <MatIcon>home</MatIcon> <span class="miniHover">Home page</span>
+        </MatNavItem>
+
+        <MatNavSubMenu>
+            <MatNavSubMenuHeader>
+                <MatNavItem AllowSelection="false">
+                    <MatIcon>settings</MatIcon><span class="miniHover">System Tables</span>
+                </MatNavItem>
+            </MatNavSubMenuHeader>
+            <MatNavSubMenuList>
+                @foreach (var item in refTables)
+                {
+                    var local_Table = item;
+
+                    //"/referencetables/" + tableName
+
+               
+           
+                    <MatNavItem Href="@NavigationManager.ToAbsoluteUri("referencetables/"+local_Table.Code).AbsoluteUri">
+                        <MatIcon>settings</MatIcon> <span class="miniHover">@item.Description</span>
+                    </MatNavItem>
+                    }
+</MatNavSubMenuList>
+        </MatNavSubMenu>
+        
+    </MatNavMenu>
+}
+    @code {
+public bool IsLoggedIn = false;
+
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+
+
+    ReferenceTableClient client = new ReferenceTableClient();
+    ICollection<ReferenceTables> refTables = null;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var setupClient = new SetupClient();
+        bool IsDatabaseConfigured = false;
+
+
+        if (!NavigationManager.Uri.Contains("/setup"))
+        {
+            bool.TryParse(await setupClient.IsDatabaseConfiguredAsync(), out IsDatabaseConfigured);
+            if (IsDatabaseConfigured)
+            {
+                refTables = await client.GetRefTableListAsync();
+
+                if (refTables == null)
+                {
+                    NavigationManager.NavigateTo("/setup");
+                }
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/setup");
+            }
+        }
+    }
+
+    protected async Task ViewTable(string tableName)
+    {
+        NavigationManager.NavigateTo("/referencetables/" + tableName);
+    }
+
+
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsLoggedIn = false;
+        //var user = (await authenticationStateTask).User;
+
+        //if (user.Identity.IsAuthenticated)
+        //{
+        //    IsLoggedIn = true;
+        //}
+
+        //https://gist.github.com/SteveSandersonMS/175a08dcdccb384a52ba760122cd2eda Examples
+        //if (user.IsInRole("Admin"))
+        //{
+        // Perform some action only available to users in the 'admin' role
+        //}
+    }
+
+
+
+
+
+    }

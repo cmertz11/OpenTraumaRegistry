@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.UI", "Trauma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.UnitTests", "TraumaRegistry.UnitTests\TraumaRegistry.UnitTests\TraumaRegistry.UnitTests.csproj", "{20F389D1-4677-4DA3-A4E4-C98879406FCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraumaRegistry.UI.MD", "TraumaRegistry.UI.MD\TraumaRegistry.UI.MD.csproj", "{517FC5B5-865D-480C-8D9D-323281636E72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{20F389D1-4677-4DA3-A4E4-C98879406FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20F389D1-4677-4DA3-A4E4-C98879406FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20F389D1-4677-4DA3-A4E4-C98879406FCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{517FC5B5-865D-480C-8D9D-323281636E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{517FC5B5-865D-480C-8D9D-323281636E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{517FC5B5-865D-480C-8D9D-323281636E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{517FC5B5-865D-480C-8D9D-323281636E72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
