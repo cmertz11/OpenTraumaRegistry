@@ -186,7 +186,7 @@ namespace TraumaRegistry.Data
                 print("Loading ICD10 Codes", ref OutputString);
                 LoadICD10Codes(context);
 
-                //LoadTestData(context, ref OutputString);
+                 LoadTestData(context, ref OutputString);
                 print("Database has been successfully Created.", ref OutputString);
             }
             catch (Exception ex)

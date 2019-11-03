@@ -5,16 +5,12 @@
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
             <div class="drawer-logo">
-                <img alt="Blazor Boilerplate" class="logo-img" src="images/blazorboilerplate-dark.svg" title="Blazor Boilerplate">
-                <a class="miniHover" href="/">Blazor Boilerplate</a>
+                <a class="miniHover" href="/">Trauma Registry</a>
             </div>
     
         </header>
         <NavMenu />
         <footer class="drawer-footer">
-            <MatTooltip Tooltip="Help">
-                <MatButton Icon="help" RefBack="@context" Link="https://github.com/enkodellc/blazorboilerplate"><span class="miniHover">Help & Support</span></MatButton>
-            </MatTooltip>
         </footer>
     </MatDrawer>
     <MatDrawerContent>
@@ -26,25 +22,15 @@
 
                         </MatAppBarTitle>
                         <div class="hidden-mdc-down">
-                            @*<nav>
-                                <ul>
-                                    <li>*@
+                    
                             <MatTooltip Tooltip="Toggle Navigation">
                                 <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
                             </MatTooltip>
-                            @*</li>
-                                <li>*@
+                 
                             <MatTooltip Tooltip="Minify Navigation">
                                 <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
                             </MatTooltip>
-                            @*</li>
-                                <li>
-                                    <MatTooltip Tooltip="Lock Navigation" >
-                                        <MatIconButton Class="navToggle" Icon="lock" ToggleIcon="radio_button_unchecked" OnClick="@((e) => NavLock())" RefBack="@context"></MatIconButton>
-                                    </MatTooltip>
-                                    </li>*@
-                            @*</ul>
-                                </nav>*@
+ 
                         </div>
                     </MatAppBarSection>
                     <MatAppBarSection Align="@MatAppBarSectionAlign.End">
@@ -62,6 +48,7 @@
               
                 <section class="container-fluid">
                     @Body
+                    
                 </section>
                 <footer class="page-footer">
                     <div class="flex-1">

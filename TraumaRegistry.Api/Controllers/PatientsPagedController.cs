@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TraumaRegistry.Data;
 using TraumaRegistry.Data.Models;
 
@@ -14,31 +15,39 @@ namespace TraumaRegistry.Api.Controllers
     public class PatientsPagedController : ControllerBase
     {
         private readonly Context _context;
+        private IConfiguration _configuration;
 
-        public PatientsPagedController(Context context)
+        public PatientsPagedController(Context context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         public ActionResult<pagedData> GetPatients(UrlQuery urlQuery)
         {
+            string tableName = "Patients";
+            tableName = AdjustDBEntityNameForProvider(tableName);
             pagedData data = new pagedData();
             var pageNumber = Convert.ToInt32(urlQuery.PageNumber);
 
 
-            string sql = "SELECT * FROM Patients";
+            string sql = string.Format("SELECT * FROM {0}", tableName);
 
             if (!string.IsNullOrEmpty(urlQuery.filterColumn) && !string.IsNullOrEmpty(urlQuery.filter))
             {
+                urlQuery.filterColumn = AdjustDBEntityNameForProvider(urlQuery.filterColumn); 
                 sql += string.Format(" WHERE {0} Like '{1}%'", urlQuery.filterColumn, urlQuery.filter);
             }
-            data.recordCount = _context.Patients.FromSqlRaw(sql).Count();
-
+            data.recordCount = _context.Patients.Count();
+           
             if (!string.IsNullOrEmpty(urlQuery.orderBy))
             {
+                urlQuery.orderBy = AdjustDBEntityNameForProvider(urlQuery.orderBy);
                 string orderby = string.Format(" Order By {0} {1}", urlQuery.orderBy, urlQuery.orderByDirection);
                 sql += orderby;
+                var offset = urlQuery.PageSize * (urlQuery.PageNumber - 1);
+                //sql += string.Format(" OFFSET {0} ROWS FETCH NEXT {0} ROWS ONLY OPTION(RECOMPILE); ", offset);
+                sql += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY; ", offset, urlQuery.PageSize);
 
-                sql += string.Format(" OFFSET {0} * ({1} - 1) ROWS FETCH NEXT {0} ROWS ONLY OPTION(RECOMPILE); ", urlQuery.PageSize, urlQuery.PageNumber);
             }
 
             data.records = _context.Patients.FromSqlRaw(sql).ToList();
@@ -46,6 +55,16 @@ namespace TraumaRegistry.Api.Controllers
 
             return data;
         }
+        private string AdjustDBEntityNameForProvider(string entityName)
+    {
+        if (_configuration.GetSection("TraumaRegistrySettings")["dbProvider"] == "postgresql")
+        {
+            entityName = "\"" + entityName + "\"";
+        }
+
+        return entityName;
+    }
+
     } 
     public class pagedData
     {
@@ -78,8 +97,6 @@ namespace TraumaRegistry.Api.Controllers
         public string orderByDirection { get; set; } = "ascending";
  
     }
-
-
     public class Pagination
     {
         public int PageNumber { get; set; }

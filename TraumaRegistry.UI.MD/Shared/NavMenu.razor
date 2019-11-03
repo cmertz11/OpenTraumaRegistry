@@ -8,7 +8,12 @@
         <MatNavItem Href="@NavigationManager.ToAbsoluteUri(" ").AbsoluteUri">
             <MatIcon>home</MatIcon> <span class="miniHover">Home page</span>
         </MatNavItem>
-
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("Patients").AbsoluteUri">
+            <MatIcon>people</MatIcon> <span class="miniHover">Patients</span>
+        </MatNavItem>
+        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("setup").AbsoluteUri">
+            <MatIcon>build</MatIcon> <span class="miniHover">Setup</span>
+        </MatNavItem>
         <MatNavSubMenu>
             <MatNavSubMenuHeader>
                 <MatNavItem AllowSelection="false">
@@ -20,17 +25,13 @@
                 {
                     var local_Table = item;
 
-                    //"/referencetables/" + tableName
-
-               
-           
                     <MatNavItem Href="@NavigationManager.ToAbsoluteUri("referencetables/"+local_Table.Code).AbsoluteUri">
                         <MatIcon>settings</MatIcon> <span class="miniHover">@item.Description</span>
                     </MatNavItem>
-                    }
-</MatNavSubMenuList>
+                }
+            </MatNavSubMenuList>
         </MatNavSubMenu>
-        
+
     </MatNavMenu>
 }
     @code {

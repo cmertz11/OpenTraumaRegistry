@@ -1,0 +1,59 @@
+﻿@page "/addpatient"
+<h3>Add Patient</h3>
+
+ 
+
+    <MatTextField id="patientMRN" Label="Medical Record Number" @bind-Value=@patient.Mrn /> 
+    <MatTextField id="patientFirstName" Label="First Name" @bind-Value=@patient.FirstName />
+    <MatTextField id="patientLastName" Label="Last Name" @bind-Value=@patient.LastName />
+    <MatTextField id="patientMI" Label="Middle Initial" @bind-Value=@patient.Mi />
+
+    <MatDatePicker Label="DOB" @bind-Value="@patient.Dob"></MatDatePicker>
+
+    <RefTableDropDown TableName="refGender" PlaceHolder="Gender" IdChanged="genderIdChanged"></RefTableDropDown>
+
+    <RefTableDropDown TableName="refRace" PlaceHolder="Race" IdChanged="raceIdChanged"></RefTableDropDown>
+
+    <input type="email" id="patientEmail" class="form-control mb-4" placeholder="E-mail" @bind=@patient.Email />
+
+   @if (success)
+   {
+    <div class="alert alert-success" role="alert">
+        New patient record added successfully!
+    </div>
+   }
+    <button @onclick="@addNewPatient" class="btn btn-primary">Save</button>
+ 
+@code {
+
+    int genderId;
+    int raceId;
+    Patient patient = new Patient();
+    bool success = false;
+
+    void genderIdChanged(int Id)
+    {
+         
+        genderId = Id;
+    }
+
+    void raceIdChanged(int Id)
+    {
+        raceId = Id;
+    }
+
+    void addNewPatient()
+    {
+        PatientsClient client = new PatientsClient();
+        patient.GenderReferenceId = genderId;
+        patient.RaceReferenceId = raceId;
+
+        var timeStamp = System.DateTime.Now;
+        patient.Created = timeStamp;
+        patient.LastUpdate = timeStamp;
+
+        var rec = client.PostPatientAsync(patient);
+        success = true;
+    }
+
+}

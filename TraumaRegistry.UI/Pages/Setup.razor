@@ -19,52 +19,47 @@
     </div>
 </form>
 
-<br /> 
+<br />
 <div class="col-lg-10">
     <h5>SqlServer - Server=(localdb)\mssqllocaldb;Database=TraumaRegistryData;Trusted_Connection=True;ConnectRetryCount=0</h5>
     <h5>Postgres - Host=192.168.0.223;Database=TraumaRegistryData;Username=postgres;Password=Jeremy11,host=localhost</h5>
     <h5>MySql - server=localhost;database=TraumaRegistryData;user=root;password=Jeremy11</h5>
 </div>
-    <br />
+<br />
 
-    <label for="txtConnectionString">&nbsp;&nbsp; Connection String</label>
-    <form class="form-inline">
-        <div class="col-lg-10">
+<label for="txtConnectionString">&nbsp;&nbsp; Connection String</label>
+<form class="form-inline">
+    <div class="col-lg-10">
 
-            <div class="input-group input-group-lg">
-                <input class="form-control" id="txtConnectionString" type="text" @bind="connectionString" />
+        <div class="input-group input-group-lg">
+            <input class="form-control" id="txtConnectionString" type="text" @bind="connectionString" />
 
-                <button type="button" class="btn btn-primary" @onclick="CreateTraumaRegistryDatabase">Start Configuration &nbsp;<i class="fas fa-cogs"></i></button>
-                @if (showSpinner)
-                {
-                    <div class="spinner-border m-5" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                }
-            </div>
-        </div>
-    </form>
+            <button type="button" class="btn btn-primary" @onclick="CreateTraumaRegistryDatabase">Start Configuration &nbsp;<i class="fas fa-cogs"></i></button>
 
-    <div class="form-group">
-        <div class="col-lg-10">
-            <label for="txtAreaOutput">Output</label>
-            <textarea class="form-control rounded-0" id="txtAreaOutput" rows="10" @bind="outputString"></textarea>
         </div>
     </div>
-    @code {
-        string dbProvider = "sqlserver";
-        string connectionString;
-        string outputString;
-        bool showSpinner = false;
+</form>
+
+<div class="form-group">
+    <div class="col-lg-10">
+        <label for="txtAreaOutput">Output</label>
+        <textarea class="form-control rounded-0" id="txtAreaOutput" rows="10" @bind="outputString"></textarea>
+    </div>
+</div>
+@code {
+    string dbProvider = "sqlserver";
+    string connectionString;
+    string outputString;
+    bool showSpinner = false;
 
 
 
-        async Task CreateTraumaRegistryDatabase()
-        {
-            showSpinner = true;
-            outputString = "";
-            SetupClient client = new SetupClient();
-            outputString = await client.SetupDatabaseAsync(dbProvider, connectionString);
-            showSpinner = false;
-        }
+    async Task CreateTraumaRegistryDatabase()
+    {
+        showSpinner = true;
+        outputString = "";
+        SetupClient client = new SetupClient();
+        outputString = await client.SetupDatabaseAsync(dbProvider, connectionString);
+        showSpinner = false;
     }
+}

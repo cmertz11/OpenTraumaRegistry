@@ -1,17 +1,14 @@
 ﻿
-    <MatSelect Label="" Enhanced="true" @onchange="selectedIdChanged">
+    <select class="form-control mb-4" Label=@PlaceHolder  @onchange="@selectedIdChanged">
         @if (refTable.TableData != null)
         {
-            @if (!string.IsNullOrEmpty(PlaceHolder))
-            {
-                <MatOption value="" selected disabled>Please select @PlaceHolder </MatOption>
-            }
+
             @foreach (var item in refTable.TableData)
             {
-                <MatOption value=@item.Id>@item.Description</MatOption>
+                <option value=@item.Id.ToString()>@item.Description</option>
             }
         }
-       </MatSelect>
+       </select>
 
         @code {
             [Parameter]

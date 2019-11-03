@@ -1,0 +1,66 @@
+﻿@page "/Setup"
+
+
+<h2><i class="fas fa-wrench"></i>Database Setup and Configuration</h2>
+<br />
+<p>
+    Welcome to the Trauma Registry! <br />
+
+    There are a few configuration choices that need to be made before the system is operational.
+</p>
+
+<form>
+    <div class="col-lg-10"> 
+        <MatSelect Label="Database Provider" style="width: 200px" id="sel_dbProvider" @bind-Value="dbProvider">
+            <MatOption value="sqlserver">MS Sql Server</MatOption>
+            <MatOption value="postgresql">PostgreSQL</MatOption>
+            <MatOption value="mysql">MySQL</MatOption>
+        </MatSelect>
+    </div>
+</form>
+
+<br /> 
+<div class="col-lg-10">
+    <h5>SqlServer - Server=(localdb)\mssqllocaldb;Database=TraumaRegistryData;Trusted_Connection=True;ConnectRetryCount=0</h5>
+    <h5>Postgres - Host=192.168.0.223;Database=TraumaRegistryData;Username=postgres;Password=Jeremy11,host=localhost</h5>
+    <h5>MySql - server=localhost;database=TraumaRegistryData;user=root;password=Jeremy11</h5>
+</div>
+<br />
+<div class="col-lg-10">
+    <div class="row">
+        <div class="col-9">
+            <MatTextField icon="dns" id="txtConnectionString" FullWidth="true" Label="Connection String" @bind-Value="connectionString" />
+        </div>
+        <div class="col-3">
+            <MatButton Icon="build" @onclick="CreateTraumaRegistryDatabase">Build Database</MatButton>
+        </div>
+    </div>
+</div>
+<br />
+    <div class="form-group">
+        <div class="col-lg-10">
+            @if (showSpinner)
+            {
+                <MatProgressBar Indeterminate="true">Building Truama Registry Database.  This may take a few minutes...</MatProgressBar>
+            }
+            <textarea class="form-control rounded-0" id="txtAreaOutput" rows="10" @bind="outputString"></textarea>
+        </div>
+    </div>
+
+    @code {
+        string dbProvider = "sqlserver";
+        string connectionString;
+        string outputString;
+        bool showSpinner = false;
+
+
+
+        async Task CreateTraumaRegistryDatabase()
+        {
+            showSpinner = true;
+            outputString = "";
+            SetupClient client = new SetupClient();
+            outputString = await client.SetupDatabaseAsync(dbProvider, connectionString);
+            showSpinner = false;
+        }
+    }

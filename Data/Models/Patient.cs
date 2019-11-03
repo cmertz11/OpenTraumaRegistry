@@ -22,7 +22,7 @@ namespace TraumaRegistry.Data.Models
 
         [MaxLength(1)]
         public string MI { get; set; }
-        public DateTime DOB { get; set; }
+        public DateTime? DOB { get; set; }
 
         public string email { get; set; }
         public DateTime Created { get; set; }

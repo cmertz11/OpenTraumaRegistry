@@ -2,7 +2,7 @@
 @page "/referencetables/{tableName}"
 
 @inject NavigationManager NavigationManager
-
+@inject IMatToaster Toaster
 
 @if (table == null)
 {
@@ -28,12 +28,9 @@ else
                         <th>
                             Description
                         </th>
-
                         <th>
-                            <MatButton OnClick="@AddRecord" Raised="true">Add New</MatButton>
+                            <MatButton style="float: right;" OnClick="@AddRecord" Icon="add">Add New</MatButton>
                         </th>
-
-
                     </tr>
                 </thead>
                 <tbody>
@@ -56,20 +53,20 @@ else
 }
 
 <MatDialog @bind-IsOpen="@dialogIsOpen">
-    <MatDialogTitle>Add New @dialogHeader</MatDialogTitle>
+    <MatDialogTitle>@dialogHeader</MatDialogTitle>
     @if (mode != "delete")
     {
-    <MatDialogContent>
-        @if (mode != "add")
-        {
-            <p>Id</p>
-            <MatTextField @bind-Value="@strId" PlaceHolder="Code"></MatTextField>
-        }
-        <p>Code</p>
-        <MatTextField @bind-Value="@tableRec.Code" PlaceHolder="Code"></MatTextField>
-        <p>Description</p>
-        <MatTextField @bind-Value="@tableRec.Description" PlaceHolder="Description"></MatTextField>
-    </MatDialogContent>
+        <MatDialogContent>
+            @if (mode != "add")
+            {
+                <p>Id</p>
+                <MatTextField @bind-Value="@strId" PlaceHolder="Code"></MatTextField>
+            }
+            <p>Code</p>
+            <MatTextField @bind-Value="@tableRec.Code" PlaceHolder="Code"></MatTextField>
+            <p>Description</p>
+            <MatTextField @bind-Value="@tableRec.Description" PlaceHolder="Description"></MatTextField>
+        </MatDialogContent>
     }
     <MatDialogActions>
         <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
@@ -77,14 +74,14 @@ else
     </MatDialogActions>
 </MatDialog>
 
+ 
+
 
 @code {
     [Parameter]
     public string tableName { get; set; }
     string mode = "List";
     string strId = "";
-
-
 
     bool dialogIsOpen = false;
     string dialogHeader = "";
@@ -95,19 +92,6 @@ else
 
     RefTable tableRec = new RefTable();
 
-
- 
-
-    void OpenDialog()
-    {
-
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        //table = await client.GetRefTableDataAsync(tableName);
-    }
-
     protected override async Task OnParametersSetAsync()
     {
         table = await client.GetRefTableDataAsync(tableName);
@@ -116,6 +100,10 @@ else
     async Task AddRecord()
     {
         mode = "add";
+        strId = "";
+        tableRec.Id = 0;
+        tableRec.Code = "";
+        tableRec.Description = "";
         dialogHeader = "Add new " + tableName + " record.";
         dialogIsOpen = true;
     }
@@ -135,7 +123,7 @@ else
     async Task DeleteRecord(int Id, string Code, string Description)
     {
         mode = "delete";
-        
+
         strId = Id.ToString();  // <MatTextField can't bind to anything but a string.
         tableRec.Id = Id;
         tableRec.Code = Code;
@@ -144,23 +132,45 @@ else
         dialogIsOpen = true;
     }
 
-    void SaveRecord()
-    {
-        if(mode=="edit")
+    async Task SaveRecord()
+    { 
+        try
         {
-            var result = client.EditRefTableRecordAsync(tableName, tableRec);
+            if (mode == "edit")
+            {
+                if (await client.EditRefTableRecordAsync(tableName, tableRec))
+                {
+                    var Message = string.Format("{0} record updated successfully.", tableName);
+                }
+            }
+            else if (mode == "add")
+            {
+
+                if (await client.AddRefTableRecordAsync(tableName, tableRec) > 0)
+                {
+                    toast(string.Format("{0} record added successfully.", tableName));
+                }
+            }
+            else
+            {
+                if (await client.DeleteRefTableRecordAsync(tableName, tableRec.Id))
+                {
+                    toast(string.Format("Record {0} deleted successfully.", tableName));
+                }
+            }
+
+            table = await client.GetRefTableDataAsync(tableName);
+            dialogIsOpen = false;
         }
-        else if (mode == "add")
+        catch (Exception ex)
         {
-            var result = client.AddRefTableRecordAsync(tableName, tableRec);
-        }
-        else
-        {
-            var result = client.DeleteRefTableRecordAsync(tableName, tableRec.Id);
-        }
-         
-           table = await client.GetRefTableDataAsync(tableName);
-        dialogIsOpen = false;
+            Toaster.Add(ex.ToString(), MatToastType.Danger, "System Error", "error", null);
+        } 
     }
- 
+
+    void toast(string message)
+    {
+        Toaster.Add(message, MatToastType.Success, "Success", null, null);
+    }
+
 }

@@ -2726,20 +2726,19 @@ namespace TraumaRegistry.Client
         [System.ComponentModel.DataAnnotations.StringLength(1)]
         public string Mi { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("dob", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset Dob { get; set; }
+        [Newtonsoft.Json.JsonProperty("dob", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? Dob { get; set; }
     
         [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Email { get; set; }
     
         [Newtonsoft.Json.JsonProperty("created", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset Created { get; set; }
+        public System.DateTime Created { get; set; }
     
         [Newtonsoft.Json.JsonProperty("lastUpdate", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset LastUpdate { get; set; }
+        public System.DateTime LastUpdate { get; set; }
     
         [Newtonsoft.Json.JsonProperty("lastUpdatedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LastUpdatedBy { get; set; }
@@ -2814,7 +2813,7 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("injuryDateTime", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset InjuryDateTime { get; set; }
+        public System.DateTime InjuryDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("injuryDetailsNarrative", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(1000)]
@@ -2830,34 +2829,34 @@ namespace TraumaRegistry.Client
         public bool? FastExamPositive { get; set; }
     
         [Newtonsoft.Json.JsonProperty("agencyDispatchDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? AgencyDispatchDateTime { get; set; }
+        public System.DateTime? AgencyDispatchDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("agencyArriveSceneDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? AgencyArriveSceneDateTime { get; set; }
+        public System.DateTime? AgencyArriveSceneDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("agencyDepartSceneDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? AgencyDepartSceneDateTime { get; set; }
+        public System.DateTime? AgencyDepartSceneDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("agencySceneDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? AgencySceneDateTime { get; set; }
+        public System.DateTime? AgencySceneDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("edArrivalDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? EdArrivalDateTime { get; set; }
+        public System.DateTime? EdArrivalDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("edDischargeDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? EdDischargeDateTime { get; set; }
+        public System.DateTime? EdDischargeDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("edDispoEDOrderTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? EdDispoEDOrderTime { get; set; }
+        public System.DateTime? EdDispoEDOrderTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("activationDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ActivationDateTime { get; set; }
+        public System.DateTime? ActivationDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("hospitalDischargeOrder", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? HospitalDischargeOrder { get; set; }
+        public System.DateTime? HospitalDischargeOrder { get; set; }
     
         [Newtonsoft.Json.JsonProperty("anesthesiaArrivalTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? AnesthesiaArrivalTime { get; set; }
+        public System.DateTime? AnesthesiaArrivalTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("outcomeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? OutcomeId { get; set; }
@@ -3195,11 +3194,11 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("timeTaken", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset TimeTaken { get; set; }
+        public System.DateTime TimeTaken { get; set; }
     
         [Newtonsoft.Json.JsonProperty("timeStamp", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset TimeStamp { get; set; }
+        public System.DateTime TimeStamp { get; set; }
     
         [Newtonsoft.Json.JsonProperty("eventId", Required = Newtonsoft.Json.Required.Always)]
         public int EventId { get; set; }
@@ -3257,7 +3256,7 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("timestamp", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset Timestamp { get; set; }
+        public System.DateTime Timestamp { get; set; }
     
         [Newtonsoft.Json.JsonProperty("eventId", Required = Newtonsoft.Json.Required.Always)]
         public int EventId { get; set; }
@@ -3276,7 +3275,7 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("timeStamp", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset TimeStamp { get; set; }
+        public System.DateTime TimeStamp { get; set; }
     
         [Newtonsoft.Json.JsonProperty("note", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Note { get; set; }
@@ -3391,7 +3390,7 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("timeStamp", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTimeOffset TimeStamp { get; set; }
+        public System.DateTime TimeStamp { get; set; }
     
     
     }
