@@ -1,12 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Microsoft.Extensions.Configuration.FileExtensions;
-using Microsoft.Extensions.Configuration.Json;
-using MySql.Data.EntityFrameworkCore.Extensions;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace TraumaRegistry.Data
 {
@@ -38,7 +34,7 @@ namespace TraumaRegistry.Data
                     break;
 
                 case "mysql": 
-                        optionsBuilder.UseMySQL(connectionString);
+                        optionsBuilder.UseMySql(connectionString);
                         //https://bugs.mysql.com/bug.php?id=96990
                         throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
                 default:

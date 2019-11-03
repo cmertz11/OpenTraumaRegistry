@@ -2740,6 +2740,9 @@ namespace TraumaRegistry.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTime LastUpdate { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("eventCount", Required = Newtonsoft.Json.Required.Always)]
+        public int EventCount { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("lastUpdatedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LastUpdatedBy { get; set; }
     
@@ -3403,6 +3406,9 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("recordCount", Required = Newtonsoft.Json.Required.Always)]
         public int RecordCount { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("eventCount", Required = Newtonsoft.Json.Required.Always)]
+        public int EventCount { get; set; }
     
     
     }

@@ -29,7 +29,8 @@ namespace TraumaRegistry.Data.Models
 
         public DateTime LastUpdate { get; set; }
 
-
+        [NotMapped]
+        public int EventCount { get; set; }
         // Intending to link to asp identity table
         public string LastUpdatedBy { get; set; }
 

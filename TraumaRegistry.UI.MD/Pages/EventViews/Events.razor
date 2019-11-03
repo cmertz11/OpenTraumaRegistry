@@ -1,0 +1,63 @@
+﻿@page "/events"
+@page "/events/{PatientId:int}"
+
+@using System.Diagnostics
+@using System.Threading
+
+
+@if (patient == null)
+{
+    <h2><i class="fas fa-user-injured"></i>Events</h2>
+    <p><em>Loading...</em></p>
+}
+else
+{
+    var fName = patient.FirstName == null ? "" : patient.FirstName;
+    var lName = patient.LastName == null ? "" : patient.LastName + ",";
+    var mName = patient.Mi == null ? "" : patient.Mi;
+
+
+    <div class="page-header" style="display: inline-block;"> 
+         <h2><i class="fas fa-user-injured"></i> Truamatic Event(s): </h2>
+         <h4 style="vertical-align: middle"><b>Patient:</b> @lName @fName @mName </h4>
+   </div>
+    
+    @foreach (var e in patient.Events)
+    {
+        var activationDate = e.ActivationDateTime.HasValue ? e.ActivationDateTime.Value.ToString("dd/MM/yyyy hh:mm tt") : "<not available>";
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-10">
+                        <b>Trauma Level:</b> @e.TraumaLevel.Description &nbsp;<b>Injury Date:</b> @e.InjuryDateTime.ToString("dd/MM/yyyy hh:mm tt") &nbsp;<b>Activation Time:</b> @activationDate  &nbsp;<b>Outcome:</b> @e.Outcome.Description
+                    </div>
+                    <div class="col">
+                        <div class="float-lg-right">
+                            <a href="#" class="btn btn-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@e.InjuryDetailsNarrative</h5>
+                <p class="card-text">Location: @e.LocationOfOccuranceDescription</p>
+            </div>
+        </div>
+        <br />
+    }
+}
+
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+
+    EventsClient client = new EventsClient();
+    Patient patient;
+
+    protected override async Task OnInitializedAsync()
+    {
+        patient = await client.GetPatientWithEventsAsync(PatientId);
+    }
+
+}

@@ -77,7 +77,7 @@ else
                     <td>@patient.FirstName</td>
                     <td>@patient.LastName</td>
                     <td>@patient.Mi</td>
-                    <td>@patient.Dob.ToString("MM/dd/yyyy")</td>
+                    <td>@patient.Dob.ToString()</td>
                     <td><button class="btn btn-primary btn-sm" @onclick="@(() => ViewRecord(patient.Id))">View <i class="fas fa-info"></i></button></td>
                 </tr>
             }

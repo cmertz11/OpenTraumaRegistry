@@ -1,9 +1,5 @@
 ﻿using TraumaRegistry.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MySql.Data.EntityFrameworkCore.Extensions;
 
 
 namespace TraumaRegistry.Data

@@ -14,13 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Pages\AddEditRefTable.razor">
+    <Content Update="Pages\ReferenceTableViews\AddEditRefTable.razor">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="Pages\ReferenceTables.razor">
+    <Content Update="Pages\ReferenceTableViews\ReferenceTables.razor">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="Pages\RefTableDropDown.razor">
+    <Content Update="Pages\ReferenceTableViews\RefTableDropDown.razor">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>

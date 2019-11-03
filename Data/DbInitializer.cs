@@ -240,11 +240,11 @@ namespace TraumaRegistry.Data
             AddPatient10(context, ref  OutputString);
 
             context.SaveChanges();
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    AddPatientRND(context, i, ref OutputString);
-            //    context.SaveChanges();
-            //}
+            for (int i = 0; i < 20; i++)
+            {
+                AddPatientRND(context, i, ref OutputString);
+                context.SaveChanges();
+            }
 
         }
 

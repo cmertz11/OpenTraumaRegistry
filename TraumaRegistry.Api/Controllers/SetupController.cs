@@ -55,9 +55,10 @@ namespace TraumaRegistry.Api.Controllers
                     break;
 
                 case "mysql":
-                    optionsBuilder.UseMySQL(connectionString);
+                    optionsBuilder.UseMySql(connectionString);
                     //https://bugs.mysql.com/bug.php?id=96990
-                    throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
+                    //throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
+                    break;
                 default:
                     return "Unable to create database with submitted configuration.";
                      

@@ -1,0 +1,90 @@
+﻿@page "/addeditpatient"
+@page "/addeditpatient/{Id:int}"
+
+@inject NavigationManager NavigationManager
+@inject IMatToaster Toaster
+
+<h3>@pageHeader</h3>
+
+<MatTextField id="patientMRN" Label="Medical Record Number" @bind-Value=@patient.Mrn />
+<br />
+<MatTextField id="patientFirstName" Label="First Name" @bind-Value=@patient.FirstName />
+<br />
+<MatTextField id="patientLastName" Label="Last Name" @bind-Value=@patient.LastName />
+<br />
+<MatTextField id="patientMI" Label="Middle Initial" @bind-Value=@patient.Mi />
+<br />
+
+<MatDatePicker Label="DOB" @bind-Value="@patient.Dob"></MatDatePicker>
+<br />
+
+<RefTableDropDown TableName="refGender" PlaceHolder="Gender" IdChanged="genderIdChanged"></RefTableDropDown> <br />
+
+<RefTableDropDown TableName="refRace" PlaceHolder="Race" IdChanged="raceIdChanged"></RefTableDropDown> <br />
+
+<MatTextField id="patientEmail" Label="E-mail" @bind-Value=@patient.Email /> <br />
+
+<MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton> 
+<MatButton Icon="save" @onclick="@addNewPatient">Save</MatButton>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    int genderId;
+    int raceId;
+    Patient patient = new Patient();
+    bool success = false;
+    string mode = "add";
+    string pageHeader = "Add Patient";
+    PatientsClient client = new PatientsClient();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        mode = "edit";
+        pageHeader = "Edit Patient";
+        patient = await client.GetPatientAsync(Id);
+    }
+
+    void cancel()
+    {
+        NavigationManager.NavigateTo("/patients");
+    }
+
+    void genderIdChanged(int Id)
+    {
+
+        genderId = Id;
+    }
+
+    void raceIdChanged(int Id)
+    {
+        raceId = Id;
+    }
+
+    void addNewPatient()
+    {
+        try
+        {
+            PatientsClient client = new PatientsClient();
+            patient.GenderReferenceId = genderId;
+            patient.RaceReferenceId = raceId;
+
+            var timeStamp = System.DateTime.Now;
+            patient.Created = timeStamp;
+            patient.LastUpdate = timeStamp;
+
+            var rec = client.PostPatientAsync(patient);
+            Toaster.Add("Patient Added Successfully!", MatToastType.Success, "Success", null, null);
+
+        }
+        catch (Exception ex)
+        {
+            Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
+        }
+
+
+    }
+
+}

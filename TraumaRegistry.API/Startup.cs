@@ -40,9 +40,8 @@ namespace TraumaRegistry.Api
                     break;
 
                 case "mysql":
-                    services.AddDbContext<Context>(options => options.UseMySQL(connectionString)); 
-                    //https://bugs.mysql.com/bug.php?id=96990
-                    throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
+                    services.AddDbContext<Context>(options => options.UseMySql(connectionString));
+                    break;
                 default:
                     services.AddDbContext<Context>();
                     break;

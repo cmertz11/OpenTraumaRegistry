@@ -6,9 +6,7 @@
 
 
 <h2><i class="fas fa-user-injured"></i>Patients</h2>
-
-<p></p>
-
+ 
 @if (pagedData == null)
 {
     <p><em>Loading...</em></p>
@@ -69,14 +67,16 @@ else
         <tbody>
             @foreach (var patient in pagedData.Records)
             {
-                <tr>
-                    <td>@patient.Id</td>
-                    <td>@patient.FirstName</td>
-                    <td>@patient.LastName</td>
-                    <td>@patient.Mi</td>
-                    <td>@patient.Dob</td>
-                    <td><MatButton Icon="more" @onclick="@(() => ViewRecord(patient.Id))">View <i class="fas fa-info"></i></MatButton></td>
-                </tr>
+            <tr>
+                <td>@patient.Id</td>
+                <td>@patient.FirstName</td>
+                <td>@patient.LastName</td>
+                <td>@patient.Mi</td>
+                <td>@Convert.ToDateTime(patient.Dob).ToShortDateString()</td>
+                <td><MatButton Icon="edit" @onclick="@(() => EditPatient(patient.Id))">Edit</MatButton></td> 
+                <td><MatButton Icon="more" @onclick="@(() => ViewPatientEvents(patient.Id))">Events (@patient.EventCount)</MatButton></td>
+
+            </tr>
             }
         </tbody>
     </table>
@@ -125,14 +125,19 @@ else
         metrics = "Total Patients: " + pagedData.RecordCount + "." + Environment.NewLine + "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
     } 
 
-    protected async Task ViewRecord(int Id)
+    protected async Task ViewPatientEvents(int Id)
     {
         NavigationManager.NavigateTo("/events/" + Id);
     }
 
+    protected async Task EditPatient(int Id)
+    {
+        NavigationManager.NavigateTo("/addeditpatient/" + Id);
+    }
+
     protected async Task AddNewPatient()
     {
-        NavigationManager.NavigateTo("/addpatient");
+        NavigationManager.NavigateTo("/addeditpatient");
     }
 
     async Task SetPage(int page)
