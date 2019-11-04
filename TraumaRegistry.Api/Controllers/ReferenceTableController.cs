@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -27,71 +29,46 @@ namespace TraumaRegistry.Api.Controllers
         [HttpGet]
         [ActionName("GetRefTableData")]
         public ActionResult<refTableDTO> GetRefTableData(string tableName)
-        {
-            tableName = AdjustTableNameForProvider(tableName);
+        { 
             refTableDTO table = new refTableDTO { Name = tableName };
-            string sql = string.Format("SELECT * FROM {0} ", tableName);
- 
-            using (var command = _context.Database.GetDbConnection().CreateCommand())
+
+            Type targetType = FindType(tableName);
+            var method = typeof(DbContext).GetMethod("Set").MakeGenericMethod(targetType);
+            var query = method.Invoke(_context, null) as IQueryable;
+
+            foreach (var item in query)
             {
-                command.CommandText = sql;
-                _context.Database.OpenConnection();
-                using (var result = command.ExecuteReader())
-                {
-                    while (result.Read())
-                    {
-                        table.tableData.Add(new refTableDTO.refTable
-                        {
-                            Id = Convert.ToInt32(result["Id"]),
-                            Code = result["Code"].ToString(),
-                            Description = result["Description"].ToString()
-                        });
-                    }
-                }
+                table.tableData.Add(
+                    new refTableDTO.refTable { 
+                        Id = (int)GetPropValue(item, "Id"), 
+                        Code = (string)GetPropValue(item, "Code"), 
+                        Description = (string)GetPropValue(item, "Description") });
             }
+
             return table;
         }
 
 
-        [HttpGet]
-        [ActionName("GetRefTableList")]
-        public ActionResult<List<ReferenceTables>> GetRefTableList()
-        {
-            try
-            {
-                return _context.ReferenceTables.ToList();
-            }
-            catch (Exception)
-            {
-
-                return null;
-            }
-           
-        }
 
         [HttpPatch]
         [ActionName("AddRefTableRecord")]
-        public int AddRefTableRecord(string tableName, refTableDTO.refTable newRec)
+        public bool AddRefTableRecord(string tableName, refTableDTO.refTable newRec)
         {
-            tableName = AdjustTableNameForProvider(tableName);
-            string sql = string.Format("INSERT INTO {0} (Code, Description) VALUES ('{1}', '{2}'); SELECT SCOPE_IDENTITY() AS Id;", tableName, newRec.Code, newRec.Description);
-            int NewId = 0;
-            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            try
             {
-                command.CommandText = sql;
-                _context.Database.OpenConnection();
-                using (var result = command.ExecuteReader())
-                {
-                    while (result.Read())
-                    {
-                        if(int.TryParse(result[0].ToString(), out NewId))
-                        {
-                            return NewId;
-                        }
-                    }
-                }
-                return NewId;
+                Type targetType = FindType(tableName);
+                var refTableObj = Activator.CreateInstance(targetType);
+                refTableObj = SetPropValue(refTableObj, "Code", newRec.Code);
+                refTableObj = SetPropValue(refTableObj, "Description", newRec.Description);
+            
+                _context.AddRange(refTableObj);
+                _context.SaveChanges();
+                return true;
             }
+            catch (Exception)
+            {
+                return false;
+            } 
         }
 
         [HttpPatch]
@@ -100,15 +77,17 @@ namespace TraumaRegistry.Api.Controllers
         {
             try
             {
-                tableName = AdjustTableNameForProvider(tableName);
+                tableName = AdjustDbObjectNameForProvider(tableName);
                 string sql = string.Format("UPDATE {0} ", tableName);
-                sql += "SET Code = @Code, Description = @Description WHERE Id = @Id;";
 
-                var Id = new SqlParameter("@Id", updatedRec.Id);
-                var code = new SqlParameter("@Code", updatedRec.Code);
-                var description = new SqlParameter("@Description", updatedRec.Description);
 
-                _context.Database.ExecuteSqlRaw(sql, code, description, Id);
+                sql += string.Format(" SET Code = '{0}', Description = '{1}' WHERE Id = {2};", updatedRec.Code, updatedRec.Description, updatedRec.Id);
+                
+                //var Id = new SqlParameter("@Id", updatedRec.Id);
+                //var code = new SqlParameter("@Code", updatedRec.Code);
+                //var description = new SqlParameter("@Description", updatedRec.Description);
+
+                _context.Database.ExecuteSqlRaw(sql);
                 
                 return true;
             }
@@ -126,12 +105,10 @@ namespace TraumaRegistry.Api.Controllers
         {
             try
             {
+                tableName = AdjustDbObjectNameForProvider(tableName);
                 string sql = string.Format("DELETE FROM {0} ", tableName);
-                sql += "WHERE Id = @Id;";
-
-                var IdParm = new SqlParameter("@Id", Id); 
-
-                _context.Database.ExecuteSqlRaw(sql, IdParm);
+                sql += string.Format("WHERE Id = {0};", Id);  
+                _context.Database.ExecuteSqlRaw(sql);
 
                 return true;
             }
@@ -141,7 +118,23 @@ namespace TraumaRegistry.Api.Controllers
             } 
         }
 
-        private string AdjustTableNameForProvider(string tableName)
+        [HttpGet]
+        [ActionName("GetRefTableList")]
+        public ActionResult<List<ReferenceTables>> GetRefTableList()
+        {
+            try
+            {
+                return _context.ReferenceTables.ToList();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+           
+        }
+
+        private string AdjustDbObjectNameForProvider(string tableName)
         {
             if (_configuration.GetSection("TraumaRegistrySettings")["dbProvider"] == "postgresql")
             {
@@ -150,6 +143,31 @@ namespace TraumaRegistry.Api.Controllers
 
             return tableName;
         }
+        private static Type FindType(string name)
+        {
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var result = (from elem in (from app in assemblies
+                                        select (from tip in app.GetTypes()
+                                                where tip.Name == name.Trim()
+                                                select tip).FirstOrDefault())
+                          where elem != null
+                          select elem).FirstOrDefault();
+
+            return result;
+        }
+
+        private static object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
+
+        private static object SetPropValue(object src, string propName, object valObj)
+        {
+            object boxedObject = RuntimeHelpers.GetObjectValue(src);
+            src.GetType().GetProperty(propName).SetValue(boxedObject, valObj);
+            return src;
+        }
+
         public class refTableDTO
         {
             public string Name { get; set; }
@@ -164,5 +182,9 @@ namespace TraumaRegistry.Api.Controllers
             }
         }
 
+    }
+
+    internal class TEntity
+    {
     }
 }
