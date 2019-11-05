@@ -91,7 +91,7 @@ namespace TraumaRegistry.Api.Controllers
                 string orderby = string.Format(" Order By {0} {1}", urlQuery.orderBy, urlQuery.orderByDirection);
                 sql += orderby;
                 var offset = urlQuery.PageSize * (urlQuery.PageNumber - 1);
-                sql += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY OPTION(RECOMPILE); ", urlQuery.PageSize);
+                sql += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY OPTION(RECOMPILE); ", offset, urlQuery.PageSize);
             }
 
             return sql;

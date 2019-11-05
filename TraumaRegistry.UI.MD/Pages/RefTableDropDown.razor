@@ -1,21 +1,34 @@
 ﻿
-    <select class="form-control mb-4" Label=@PlaceHolder  @onchange="@selectedIdChanged">
-        @if (refTable.TableData != null)
-        {
+    
+    <div style="col-lg-2">
 
-            @foreach (var item in refTable.TableData)
+
+        <select class="form-control mb-4" Label=@PlaceHolder @onchange="@selectedIdChanged">
+
+            @if (refTable.TableData != null)
             {
-                <option value=@item.Id.ToString()>@item.Description</option>
-            }
-        }
-       </select>
 
+                @foreach (var item in refTable.TableData)
+                {
+                    if (item.Id == SelectedId)
+                    {
+                        <option value=@item.Id selected>@item.Description</option>
+                    }
+                    else
+                    {
+                        <option value=@item.Id>@item.Description</option>
+                    }
+                }
+            }
+        </select>
+    </div>
         @code {
             [Parameter]
             public string TableName { get; set; }
             [Parameter]
             public string PlaceHolder { get; set; }
-
+            [Parameter]
+            public int SelectedId {get; set;}
             [Parameter]
             public EventCallback<int> IdChanged { get; set; }
 

@@ -48,8 +48,6 @@ namespace TraumaRegistry.Api.Controllers
             return table;
         }
 
-
-
         [HttpPatch]
         [ActionName("AddRefTableRecord")]
         public bool AddRefTableRecord(string tableName, refTableDTO.refTable newRec)
@@ -61,7 +59,7 @@ namespace TraumaRegistry.Api.Controllers
                 refTableObj = SetPropValue(refTableObj, "Code", newRec.Code);
                 refTableObj = SetPropValue(refTableObj, "Description", newRec.Description);
             
-                _context.AddRange(refTableObj);
+                _context.AddRange(refTableObj);  
                 _context.SaveChanges();
                 return true;
             }
@@ -77,26 +75,20 @@ namespace TraumaRegistry.Api.Controllers
         {
             try
             {
-                tableName = AdjustDbObjectNameForProvider(tableName);
-                string sql = string.Format("UPDATE {0} ", tableName);
-
-
-                sql += string.Format(" SET Code = '{0}', Description = '{1}' WHERE Id = {2};", updatedRec.Code, updatedRec.Description, updatedRec.Id);
-                
-                //var Id = new SqlParameter("@Id", updatedRec.Id);
-                //var code = new SqlParameter("@Code", updatedRec.Code);
-                //var description = new SqlParameter("@Description", updatedRec.Description);
-
-                _context.Database.ExecuteSqlRaw(sql);
+                Type targetType = FindType(tableName);
+                var refTableObj = Activator.CreateInstance(targetType);
+                refTableObj = SetPropValue(refTableObj, "Id", updatedRec.Id);
+                refTableObj = SetPropValue(refTableObj, "Code", updatedRec.Code);
+                refTableObj = SetPropValue(refTableObj, "Description", updatedRec.Description);
+                _context.Update(refTableObj);
+                _context.SaveChanges();
                 
                 return true;
             }
             catch (Exception ex)
             {
                 return false;
-            }
-
-             
+            } 
         }
 
         [HttpPatch]
@@ -105,11 +97,11 @@ namespace TraumaRegistry.Api.Controllers
         {
             try
             {
-                tableName = AdjustDbObjectNameForProvider(tableName);
-                string sql = string.Format("DELETE FROM {0} ", tableName);
-                sql += string.Format("WHERE Id = {0};", Id);  
-                _context.Database.ExecuteSqlRaw(sql);
-
+                Type targetType = FindType(tableName);
+                var refTableObj = Activator.CreateInstance(targetType);
+                refTableObj = SetPropValue(refTableObj, "Id", Id);
+                _context.Remove(refTableObj);
+                _context.SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -134,15 +126,6 @@ namespace TraumaRegistry.Api.Controllers
            
         }
 
-        private string AdjustDbObjectNameForProvider(string tableName)
-        {
-            if (_configuration.GetSection("TraumaRegistrySettings")["dbProvider"] == "postgresql")
-            {
-                tableName = "\"" + tableName + "\"";
-            }
-
-            return tableName;
-        }
         private static Type FindType(string name)
         {
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -182,9 +165,5 @@ namespace TraumaRegistry.Api.Controllers
             }
         }
 
-    }
-
-    internal class TEntity
-    {
     }
 }

@@ -52,28 +52,24 @@ else
     </div>
 }
 
+
 <MatDialog @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle>@dialogHeader</MatDialogTitle>
-    @if (mode != "delete")
-    {
+
         <MatDialogContent>
-            @if (mode != "add")
-            {
-                <p>Id</p>
-                <MatTextField @bind-Value="@strId" PlaceHolder="Code"></MatTextField>
-            }
-            <p>Code</p>
-            <MatTextField @bind-Value="@tableRec.Code" PlaceHolder="Code"></MatTextField>
-            <p>Description</p>
-            <MatTextField @bind-Value="@tableRec.Description" PlaceHolder="Description"></MatTextField>
+   
+            <MatTextField @bind-Value="@tableRec.Code" Label="Code" ></MatTextField>
+ 
+            <MatTextField @bind-Value="@tableRec.Description" Label="Description" ></MatTextField>
+
         </MatDialogContent>
-    }
+
     <MatDialogActions>
         <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
         <MatButton OnClick="@SaveRecord">OK</MatButton>
     </MatDialogActions>
-</MatDialog>
 
+</MatDialog>
  
 
 
@@ -146,7 +142,8 @@ else
             else if (mode == "add")
             {
 
-                if (await client.AddRefTableRecordAsync(tableName, tableRec) > 0)
+                var response = await client.AddRefTableRecordAsync(tableName, tableRec);
+                if (response)
                 {
                     toast(string.Format("{0} record added successfully.", tableName));
                 }

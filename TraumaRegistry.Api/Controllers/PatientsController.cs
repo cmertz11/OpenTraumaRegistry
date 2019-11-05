@@ -43,9 +43,6 @@ namespace TraumaRegistry.Api.Controllers
         }
 
 
-
-
-
         // PUT: api/Patients/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPatient(int id, Patient patient)
@@ -61,7 +58,7 @@ namespace TraumaRegistry.Api.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
                 if (!PatientExists(id))
                 {

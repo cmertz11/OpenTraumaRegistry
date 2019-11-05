@@ -8,7 +8,7 @@ namespace TraumaRegistry.Data
 {
     public static class DbInitializer
     {
-
+        public static string SystemId { get; set; } = Guid.NewGuid().ToString();  //Get System Id from Identity 
         public static void Initialize(Context context, ref string OutputString)
         {
             try
@@ -251,8 +251,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient1(Context context, ref string OutputString)
         {
             print("Adding Test Patient 1", ref OutputString);
-            var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 };
-
+            var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 , Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId};
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 1", ref OutputString);
             Event event1 = AddPatientEvent1();
             patient.Events.Add(event1);
@@ -269,7 +269,7 @@ namespace TraumaRegistry.Data
         {
             print("Adding Test Patient 2", ref OutputString);
             var patient = new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 };
-
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 2", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -281,8 +281,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient3(Context context, ref string OutputString)
         {
             print("Adding Test Patient 3", ref OutputString);
-            var patient = new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12), GenderReferenceId = 2, RaceReferenceId = 6 };
-
+            var patient = new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12), GenderReferenceId = 2, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 3", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -294,8 +294,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient4(Context context, ref string OutputString)
         {
             print("Adding Test Patient 4", ref OutputString);
-            var patient = new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29), GenderReferenceId = 1, RaceReferenceId = 6 };
-
+            var patient = new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29), GenderReferenceId = 1, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 4", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -307,8 +307,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient5(Context context, ref string OutputString)
         {
             print("Adding Test Patient 5", ref OutputString);
-            var patient = new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14), GenderReferenceId = 2, RaceReferenceId = 6 };
-
+            var patient = new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14), GenderReferenceId = 2, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 5", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -320,8 +320,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient6(Context context, ref string OutputString)
         {
             print("Adding Test Patient 6", ref OutputString);
-            var patient = new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId = 1, RaceReferenceId = 6 };
-
+            var patient = new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId = 1, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 6", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -333,8 +333,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient7(Context context, ref string OutputString)
         {
             print("Adding Test Patient 7", ref OutputString);
-            var patient = new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
-
+            var patient = new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 7", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -346,8 +346,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient8(Context context, ref string OutputString)
         {
             print("Adding Test Patient 8", ref OutputString);
-            var patient = new Patient { FirstName = "Samuel", LastName = "Wilson", MI = "T", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
-
+            var patient = new Patient { FirstName = "Samuel", LastName = "Wilson", MI = "T", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 8", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -359,8 +359,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient9(Context context, ref string OutputString)
         {
             print("Adding Test Patient 9", ref OutputString);
-            var patient = new Patient { FirstName = "Clint", LastName = "Barton", MI = "", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 6 };
-
+            var patient = new Patient { FirstName = "Clint", LastName = "Barton", MI = "", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 9", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -372,8 +372,8 @@ namespace TraumaRegistry.Data
         private static void AddPatient10(Context context, ref string OutputString)
         {
             print("Adding Test Patient 10", ref OutputString);
-            var patient = new Patient { FirstName = "James", LastName = "Rhodes", MI = "", DOB = new DateTime(1968, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1 };
-
+            var patient = new Patient { FirstName = "James", LastName = "Rhodes", MI = "", DOB = new DateTime(1968, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             print("Adding Test Event 1 for Patient 10", ref OutputString);
             Event event1 = AddPatientEvent1();
 
@@ -396,8 +396,8 @@ namespace TraumaRegistry.Data
             string LastName = ngen.GenRandomLastName();
             string MI = ngen.GenRandomMI();
             print("Adding Test Patient " + count, ref OutputString);
-            var patient = new Patient { FirstName = FirstName, LastName = LastName, MI = MI, DOB = dob, GenderReferenceId = f, RaceReferenceId = 1 };
-
+            var patient = new Patient { FirstName = FirstName, LastName = LastName, MI = MI, DOB = dob, GenderReferenceId = f, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
+            patient.email = string.Format("{0}.{1}@gmail.com", FirstName, LastName);
             print("Adding Test Event 1 for Patient " + (count + 10).ToString(), ref OutputString); // the + 10 is to account for the first 10 patients added.
             Event event1 = AddPatientEvent1();
 
