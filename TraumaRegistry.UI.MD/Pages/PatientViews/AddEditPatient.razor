@@ -6,33 +6,39 @@
 
 
 <h3>@pageHeader</h3>
-<p>
-    <MatTextField id="patientMRN" Outlined="true" Label="Medical Record Number" @bind-Value=@patient.Mrn />
-</p>
-<p>
-    <MatTextField id="patientFirstName" Outlined="true" Label="First Name" @bind-Value=@patient.FirstName />
-</p>
-<p>
-    <MatTextField id="patientLastName" Outlined="true" Label="Last Name" @bind-Value=@patient.LastName />
-</p>
-<p>
-    <MatTextField id="patientMI" Outlined="true" Label="Middle Initial" @bind-Value=@patient.Mi />
-</p>
-<p>
-    <MatDatePicker Label="DOB" Dense="true" Outlined="true" @bind-Value="@patient.Dob"></MatDatePicker>
-</p>
-<p>
-    <RefTableDropDown TableName="RefGender" PlaceHolder="Gender" SelectedId="@patient.GenderReferenceId" IdChanged="genderIdChanged"></RefTableDropDown>
-</p>
-<p>
-    <RefTableDropDown TableName="RefRace" PlaceHolder="Race" SelectedId="@patient.RaceReferenceId" IdChanged="raceIdChanged"></RefTableDropDown>
-</p>
-<p>
-<MatTextField id="patientEmail" Outlined="true" Label="E-mail" @bind-Value=@patient.Email /> <br />
-</p>
-<MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton> 
-<MatButton Icon="save" @onclick="@savePatient">Save</MatButton>
+<EditForm Model="@patient" OnValidSubmit="@validateForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <p>
+        <MatTextField id="patientMRN" Outlined="true" Label="Medical Record Number" @bind-Value=@patient.Mrn />
+    </p>
+    <p>
+        <MatTextField id="patientFirstName" Outlined="true" Label="First Name" @bind-Value=@patient.FirstName />
 
+        <ValidationMessage For="@(() => patient.FirstName)" />
+    </p>
+    <p>
+        <MatTextField id="patientLastName" Outlined="true" Label="Last Name" @bind-Value=@patient.LastName />
+        <ValidationMessage For="@(() => patient.LastName)" />
+    </p>
+    <p>
+        <MatTextField id="patientMI" Outlined="true" Label="Middle Initial" @bind-Value=@patient.Mi />
+    </p>
+    <p>
+        <MatDatePicker Label="DOB" Dense="true" Outlined="true" @bind-Value="@patient.Dob"></MatDatePicker>
+    </p>
+    <p>
+        <RefTableDropDown TableName="RefGender" PlaceHolder="Gender" SelectedId="@patient.GenderReferenceId" IdChanged="genderIdChanged"></RefTableDropDown>
+    </p>
+    <p>
+        <RefTableDropDown TableName="RefRace" PlaceHolder="Race" SelectedId="@patient.RaceReferenceId" IdChanged="raceIdChanged"></RefTableDropDown>
+    </p>
+    <p>
+        <MatTextField id="patientEmail" Outlined="true" Label="E-mail" @bind-Value=@patient.Email /> <br />
+    </p>
+    <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
+    <MatButton type="submit" Icon="save" >Save</MatButton>
+</EditForm>
 @code {
 
     [Parameter]
@@ -83,29 +89,36 @@
     {
         try
         {
-                PatientsClient client = new PatientsClient();
-                patient.GenderReferenceId = genderId;
-                patient.RaceReferenceId = raceId;
+            PatientsClient client = new PatientsClient();
+            patient.GenderReferenceId = genderId;
+            patient.RaceReferenceId = raceId;
 
-                var timeStamp = System.DateTime.Now;
-                patient.LastUpdate = timeStamp;
+            var timeStamp = System.DateTime.Now;
+            patient.LastUpdate = timeStamp;
 
-                if (mode == "add")
-                {
+            if (mode == "add")
+            {
 
-                    patient.Created = timeStamp;
-                    var rec = client.PostPatientAsync(patient);
-                    Toaster.Add("Patient Added Successfully!", MatToastType.Success, "Success", null, null);
-                }
-                else
-                {
-                    var rec = await client.PutPatientAsync(Id, patient);
-                    Toaster.Add("Patient Updated Successfully!", MatToastType.Success, "Success", null, null);
-                }
+                patient.Created = timeStamp;
+                var rec = client.PostPatientAsync(patient);
+                Toaster.Add("Patient Added Successfully!", MatToastType.Success, "Success", null, null);
+            }
+            else
+            {
+                var rec = await client.PutPatientAsync(Id, patient);
+                Toaster.Add("Patient Updated Successfully!", MatToastType.Success, "Success", null, null);
+            }
         }
         catch (Exception ex)
         {
             Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
         }
-    } 
+    }
+
+    private void validateForm()
+    {
+        savePatient();
+    }
+
+ 
 }

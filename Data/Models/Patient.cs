@@ -14,16 +14,19 @@ namespace TraumaRegistry.Data.Models
 
         public string MRN { get; set; }
 
-        [MaxLength(100)]
+
+        [Required]
+        [StringLength(100, ErrorMessage = "First Name too long (100 character limit).")]
         public string FirstName { get; set; }
 
-        [MaxLength(100)]
+        [Required]
+        [StringLength(100, ErrorMessage = "First Name too long (100 character limit).")]
         public string LastName { get; set; }
 
         [MaxLength(1)]
         public string MI { get; set; }
         public DateTime? DOB { get; set; }
-
+        [EmailAddress]
         public string email { get; set; }
         public DateTime Created { get; set; }
 
