@@ -17,11 +17,12 @@ else
     var mName = patient.Mi == null ? "" : patient.Mi;
 
 
-    <div class="page-header" style="display: inline-block;"> 
-         <h2><i class="fas fa-user-injured"></i> Truamatic Event(s): </h2>
-         <h4 style="vertical-align: middle"><b>Patient:</b> @lName @fName @mName </h4>
-   </div>
-    
+    <div class="page-header" style="display: inline-block;">
+        <h2><i class="fas fa-user-injured"></i> Traumatic Event(s): </h2>
+        <h4 style="vertical-align: middle"><b>Patient:</b> @lName @fName @mName </h4>
+
+    </div>
+    <MatButton Style="float: right" Icon="add" @onclick="@(() => AddEvent())">Add Event</MatButton>
     @foreach (var e in patient.Events)
     {
         var activationDate = e.ActivationDateTime.HasValue ? e.ActivationDateTime.Value.ToString("dd/MM/yyyy hh:mm tt") : "<not available>";
@@ -33,7 +34,7 @@ else
                     </div>
                     <div class="col">
                         <div class="float-lg-right">
-                            <a href="#" class="btn btn-primary">View</a>
+                            <MatButton Icon="folder_open" @onclick="@(() => ViewEvent(e.Id))">View</MatButton>
                         </div>
                     </div>
                 </div>
@@ -54,6 +55,16 @@ else
 
     EventsClient client = new EventsClient();
     Patient patient;
+
+    void ViewEvent(int Id)
+    {
+
+    }
+
+    void AddEvent()
+    {
+
+    }
 
     protected override async Task OnInitializedAsync()
     {

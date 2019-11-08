@@ -7,18 +7,17 @@
 
 <h3>@pageHeader</h3>
 <EditForm Model="@patient" OnValidSubmit="@validateForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+    <DataAnnotationsValidator /> 
     <p>
-        <MatTextField id="patientMRN" Outlined="true" Label="Medical Record Number" @bind-Value=@patient.Mrn />
+        <MatTextField id="patientMRN"  Label="Medical Record Number" @bind-Value=@patient.Mrn />
     </p>
     <p>
-        <MatTextField id="patientFirstName" Outlined="true" Label="First Name" @bind-Value=@patient.FirstName />
+        <MatTextField id="patientFirstName"  Label="First Name" @bind-Value=@patient.FirstName />
 
         <ValidationMessage For="@(() => patient.FirstName)" />
     </p>
     <p>
-        <MatTextField id="patientLastName" Outlined="true" Label="Last Name" @bind-Value=@patient.LastName />
+        <MatTextField id="patientLastName"   Label="Last Name" @bind-Value=@patient.LastName />
         <ValidationMessage For="@(() => patient.LastName)" />
     </p>
     <p>
@@ -35,6 +34,7 @@
     </p>
     <p>
         <MatTextField id="patientEmail" Outlined="true" Label="E-mail" @bind-Value=@patient.Email /> <br />
+        <ValidationMessage For="@(() => patient.Email)" />
     </p>
     <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
     <MatButton type="submit" Icon="save" >Save</MatButton>
@@ -119,6 +119,4 @@
     {
         savePatient();
     }
-
- 
 }

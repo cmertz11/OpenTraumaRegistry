@@ -5,7 +5,8 @@
 @inject NavigationManager NavigationManager
 
 
-<h2><i class="fas fa-user-injured"></i>Patients</h2>
+<h2><i class="fa-user-injured"></i>Patients</h2> 
+<MatProgressBar Indeterminate="@querying"></MatProgressBar>
  
 @if (pagedData == null)
 {
@@ -21,7 +22,6 @@ else
         <MatOption value="MI">MI</MatOption>
     </MatSelect>
 
- 
     <MatTextField id="searchFilter" Label="Search" @bind-Value="query.Filter" />
     <MatButton Icon="search" @onclick="SearchAsync">Search </MatButton>
 
@@ -112,17 +112,20 @@ else
     string metrics = "";
     string pageSize = "10";
     int pageCount = 0;
+    bool querying = false; 
 
     UrlQuery query = new UrlQuery { PageNumber = 1, PageSize = 10, FilterColumn = "LastName", OrderBy = "Id", OrderByDirection = "asc" };
 
     protected async Task SearchAsync()
     {
+        querying = true;
         Stopwatch sw = new Stopwatch();
         sw.Start();
         pagedData = await client.GetPatientsAsync(query);
         pageCount = (pagedData.RecordCount + query.PageSize - 1) / query.PageSize;
         sw.Stop();
         metrics = "Total Patients: " + pagedData.RecordCount + "." + Environment.NewLine + "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
+        querying = false; 
     } 
 
     protected async Task ViewPatientEvents(int Id)

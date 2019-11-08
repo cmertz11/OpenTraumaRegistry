@@ -26,17 +26,19 @@ app {
 
 /* material theme */
 :root {
-    --mdc-theme-primary: #5D2E8F;
-    --mdc-theme-secondary: #fbaf41;
+    --mdc-theme-primary: #546e7a;
+    --mdc-theme-secondary: #b0bec5;
     /*--mdc-theme-on-primary: #495f90;
-    --mdc-theme-on-secondary: #ffe172;*/
-    --mdc-theme-text-primary: #ffffff;
-    --mdc-theme-text-secondary: #333;
-    --mdc-theme-text-on-primary: #001037;
-    --mdc-theme-text-on-secondary: #c48003;
+    /*--mdc-theme-on-secondary: #ffe172;*/
+    /*--mdc-theme-text-primary: #b0bec5;*/
+    /*--mdc-theme-text-secondary: #333;*/
+    /*--mdc-theme-text-on-primary: #001037;*/
+    /*--mdc-theme-text-on-secondary: #c48003;*/*/
     /*--mdc-theme-surface: #263238; */
 }
-
+.mdc-floating-label {
+    color: #546e7a;
+}
 .mdc-icon-button .fa {
     font-size: 30px;
 }
@@ -68,7 +70,7 @@ app {
 .loading-container {
     position: relative;
     text-align: center;
-    background-color: #fff;
+    background-color: #b0bec5;
     margin: 10% auto 0 auto;
     padding: 20px;
 }
@@ -142,12 +144,12 @@ app {
 
 /* app bar */
 .mdc-top-app-bar__row {
-    background-color: #fff;
-    color: #404040;
+    background-color: #455a64;
+    color: #b0bec5;
 }
 
 .mdc-top-app-bar__section .mdc-icon-button i {
-    color: #5D2E8F;
+    color: #b0bec5;
 }
 
 .logo-img {
@@ -164,7 +166,7 @@ app {
 
 .mdc-top-app-bar__title,
 .mdc-top-app-bar__title a {
-    color: white;
+    color: #455a64
 }
 
 
@@ -181,7 +183,8 @@ app {
 }
 
 .hidden-mdc-down nav a {
-    color: #E00;
+    color: #b0bec5;
+    
     display: block;
     padding: 0.5em 1em;
     text-decoration: none;
@@ -199,7 +202,7 @@ app {
 }
 
 .hidden-mdc-down nav > ul {
-    background: #EEE;
+    background: #455a64;
     text-align: center;
 }
 
@@ -213,7 +216,7 @@ app {
         }
 
 .sub-menu {
-    background: #DDD;
+    background: #455a64;
 }
 
 
@@ -226,12 +229,15 @@ app {
 .page-footer {
     display: flex;
     flex: 0 0 auto;
-    background: #fff;
-    color: #4d4d4d;
+    background: #455a64;
+    color: #b0bec5;
     padding: 9px 12px 9px 18px;
     box-shadow: 0 0 5px 0 rgba(0,0,0,0.21);
     margin-top: 30px;
     font-size: 12px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 .flex-1 {
@@ -308,14 +314,14 @@ app {
 }
 
 .mdc-drawer__content {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-    color: #FFF;
+    background-color: #455a64;
+    color: #b0bec5;
 }
 
 .mdc-drawer .mdc-list-item {
     margin: 8px 0 !important;
     border-radius: 0 !important;
-    color: #fff !important;
+    color: #b0bec5 !important;
 }
 
 .mdc-drawere .mdc-list-item:active {
@@ -354,13 +360,13 @@ app {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #5D2E8F;
+    background-color: #263238;
     height: 64px;
-    color: #fff;
+    color: #b0bec5;
 }
 
     .drawer-logo a {
-        color: #fff;
+        color: #b0bec5;
     }
 
 .drawer-header {
@@ -371,13 +377,13 @@ app {
     border-bottom: solid 1px #777;
     background-image: url("../images/profile-bg.jpg");
     background-size: cover;
-    color: #fff;
+    color: #b0bec5;
     font-size: 12px;
 }
 
     .drawer-profile a,
     .drawer-profile .material-icons {
-        color: #fff;
+        color: #b0bec5;
     }
 
 .app-sidebar .material-icons {
@@ -500,12 +506,12 @@ ul.breadcrumb {
 }
 
 .mdc-dialog__title {
-    color: #fff !important;
-    background: #5D2E8F;
+    color: #78909c !important;
+    background: #455a64
 }
 
 .mdc-dialog__actions {
-    border-top: 1px solid #e1e1e1 !important;
+    border-top: 1px solid #78909c !important;
 }
 
 .no-drop {
@@ -521,8 +527,7 @@ ul.breadcrumb {
     padding: 10px 25px;
     border: 1px solid #424d5c;
     cursor: grab;
-    background: #5c6b7f;
-    color: #ffffff;
+    background: #5c6b7f; 
     border-radius: 5px;
     width: 250px;
 }

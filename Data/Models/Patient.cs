@@ -26,7 +26,8 @@ namespace TraumaRegistry.Data.Models
         [MaxLength(1)]
         public string MI { get; set; }
         public DateTime? DOB { get; set; }
-        [EmailAddress]
+
+        [EmailAddress(ErrorMessage = "Please enter a valid email")]
         public string email { get; set; }
         public DateTime Created { get; set; }
 

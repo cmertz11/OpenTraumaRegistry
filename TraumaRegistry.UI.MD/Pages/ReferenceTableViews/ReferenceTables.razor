@@ -12,7 +12,7 @@ else
 {
 
     <h3><i class="fas fa-table"></i>&nbsp; System Reference Data: @tableName</h3>
-
+    <MatProgressBar Indeterminate="@querying"></MatProgressBar>
 
     <div class="row">
         <div class="col-5">
@@ -56,13 +56,13 @@ else
 <MatDialog @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle>@dialogHeader</MatDialogTitle>
 
-        <MatDialogContent>
-   
-            <MatTextField @bind-Value="@tableRec.Code" Label="Code" ></MatTextField>
- 
-            <MatTextField @bind-Value="@tableRec.Description" Label="Description" ></MatTextField>
+    <MatDialogContent>
 
-        </MatDialogContent>
+        <MatTextField @bind-Value="@tableRec.Code" Label="Code"></MatTextField>
+
+        <MatTextField @bind-Value="@tableRec.Description" Label="Description"></MatTextField>
+
+    </MatDialogContent>
 
     <MatDialogActions>
         <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
@@ -70,7 +70,7 @@ else
     </MatDialogActions>
 
 </MatDialog>
- 
+
 
 
 @code {
@@ -81,7 +81,7 @@ else
 
     bool dialogIsOpen = false;
     string dialogHeader = "";
-
+    bool querying = false;
 
     ReferenceTableClient client = new ReferenceTableClient();
     RefTableDTO table = null;
@@ -90,7 +90,9 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
+        querying = true;
         table = await client.GetRefTableDataAsync(tableName);
+        querying = false;
     }
 
     async Task AddRecord()
@@ -129,7 +131,7 @@ else
     }
 
     async Task SaveRecord()
-    { 
+    {
         try
         {
             if (mode == "edit")
@@ -162,7 +164,7 @@ else
         catch (Exception ex)
         {
             Toaster.Add(ex.ToString(), MatToastType.Danger, "System Error", "error", null);
-        } 
+        }
     }
 
     void toast(string message)
