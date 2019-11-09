@@ -17,6 +17,7 @@ else
  
     <MatSelect Label="Filter" Enhanced="true" @bind-Value="query.FilterColumn">
         <MatOption value="Id">Id</MatOption>
+        <MatOption Value="MRN"></MatOption>
         <MatOption value="FirstName">First Name</MatOption>
         <MatOption value="LastName">Last Name</MatOption>
         <MatOption value="MI">MI</MatOption>
@@ -40,6 +41,11 @@ else
                 <th>
                     Id
                     <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("Id"))"></MatButton>
+
+                </th>
+                <th>
+                    MRN
+                    <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("MRN"))"></MatButton>
 
                 </th>
                 <th>
@@ -69,6 +75,7 @@ else
             {
             <tr>
                 <td>@patient.Id</td>
+                <td>@patient.Mrn</td>
                 <td>@patient.FirstName</td>
                 <td>@patient.LastName</td>
                 <td>@patient.Mi</td>

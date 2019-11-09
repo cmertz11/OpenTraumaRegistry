@@ -5,118 +5,166 @@
 @inject IMatToaster Toaster
 
 
-<h3>@pageHeader</h3>
-<EditForm Model="@patient" OnValidSubmit="@validateForm">
-    <DataAnnotationsValidator /> 
-    <p>
-        <MatTextField id="patientMRN"  Label="Medical Record Number" @bind-Value=@patient.Mrn />
-    </p>
-    <p>
-        <MatTextField id="patientFirstName"  Label="First Name" @bind-Value=@patient.FirstName />
 
-        <ValidationMessage For="@(() => patient.FirstName)" />
-    </p>
-    <p>
-        <MatTextField id="patientLastName"   Label="Last Name" @bind-Value=@patient.LastName />
-        <ValidationMessage For="@(() => patient.LastName)" />
-    </p>
-    <p>
-        <MatTextField id="patientMI" Outlined="true" Label="Middle Initial" @bind-Value=@patient.Mi />
-    </p>
-    <p>
-        <MatDatePicker Label="DOB" Dense="true" Outlined="true" @bind-Value="@patient.Dob"></MatDatePicker>
-    </p>
-    <p>
-        <RefTableDropDown TableName="RefGender" PlaceHolder="Gender" SelectedId="@patient.GenderReferenceId" IdChanged="genderIdChanged"></RefTableDropDown>
-    </p>
-    <p>
-        <RefTableDropDown TableName="RefRace" PlaceHolder="Race" SelectedId="@patient.RaceReferenceId" IdChanged="raceIdChanged"></RefTableDropDown>
-    </p>
-    <p>
-        <MatTextField id="patientEmail" Outlined="true" Label="E-mail" @bind-Value=@patient.Email /> <br />
-        <ValidationMessage For="@(() => patient.Email)" />
-    </p>
-    <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
-    <MatButton type="submit" Icon="save" >Save</MatButton>
-</EditForm>
-@code {
+<div class="container">
+    <div class="row">
+        <div class="col-4">
 
-    [Parameter]
-    public int Id { get; set; }
+            <h3>@pageHeader</h3>
+            <EditForm Model="@patient" OnValidSubmit="@validateForm">
+                <DataAnnotationsValidator />
+                <p>
+                    <MatTextField id="patientMRN" FullWidth="true" Label="Medical Record Number" @bind-Value=@patient.Mrn />
+                </p>
+                <p>
+                    <MatTextField id="patientFirstName" Label="First Name" FullWidth="true" @bind-Value=@patient.FirstName />
 
-    int genderId;
-    int raceId;
-    Patient patient = new Patient();
-    bool success = false;
-    string mode = "add";
-    string pageHeader = "Add Patient";
-    PatientsClient client = new PatientsClient();
+                    <ValidationMessage For="@(() => patient.FirstName)" />
+                </p>
+                <p>
+                    <MatTextField id="patientLastName" Label="Last Name" FullWidth="true" @bind-Value=@patient.LastName />
+                    <ValidationMessage For="@(() => patient.LastName)" />
+                </p>
+                <p>
+                    <MatTextField id="patientMI" Label="Middle Initial" FullWidth="true" @bind-Value=@patient.Mi />
+                </p>
+                <p>
+                    <MatDatePicker Label="DOB" FullWidth="true" @bind-Value="@patient.Dob"></MatDatePicker>
+                </p>
+                <p>
+                    <MatSelect Label="Gender" FullWidth="true" @bind-Value="@genderIdStr">
 
-    protected override async Task OnParametersSetAsync()
-    {
-        if (Id > 0)
-        {
-            mode = "edit";
-            pageHeader = "Edit Patient: " + Id;
-            patient = await client.GetPatientAsync(Id);
-            genderId = patient.GenderReferenceId;
-            raceId = patient.RaceReferenceId;
-        }
-        else
-        {
-            mode = "add";
-            pageHeader = "Add New Patient";
-        }
-    }
+                        @if (refGenderTable.TableData != null)
+                        {
+                            <MatOption Value=""></MatOption>
+                            @foreach (var item in refGenderTable.TableData)
+                            {
+                                if (item.Id == SelectedGenderId)
+                                {
+                                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                                }
+                                else
+                                {
+                                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                                }
+                            }
+                        }
+                    </MatSelect>
+                </p>
+                <p>
+                    <MatSelect Label="Race" FullWidth="true" @bind-Value="@raceIdStr">
 
-    void cancel()
-    {
-        NavigationManager.NavigateTo("/patients");
-    }
+                        @if (refRaceTable.TableData != null)
+                        {
+                            <MatOption Value=""></MatOption>
+                            @foreach (var item in refRaceTable.TableData)
+                            {
+                                if (item.Id == SelectedRaceId)
+                                {
+                                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                                }
+                                else
+                                {
+                                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                                }
+                            }
+                        }
+                    </MatSelect>
+                </p>
+                <p>
+                    <MatTextField id="patientEmail" Label="E-mail" FullWidth="true" @bind-Value=@patient.Email /> <br />
+                    <ValidationMessage For="@(() => patient.Email)" />
+                </p>
 
-    void genderIdChanged(int Id)
-    {
+                <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
+                <MatButton type="submit" Icon="save">Save</MatButton>
+            </EditForm>
+        </div>
+        </div>
+    </div>
+            @code {
+                [Parameter]
+                public int Id { get; set; }
 
-        genderId = Id;
-    }
+                int genderId;
+                int raceId;
+                Patient patient = new Patient();
+                bool success = false;
+                string mode = "add";
+                string pageHeader = "Add Patient";
+                PatientsClient client = new PatientsClient();
 
-    void raceIdChanged(int Id)
-    {
-        raceId = Id;
-    }
+                public int SelectedGenderId { get; set; } = 0;
+                public int SelectedRaceId { get; set; } = 0;
 
-    async Task savePatient()
-    {
-        try
-        {
-            PatientsClient client = new PatientsClient();
-            patient.GenderReferenceId = genderId;
-            patient.RaceReferenceId = raceId;
+                public string genderIdStr { get; set; }
+                public string raceIdStr { get; set; }
 
-            var timeStamp = System.DateTime.Now;
-            patient.LastUpdate = timeStamp;
 
-            if (mode == "add")
-            {
+                RefTableDTO refGenderTable = new RefTableDTO();
+                RefTableDTO refRaceTable = new RefTableDTO();
 
-                patient.Created = timeStamp;
-                var rec = client.PostPatientAsync(patient);
-                Toaster.Add("Patient Added Successfully!", MatToastType.Success, "Success", null, null);
+                protected override async Task OnInitializedAsync()
+                {
+                    ReferenceTableClient client = new ReferenceTableClient();
+                    refGenderTable = await client.GetRefTableDataAsync("RefGender");
+                    refRaceTable = await client.GetRefTableDataAsync("RefRace");
+                }
+
+                protected override async Task OnParametersSetAsync()
+                {
+                    if (Id > 0)
+                    {
+                        mode = "edit";
+                        pageHeader = "Edit Patient: " + Id;
+                        patient = await client.GetPatientAsync(Id);
+                        SelectedGenderId = patient.GenderReferenceId;
+                        SelectedRaceId = patient.RaceReferenceId;
+                    }
+                    else
+                    {
+                        mode = "add";
+                        pageHeader = "Add New Patient";
+                    }
+                }
+
+                void cancel()
+                {
+                    NavigationManager.NavigateTo("/patients");
+                }
+
+                async Task savePatient()
+                {
+                    try
+                    {
+                        PatientsClient client = new PatientsClient();
+                        patient.GenderReferenceId = Convert.ToInt32(genderIdStr);
+                        patient.RaceReferenceId = Convert.ToInt32(raceIdStr);
+
+                        var timeStamp = System.DateTime.Now;
+                        patient.LastUpdate = timeStamp;
+
+                        if (mode == "add")
+                        {
+
+                            patient.Created = timeStamp;
+                            var rec = client.PostPatientAsync(patient);
+                            Toaster.Add("Patient Added Successfully!", MatToastType.Success, "Success", null, null);
+                        }
+                        else
+                        {
+                            var rec = await client.PutPatientAsync(Id, patient);
+                            Toaster.Add("Patient Updated Successfully!", MatToastType.Success, "Success", null, null);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
+                    }
+                }
+
+                private async Task validateForm()
+                {
+                    await savePatient();
+                }
             }
-            else
-            {
-                var rec = await client.PutPatientAsync(Id, patient);
-                Toaster.Add("Patient Updated Successfully!", MatToastType.Success, "Success", null, null);
-            }
-        }
-        catch (Exception ex)
-        {
-            Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
-        }
-    }
-
-    private void validateForm()
-    {
-        savePatient();
-    }
-}

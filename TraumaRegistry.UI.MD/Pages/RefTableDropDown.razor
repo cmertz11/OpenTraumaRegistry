@@ -1,9 +1,5 @@
 ﻿
-    
-    <div style="col-lg-2">
-
-
-        <select class="form-control mb-4" Label=@PlaceHolder @onchange="@selectedIdChanged">
+        <MatSelect Label=@PlaceHolder @onchange="@selectedIdChanged">
 
             @if (refTable.TableData != null)
             {
@@ -12,16 +8,16 @@
                 {
                     if (item.Id == SelectedId)
                     {
-                        <option value=@item.Id selected>@item.Description</option>
+                        <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
                     }
                     else
                     {
-                        <option value=@item.Id>@item.Description</option>
+                        <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
                     }
                 }
             }
-        </select>
-    </div>
+        </MatSelect>
+
         @code {
             [Parameter]
             public string TableName { get; set; }
