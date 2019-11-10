@@ -1,0 +1,184 @@
+﻿@page "/addEvent/{PatientId:int}"
+@page "/editEvent/{EventId:int}"
+
+
+<h3>AddEditEvent</h3>
+
+<MatDatePicker Label="Injury Date" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.InjuryDateTime"></MatDatePicker>
+
+<MatSelect Label="Injury Type" FullWidth="true" @bind-Value="@InjuryTypeIdStr">
+
+    @if (refInjuryTypeTable.TableData != null)
+    {
+        <MatOption Value=""></MatOption>
+        @foreach (var item in refInjuryTypeTable.TableData)
+        {
+            if (item.Id == SelectedInjuryTypeId)
+            {
+                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+            }
+            else
+            {
+                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+            }
+        }
+    }
+</MatSelect>
+
+<MatTextField Label="Place of Occurance/ZIP" @bind-Value=@eventObj.OccuranceZipCode />
+
+<MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true"></MatTextField>
+
+<MatAccordion>
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Safety Devices</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            @if (refSafetyDevices.TableData != null)
+            {
+                @foreach (var device in refSafetyDevices.TableData)
+                {
+                    <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                }
+            }
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+
+    <MatExpansionPanel>
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Risk Data (Comorbids)</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            @if (refRiskData.TableData != null)
+            {
+                @foreach (var device in refRiskData.TableData)
+                {
+                    <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                }
+            }
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+
+</MatAccordion>
+
+<br />
+
+<MatDatePicker Label="Agency Distpatch Date/Time" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDispatchDateTime"></MatDatePicker>
+<MatDatePicker Label="Agnecy Arrive Date/Time" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyArriveSceneDateTime"></MatDatePicker>
+<MatDatePicker Label="Agnecy Depart Date/Time" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
+
+<MatSelect Label="Arrived From" FullWidth="true" @bind-Value="@ArrivedFromStr">
+
+    @if (refArrivedFrom.TableData != null)
+    {
+        <MatOption Value=""></MatOption>
+        @foreach (var item in refArrivedFrom.TableData)
+        {
+            if (item.Id == SelectedArrivedFromID)
+            {
+                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+            }
+            else
+            {
+                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+            }
+        }
+    }
+</MatSelect>
+
+<MatSelect Label="Transport" FullWidth="true" @bind-Value="@TransportStr">
+
+    @if (refTransport.TableData != null)
+    {
+        <MatOption Value=""></MatOption>
+        @foreach (var item in refTransport.TableData)
+        {
+            if (item.Id == SelectedTransportId)
+            {
+                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+            }
+            else
+            {
+                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+            }
+        }
+    }
+</MatSelect>
+
+<MatSelect Label="Trauma Level" FullWidth="true" @bind-Value="@TraumaLevelStr">
+
+    @if (refTraumaLevel.TableData != null)
+    {
+        <MatOption Value=""></MatOption>
+        @foreach (var item in refTraumaLevel.TableData)
+        {
+            if (item.Id == SelectedTransportId)
+            {
+                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+            }
+            else
+            {
+                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+            }
+        }
+    }
+</MatSelect>
+
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; } = 0;
+    [Parameter]
+    public int EventId { get; set; } = 0;
+
+    string mode = "add";
+    RefTableDTO refInjuryTypeTable = new RefTableDTO();
+
+
+    RefTableDTO refSafetyDevices = new RefTableDTO();
+    RefTableDTO refRiskData = new RefTableDTO();
+    RefTableDTO refArrivedFrom = new RefTableDTO();
+    RefTableDTO refTransport = new RefTableDTO();
+    RefTableDTO refTraumaLevel = new RefTableDTO();
+    int SelectedArrivedFromID { get; set; } = 0;
+
+    int SelectedInjuryTypeId { get; set; } = 0;
+    int SelectedTransportId { get; set; } = 0;
+    int SelectedTraumaLevelId { get; set; } = 0;
+
+    string InjuryTypeIdStr { get; set; }
+    string ArrivedFromStr { get; set; }
+    string TransportStr { get; set; }
+    string TraumaLevelStr { get; set; }
+
+    Event eventObj = new Event();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventsClient EventClient = new EventsClient();
+        ReferenceTableClient RefTableClient = new ReferenceTableClient();
+        refInjuryTypeTable = await RefTableClient.GetRefTableDataAsync("RefInjuryType");
+        refSafetyDevices = await RefTableClient.GetRefTableDataAsync("RefSafetyDevices");
+        refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
+        refArrivedFrom = await RefTableClient.GetRefTableDataAsync("RefArrivedFrom");
+        refTransport = await RefTableClient.GetRefTableDataAsync("RefTransport");
+        refTraumaLevel = await RefTableClient.GetRefTableDataAsync("RefTraumaLevel");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (PatientId > 0)
+        {
+            mode = "add";
+        }
+        else if (EventId > 0)
+        {
+            mode = "edit";
+        }
+    }
+
+}

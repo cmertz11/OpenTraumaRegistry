@@ -94,11 +94,11 @@
                 string pageHeader = "Add Patient";
                 PatientsClient client = new PatientsClient();
 
-                public int SelectedGenderId { get; set; } = 0;
-                public int SelectedRaceId { get; set; } = 0;
-
-                public string genderIdStr { get; set; }
-                public string raceIdStr { get; set; }
+                int SelectedGenderId { get; set; } = 0;
+                int SelectedRaceId { get; set; } = 0;
+               
+                string genderIdStr { get; set; }
+                string raceIdStr { get; set; }
 
 
                 RefTableDTO refGenderTable = new RefTableDTO();

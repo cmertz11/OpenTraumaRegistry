@@ -3,6 +3,7 @@
 
 @using System.Diagnostics
 @using System.Threading
+@inject NavigationManager NavigationManager
 
 
 @if (patient == null)
@@ -30,10 +31,11 @@ else
             <div class="card-header">
                 <div class="row">
                     <div class="col-10">
-                        <b>Trauma Level:</b> @e.TraumaLevel.Description &nbsp;<b>Injury Date:</b> @e.InjuryDateTime.ToString("dd/MM/yyyy hh:mm tt") &nbsp;<b>Activation Time:</b> @activationDate  &nbsp;<b>Outcome:</b> @e.Outcome.Description
+                        <b>Trauma Level:</b> @e.TraumaLevel.Description &nbsp;<b>Injury Date:</b> @Convert.ToDateTime(e.InjuryDateTime).ToString("dd/MM/yyyy hh:mm tt") &nbsp;<b>Activation Time:</b> @activationDate  &nbsp;<b>Outcome:</b> @e.Outcome.Description
                     </div>
                     <div class="col">
                         <div class="float-lg-right">
+                            <MatButton Icon="edit" @onclick="@(() => EditEvent(e.Id))">Edit</MatButton>
                             <MatButton Icon="folder_open" @onclick="@(() => ViewEvent(e.Id))">View</MatButton>
                         </div>
                     </div>
@@ -56,14 +58,20 @@ else
     EventsClient client = new EventsClient();
     Patient patient;
 
-    void ViewEvent(int Id)
+    void ViewEvent(int EventId)
     {
-
+        //view event page is a printable report
+        NavigationManager.NavigateTo("/viewEvent/" + EventId);
     }
 
     void AddEvent()
     {
+        NavigationManager.NavigateTo("/addEvent/" + PatientId);
+    }
 
+    void EditEvent(int EventId)
+    {
+         NavigationManager.NavigateTo("/editEvent/" + EventId);
     }
 
     protected override async Task OnInitializedAsync()

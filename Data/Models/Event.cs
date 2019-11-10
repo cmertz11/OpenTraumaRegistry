@@ -17,7 +17,7 @@ namespace TraumaRegistry.Data.Models
 
         public string LocationOfOccuranceDescription { get; set; }
         public string OccuranceZipCode { get; set; }
-        public DateTime InjuryDateTime { get; set; }
+       
 
         [MaxLength(1000)]
         public string InjuryDetailsNarrative { get; set; }
@@ -27,6 +27,7 @@ namespace TraumaRegistry.Data.Models
 
         public bool? FastExamPositive { get; set; }
         #region Key Event DateTimes
+            public DateTime? InjuryDateTime { get; set; }
             public DateTime? AgencyDispatchDateTime { get; set; }
             public DateTime? AgencyArriveSceneDateTime { get; set; }
             public DateTime? AgencyDepartSceneDateTime { get; set; }

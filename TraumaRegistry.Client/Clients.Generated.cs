@@ -2712,6 +2712,7 @@ namespace TraumaRegistry.Client
         public int Id { get; set; }
     
         [Newtonsoft.Json.JsonProperty("mrn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(20)]
         public string Mrn { get; set; }
     
         [Newtonsoft.Json.JsonProperty("firstName", Required = Newtonsoft.Json.Required.Always)]
@@ -2816,10 +2817,6 @@ namespace TraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("occuranceZipCode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OccuranceZipCode { get; set; }
     
-        [Newtonsoft.Json.JsonProperty("injuryDateTime", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.DateTime InjuryDateTime { get; set; }
-    
         [Newtonsoft.Json.JsonProperty("injuryDetailsNarrative", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(1000)]
         public string InjuryDetailsNarrative { get; set; }
@@ -2832,6 +2829,9 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("fastExamPositive", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? FastExamPositive { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("injuryDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? InjuryDateTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("agencyDispatchDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? AgencyDispatchDateTime { get; set; }
