@@ -65,8 +65,9 @@ else
                     DOB
                     <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("DOB"))"></MatButton>
                 </th>
+                <th></th>
                 <th>
-                    <MatButton Icon="add" @onclick="@AddNewPatient">Add New</MatButton>
+                    <MatButton Style="float: right;" Icon="add" @onclick="@AddNewPatient">Add New</MatButton>
                 </th>
             </tr>
         </thead>

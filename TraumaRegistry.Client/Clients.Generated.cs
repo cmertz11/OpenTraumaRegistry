@@ -2830,6 +2830,9 @@ namespace TraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("fastExamPositive", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? FastExamPositive { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("bloodProducts", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string BloodProducts { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("injuryDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? InjuryDateTime { get; set; }
     
@@ -2862,6 +2865,12 @@ namespace TraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("anesthesiaArrivalTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? AnesthesiaArrivalTime { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("bloodProductsStartTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? BloodProductsStartTime { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("bloodProductsStopTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? BloodProductsStopTime { get; set; }
     
         [Newtonsoft.Json.JsonProperty("outcomeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? OutcomeId { get; set; }

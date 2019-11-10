@@ -30,6 +30,23 @@ namespace TraumaRegistry.Api.Controllers
                 .ThenInclude(events => events.Outcome)
                 .Include(events => events.Events)
                 .ThenInclude(events => events.TraumaLevel)
+                .Include(events => events.Events)
+                .ThenInclude(events => events.InjuryTypes)
+                .Include(events => events.Events)
+                .ThenInclude(events => events.SafetyDevices)
+                                .Include(events => events.Events)
+                .ThenInclude(events => events.Vitals)
+                                .Include(events => events.Events)
+                .ThenInclude(events => events.Injuries)
+                                .Include(events => events.Events)
+                .ThenInclude(events => events.Procedures)
+                                .Include(events => events.Events)
+                .ThenInclude(events => events.Complications)
+                                .Include(events => events.Events)
+                .ThenInclude(events => events.Risks)
+                                .Include(events => events.Events)
+                .ThenInclude(events => events.Consults)
+
                 .FirstOrDefaultAsync();
 
             if (patient == null)
@@ -39,7 +56,6 @@ namespace TraumaRegistry.Api.Controllers
 
             return patient;
         }
-
 
 
         // PUT: api/Events/5

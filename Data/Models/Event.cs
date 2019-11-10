@@ -26,8 +26,11 @@ namespace TraumaRegistry.Data.Models
         public bool? FastExam { get; set; }
 
         public bool? FastExamPositive { get; set; }
+
+        public string BloodProducts { get; set; }
+
         #region Key Event DateTimes
-            public DateTime? InjuryDateTime { get; set; }
+        public DateTime? InjuryDateTime { get; set; }
             public DateTime? AgencyDispatchDateTime { get; set; }
             public DateTime? AgencyArriveSceneDateTime { get; set; }
             public DateTime? AgencyDepartSceneDateTime { get; set; }
@@ -38,6 +41,8 @@ namespace TraumaRegistry.Data.Models
             public DateTime? ActivationDateTime { get; set; }
             public DateTime? HospitalDischargeOrder { get; set; }
             public DateTime? AnesthesiaArrivalTime { get; set; }
+            public DateTime? BloodProductsStartTime{ get; set; }
+            public DateTime? BloodProductsStopTime { get; set; }
         #endregion
 
         #region ForeignKey Id's Single

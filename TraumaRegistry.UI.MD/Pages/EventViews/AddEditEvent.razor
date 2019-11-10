@@ -1,133 +1,167 @@
 ﻿@page "/addEvent/{PatientId:int}"
 @page "/editEvent/{EventId:int}"
-
+@inject NavigationManager NavigationManager
 
 <h3>AddEditEvent</h3>
 
-<MatDatePicker Label="Injury Date" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.InjuryDateTime"></MatDatePicker>
-
-<MatSelect Label="Injury Type" FullWidth="true" @bind-Value="@InjuryTypeIdStr">
-
-    @if (refInjuryTypeTable.TableData != null)
-    {
-        <MatOption Value=""></MatOption>
-        @foreach (var item in refInjuryTypeTable.TableData)
-        {
-            if (item.Id == SelectedInjuryTypeId)
-            {
-                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-            }
-            else
-            {
-                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
-            }
-        }
-    }
-</MatSelect>
-
-<MatTextField Label="Place of Occurance/ZIP" @bind-Value=@eventObj.OccuranceZipCode />
-
-<MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true"></MatTextField>
-
-<MatAccordion>
-    <MatExpansionPanel>
-        <MatExpansionPanelSummary>
-            <MatExpansionPanelHeader>Safety Devices</MatExpansionPanelHeader>
-            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
-        </MatExpansionPanelSummary>
-        <MatExpansionPanelDetails>
-            @if (refSafetyDevices.TableData != null)
-            {
-                @foreach (var device in refSafetyDevices.TableData)
+<EditForm Model="@eventObj" OnValidSubmit="@validateForm">
+    <MatDatePicker Label="Injury Date" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.InjuryDateTime"></MatDatePicker>
+    <br />
+    <MatTextField Label="Place of Occurance/ZIP" @bind-Value=@eventObj.OccuranceZipCode />
+    <br />
+    <br />
+    <MatAccordion>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Safety Devices</MatExpansionPanelHeader>
+                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                @if (refSafetyDevices.TableData != null)
                 {
-                    <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                    @foreach (var device in refSafetyDevices.TableData)
+                    {
+                        <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                    }
+                }
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    </MatAccordion>
+
+    <br />
+
+    <MatSelect Label="Injury Type" FullWidth="true" @bind-Value="@InjuryTypeIdStr">
+
+        @if (refInjuryTypeTable.TableData != null)
+        {
+            <MatOption Value=""></MatOption>
+            @foreach (var item in refInjuryTypeTable.TableData)
+            {
+                if (item.Id == SelectedInjuryTypeId)
+                {
+                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                }
+                else
+                {
+                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
                 }
             }
-        </MatExpansionPanelDetails>
-    </MatExpansionPanel>
+        }
+    </MatSelect>
+    <br />
+    <br />
 
-    <MatExpansionPanel>
-        <MatExpansionPanelSummary>
-            <MatExpansionPanelHeader>Risk Data (Comorbids)</MatExpansionPanelHeader>
-            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
-        </MatExpansionPanelSummary>
-        <MatExpansionPanelDetails>
-            @if (refRiskData.TableData != null)
-            {
-                @foreach (var device in refRiskData.TableData)
+    <MatAccordion>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Risk Data (Comorbids)</MatExpansionPanelHeader>
+                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                @if (refRiskData.TableData != null)
                 {
-                    <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                    @foreach (var device in refRiskData.TableData)
+                    {
+                        <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                    }
+                }
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    </MatAccordion>
+    <br />
+
+    <MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true"></MatTextField>
+    <br />
+
+
+    <MatDatePicker Label="Agency Distpatch Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDispatchDateTime"></MatDatePicker>
+    <br />
+    <MatDatePicker Label="Agnecy Arrive Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyArriveSceneDateTime"></MatDatePicker>
+    <br />
+    <MatDatePicker Label="Agnecy Depart Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
+    <br />
+
+    <MatSelect Label="Arrived From" FullWidth="true" @bind-Value="@ArrivedFromStr">
+
+        @if (refArrivedFrom.TableData != null)
+        {
+            <MatOption Value=""></MatOption>
+            @foreach (var item in refArrivedFrom.TableData)
+            {
+                if (item.Id == SelectedArrivedFromID)
+                {
+                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                }
+                else
+                {
+                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
                 }
             }
-        </MatExpansionPanelDetails>
-    </MatExpansionPanel>
+        }
+    </MatSelect>
+    <br />
 
-</MatAccordion>
+    <MatSelect Label="Transport" FullWidth="true" @bind-Value="@TransportStr">
 
-<br />
-
-<MatDatePicker Label="Agency Distpatch Date/Time" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDispatchDateTime"></MatDatePicker>
-<MatDatePicker Label="Agnecy Arrive Date/Time" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyArriveSceneDateTime"></MatDatePicker>
-<MatDatePicker Label="Agnecy Depart Date/Time" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
-
-<MatSelect Label="Arrived From" FullWidth="true" @bind-Value="@ArrivedFromStr">
-
-    @if (refArrivedFrom.TableData != null)
-    {
-        <MatOption Value=""></MatOption>
-        @foreach (var item in refArrivedFrom.TableData)
+        @if (refTransport.TableData != null)
         {
-            if (item.Id == SelectedArrivedFromID)
+            <MatOption Value=""></MatOption>
+            @foreach (var item in refTransport.TableData)
             {
-                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-            }
-            else
-            {
-                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                if (item.Id == SelectedTransportId)
+                {
+                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                }
+                else
+                {
+                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                }
             }
         }
-    }
-</MatSelect>
+    </MatSelect>
+    <br />
+    <br />
+    <MatSelect Label="Trauma Level" FullWidth="true" @bind-Value="@TraumaLevelStr">
 
-<MatSelect Label="Transport" FullWidth="true" @bind-Value="@TransportStr">
-
-    @if (refTransport.TableData != null)
-    {
-        <MatOption Value=""></MatOption>
-        @foreach (var item in refTransport.TableData)
+        @if (refTraumaLevel.TableData != null)
         {
-            if (item.Id == SelectedTransportId)
+            <MatOption Value=""></MatOption>
+            @foreach (var item in refTraumaLevel.TableData)
             {
-                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-            }
-            else
-            {
-                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                if (item.Id == SelectedTransportId)
+                {
+                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                }
+                else
+                {
+                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                }
             }
         }
-    }
-</MatSelect>
+    </MatSelect>
 
-<MatSelect Label="Trauma Level" FullWidth="true" @bind-Value="@TraumaLevelStr">
+    <br />
+    <MatDatePicker Label="Activation Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.ActivationDateTime"></MatDatePicker>
+    <br />
+    <MatCheckbox @bind-Checked="@FastExam" Label="Fast Exam"></MatCheckbox>
+    <br />
+    <MatCheckbox @bind-Checked="@FastExamPositive" Label="Fast Exam Positive"></MatCheckbox>
+    <br />
+    <MatCheckbox @bind-Checked="@TimeInERHolder" Label="Time In ER Holder"></MatCheckbox>
+    <br />
+    <MatDatePicker Label="Anesthesia Arrival Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
+    <br />
+    <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts />
+    <br />
+    <MatDatePicker Label="Blood Products Start Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStartTime"></MatDatePicker>
+    <br />
+    <MatDatePicker Label="Blood Products Stop Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStopTime"></MatDatePicker>
+    <br />
 
-    @if (refTraumaLevel.TableData != null)
-    {
-        <MatOption Value=""></MatOption>
-        @foreach (var item in refTraumaLevel.TableData)
-        {
-            if (item.Id == SelectedTransportId)
-            {
-                <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-            }
-            else
-            {
-                <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
-            }
-        }
-    }
-</MatSelect>
+    <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
+    <MatButton type="submit" Icon="save">Save</MatButton>
 
-
+</EditForm>
 @code {
     [Parameter]
     public int PatientId { get; set; } = 0;
@@ -136,7 +170,6 @@
 
     string mode = "add";
     RefTableDTO refInjuryTypeTable = new RefTableDTO();
-
 
     RefTableDTO refSafetyDevices = new RefTableDTO();
     RefTableDTO refRiskData = new RefTableDTO();
@@ -150,16 +183,23 @@
     int SelectedTraumaLevelId { get; set; } = 0;
 
     string InjuryTypeIdStr { get; set; }
-    string ArrivedFromStr { get; set; }
-    string TransportStr { get; set; }
-    string TraumaLevelStr { get; set; }
+    string ArrivedFromStr  { get; set; }
+    string TransportStr    { get; set; }
+    string TraumaLevelStr  { get; set; }
 
+
+
+    bool FastExam { get; set; } = false;
+    bool FastExamPositive { get; set; } = false;
+    bool TimeInERHolder { get; set; } = false;
+
+    EventsClient EventClient = new EventsClient();
+    Patient patientObj = new Patient();
     Event eventObj = new Event();
-
 
     protected override async Task OnInitializedAsync()
     {
-        EventsClient EventClient = new EventsClient();
+
         ReferenceTableClient RefTableClient = new ReferenceTableClient();
         refInjuryTypeTable = await RefTableClient.GetRefTableDataAsync("RefInjuryType");
         refSafetyDevices = await RefTableClient.GetRefTableDataAsync("RefSafetyDevices");
@@ -178,7 +218,23 @@
         else if (EventId > 0)
         {
             mode = "edit";
+            patientObj = await EventClient.GetPatientWithEventsAsync(1);
+            eventObj = patientObj.Events.Where(e => e.Id == EventId).FirstOrDefault();
+
+            //InjuryTypeIdStr = eventObj.  <-- multi select is possible
+            ArrivedFromStr = eventObj.ArrivedFromId.ToString();
+            TransportStr = eventObj.TransportId.ToString();
+            TraumaLevelStr = eventObj.TraumaLevelId.ToString();
+
         }
+    }
+    void cancel()
+    {
+        NavigationManager.NavigateTo("/patients");
+    }
+
+    private async Task validateForm()
+    {
     }
 
 }
