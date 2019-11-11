@@ -21,7 +21,7 @@
                 {
                     @foreach (var device in refSafetyDevices.TableData)
                     {
-                        <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                        <MatCheckbox @bind-Checked="@device.Selected" Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
                     }
                 }
             </MatExpansionPanelDetails>
@@ -60,9 +60,9 @@
             <MatExpansionPanelDetails>
                 @if (refRiskData.TableData != null)
                 {
-                    @foreach (var device in refRiskData.TableData)
+                    @foreach (var r in refRiskData.TableData)
                     {
-                        <MatCheckbox Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
+                        <MatCheckbox @bind-Checked="@r.Selected" Value="@r.Id.ToString()" Label="@r.Description"></MatCheckbox>
                     }
                 }
             </MatExpansionPanelDetails>
@@ -225,6 +225,16 @@
             ArrivedFromStr = eventObj.ArrivedFromId.ToString();
             TransportStr = eventObj.TransportId.ToString();
             TraumaLevelStr = eventObj.TraumaLevelId.ToString();
+
+            foreach (var risk in eventObj.Risks)
+            {
+                refRiskData.TableData.Where(r => r.Id == risk.Id).FirstOrDefault().Selected = true;
+            }
+
+            foreach (var safetyDevice in eventObj.SafetyDevices)
+            {
+                refSafetyDevices.TableData.Where(r => r.Id == safetyDevice.Id).FirstOrDefault().Selected = true;
+            }
 
         }
     }

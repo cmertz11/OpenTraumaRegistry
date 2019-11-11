@@ -3475,6 +3475,9 @@ namespace TraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("selected", Required = Newtonsoft.Json.Required.Always)]
+        public bool Selected { get; set; }
+    
     
     }
     
