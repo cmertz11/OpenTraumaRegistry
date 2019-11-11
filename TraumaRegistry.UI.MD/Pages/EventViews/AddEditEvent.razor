@@ -1,4 +1,4 @@
-﻿@page "/addEvent/{PatientId:int}"
+﻿ @page "/addEvent/{PatientId:int}"
 @page "/editEvent/{EventId:int}"
 @inject NavigationManager NavigationManager
 
@@ -30,25 +30,101 @@
 
     <br />
 
-    <MatSelect Label="Injury Type" FullWidth="true" @bind-Value="@InjuryTypeIdStr">
+    <MatAccordion>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Injury Types</MatExpansionPanelHeader>
+                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                @if (refInjuryTypeTable.TableData != null)
+                {
+                    @foreach (var r in refInjuryTypeTable.TableData)
+                    {
+                        <MatCheckbox @bind-Checked="@r.Selected" Value="@r.Id.ToString()" Label="@r.Description"></MatCheckbox>
+                    }
+                }
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    </MatAccordion>
 
-        @if (refInjuryTypeTable.TableData != null)
-        {
-            <MatOption Value=""></MatOption>
-            @foreach (var item in refInjuryTypeTable.TableData)
-            {
-                if (item.Id == SelectedInjuryTypeId)
-                {
-                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-                }
-                else
-                {
-                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
-                }
-            }
-        }
-    </MatSelect>
+
+
     <br />
+    <MatAccordion>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>Vitals</MatExpansionPanelHeader>
+                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <div class="row">
+                    <div class="col-10">
+                        <table class="table table-striped table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Systolic
+                                    </th>
+                                    <th>
+                                        Diastolic
+                                    </th>
+                                    <th>
+                                        Pulse
+                                    </th>
+                                    <th>
+                                        Resp Rate
+                                    </th>
+                                    <th>
+                                        SPO2
+                                    </th>
+                                    <th>
+                                        Temp
+                                    </th>
+                                    <th>
+                                        Height
+                                    </th>
+                                    <th>
+                                        Weight
+                                    </th>
+                                    <th>
+                                        Time Taken
+                                    </th>
+                                    <th>
+                                        <MatButton style="float: right;" OnClick="@AddVitals" Icon="add">Add New</MatButton>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(vitals != null)
+                                {
+                                    @foreach (var rec in vitals)
+                                    {
+                                    <tr>
+
+                                        <td>@rec.Systolic</td>
+                                        <td>@rec.Diastolic</td>
+                                        <td>@rec.Pulse</td>
+                                        <td>@rec.RespiratoryRate</td>
+                                        <td>@rec.SpO2</td>
+                                        <td>@rec.Temperature</td>
+                                        <td>@rec.Height</td>
+                                        <td>@rec.Weight</td>
+                                        <td>@rec.TimeTaken</td>
+                                        <td>
+                                            <MatButton Icon="edit" @onclick="@(() => EditVitals(rec.Id))">Edit</MatButton>
+                                            <MatButton Icon="delete" @onclick="@(() => DeleteVitals(rec.Id))">Delete </MatButton>
+                                        </td>
+                                    </tr>
+                                    } 
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    </MatAccordion>
     <br />
 
     <MatAccordion>
@@ -100,7 +176,6 @@
         }
     </MatSelect>
     <br />
-
     <MatSelect Label="Transport" FullWidth="true" @bind-Value="@TransportStr">
 
         @if (refTransport.TableData != null)
@@ -119,7 +194,6 @@
             }
         }
     </MatSelect>
-    <br />
     <br />
     <MatSelect Label="Trauma Level" FullWidth="true" @bind-Value="@TraumaLevelStr">
 
@@ -170,12 +244,13 @@
 
     string mode = "add";
     RefTableDTO refInjuryTypeTable = new RefTableDTO();
-
     RefTableDTO refSafetyDevices = new RefTableDTO();
     RefTableDTO refRiskData = new RefTableDTO();
     RefTableDTO refArrivedFrom = new RefTableDTO();
     RefTableDTO refTransport = new RefTableDTO();
     RefTableDTO refTraumaLevel = new RefTableDTO();
+    ICollection<Vitals> vitals;
+
     int SelectedArrivedFromID { get; set; } = 0;
 
     int SelectedInjuryTypeId { get; set; } = 0;
@@ -225,6 +300,7 @@
             ArrivedFromStr = eventObj.ArrivedFromId.ToString();
             TransportStr = eventObj.TransportId.ToString();
             TraumaLevelStr = eventObj.TraumaLevelId.ToString();
+            vitals = eventObj.Vitals;
 
             foreach (var risk in eventObj.Risks)
             {
@@ -236,6 +312,11 @@
                 refSafetyDevices.TableData.Where(r => r.Id == safetyDevice.Id).FirstOrDefault().Selected = true;
             }
 
+            foreach (var injuryType in eventObj.InjuryTypes)
+            {
+                refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.Id).FirstOrDefault().Selected = true;
+            }
+
         }
     }
     void cancel()
@@ -245,6 +326,21 @@
 
     private async Task validateForm()
     {
+    }
+
+    void AddVitals()
+    {
+
+    }
+
+    void EditVitals(int VitalsId)
+    {
+
+    }
+
+    void DeleteVitals(int VitalsId)
+    {
+
     }
 
 }
