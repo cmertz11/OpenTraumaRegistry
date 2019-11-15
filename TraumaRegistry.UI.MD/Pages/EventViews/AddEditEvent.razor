@@ -1,6 +1,7 @@
-﻿ @page "/addEvent/{PatientId:int}"
+﻿@page "/addEvent/{PatientId:int}"
 @page "/editEvent/{EventId:int}"
 @inject NavigationManager NavigationManager
+@inject IMatToaster Toaster
 
 <h3>AddEditEvent</h3>
 
@@ -24,7 +25,9 @@
                         <MatCheckbox @bind-Checked="@device.Selected" Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
                     }
                 }
+            <MatButton Icon="save" OnClick="@SaveSafetyDevices">Save</MatButton>
             </MatExpansionPanelDetails>
+            
         </MatExpansionPanel>
     </MatAccordion>
 
@@ -96,32 +99,32 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(vitals != null)
+                                @if (vitals != null)
                                 {
                                     @foreach (var rec in vitals)
                                     {
-                                    <tr>
+                                        <tr>
 
-                                        <td>@rec.Systolic</td>
-                                        <td>@rec.Diastolic</td>
-                                        <td>@rec.Pulse</td>
-                                        <td>@rec.RespiratoryRate</td>
-                                        <td>@rec.SpO2</td>
-                                        <td>@rec.Temperature</td>
-                                        <td>@rec.Height</td>
-                                        <td>@rec.Weight</td>
-                                        <td>@rec.TimeTaken</td>
-                                        <td>
-                                            <MatButton Icon="edit" @onclick="@(() => EditVitals(rec.Id))">Edit</MatButton>
-                                            <MatButton Icon="delete" @onclick="@(() => DeleteVitals(rec.Id))">Delete </MatButton>
-                                        </td>
-                                    </tr>
-                                    } 
+                                            <td>@rec.Systolic</td>
+                                            <td>@rec.Diastolic</td>
+                                            <td>@rec.Pulse</td>
+                                            <td>@rec.RespiratoryRate</td>
+                                            <td>@rec.SpO2</td>
+                                            <td>@rec.Temperature</td>
+                                            <td>@rec.Height</td>
+                                            <td>@rec.Weight</td>
+                                            <td>@rec.TimeTaken</td>
+                                            <td>
+                                                <MatButton Icon="edit" @onclick="@(() => EditVitals(rec.Id))">Edit</MatButton>
+                                                <MatButton Icon="delete" @onclick="@(() => DeleteVitals(rec.Id))">Delete </MatButton>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             </tbody>
                         </table>
                     </div>
-                </div> 
+                </div>
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -145,11 +148,8 @@
         </MatExpansionPanel>
     </MatAccordion>
     <br />
-
     <MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true"></MatTextField>
     <br />
-
-
     <MatDatePicker Label="Agency Distpatch Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDispatchDateTime"></MatDatePicker>
     <br />
     <MatDatePicker Label="Agnecy Arrive Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyArriveSceneDateTime"></MatDatePicker>
@@ -236,13 +236,83 @@
     <MatButton type="submit" Icon="save">Save</MatButton>
 
 </EditForm>
+
+<MatDialog @bind-IsOpen="@vitalsDiagOpen">
+    <MatDialogTitle>@vitalsDiagHeader</MatDialogTitle>
+
+    <MatDialogContent>
+
+        <MatNumericUpDownField Label="Systolic"
+                               @bind-Value=@vitalsObj.Systolic
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="Diastolic"
+                               @bind-Value=@vitalsObj.Diastolic
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="Pulse"
+                               @bind-Value=@vitalsObj.Pulse
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="Resp Rate"
+                               @bind-Value=@vitalsObj.RespiratoryRate
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="SPO2"
+                               @bind-Value=@vitalsObj.SpO2
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="Temp"
+                               @bind-Value=@vitalsObj.Temperature
+                               DecimalPlaces=1
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="Height"
+                               @bind-Value=@vitalsObj.Height
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="Weight"
+                               @bind-Value=@vitalsObj.Weight
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+    </MatDialogContent>
+
+    <MatDialogActions>
+        <MatButton Icon="cancel" OnClick="@(e => { vitalsDiagOpen = false; })">Cancel</MatButton>
+        <MatButton Icon="save" OnClick="@SaveVitals">Save</MatButton>
+        <MatButton Icon="save" OnClick="@SaveVitalsAndClose">Save & Close</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<MatButton Icon="save" OnClick="@SaveEvent">Save</MatButton>
 @code {
     [Parameter]
     public int PatientId { get; set; } = 0;
     [Parameter]
     public int EventId { get; set; } = 0;
 
+    decimal? test { get; set; }
+
     string mode = "add";
+    bool vitalsDiagOpen = false;
+    string vitalsDiagHeader = "";
+
+    Vitals vitalsObj = new Vitals();
     RefTableDTO refInjuryTypeTable = new RefTableDTO();
     RefTableDTO refSafetyDevices = new RefTableDTO();
     RefTableDTO refRiskData = new RefTableDTO();
@@ -258,11 +328,9 @@
     int SelectedTraumaLevelId { get; set; } = 0;
 
     string InjuryTypeIdStr { get; set; }
-    string ArrivedFromStr  { get; set; }
-    string TransportStr    { get; set; }
-    string TraumaLevelStr  { get; set; }
-
-
+    string ArrivedFromStr { get; set; }
+    string TransportStr { get; set; }
+    string TraumaLevelStr { get; set; }
 
     bool FastExam { get; set; } = false;
     bool FastExamPositive { get; set; } = false;
@@ -286,39 +354,85 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (PatientId > 0)
+        try
         {
-            mode = "add";
+            if (PatientId > 0)
+            {
+                mode = "add";
+            }
+            else if (EventId > 0)
+            {
+                mode = "edit";
+                patientObj = await EventClient.GetPatientWithEventsAsync(1);
+                eventObj = patientObj.Events.Where(e => e.Id == EventId).FirstOrDefault();
+
+                //InjuryTypeIdStr = eventObj.  <-- multi select is possible
+                ArrivedFromStr = eventObj.ArrivedFromId.ToString();
+                TransportStr = eventObj.TransportId.ToString();
+                TraumaLevelStr = eventObj.TraumaLevelId.ToString();
+                vitals = eventObj.Vitals;
+
+                foreach (var risk in eventObj.Risks)
+                {
+                    refRiskData.TableData.Where(r => r.Id == risk.Id).FirstOrDefault().Selected = true;
+                }
+
+                foreach (var safetyDevice in eventObj.SafetyDevices)
+                {
+                    refSafetyDevices.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
+                }
+
+                foreach (var injuryType in eventObj.InjuryTypes)
+                {
+                    refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.Id).FirstOrDefault().Selected = true;
+                }
+            }
         }
-        else if (EventId > 0)
+        catch (Exception ex)
         {
-            mode = "edit";
-            patientObj = await EventClient.GetPatientWithEventsAsync(1);
-            eventObj = patientObj.Events.Where(e => e.Id == EventId).FirstOrDefault();
 
-            //InjuryTypeIdStr = eventObj.  <-- multi select is possible
-            ArrivedFromStr = eventObj.ArrivedFromId.ToString();
-            TransportStr = eventObj.TransportId.ToString();
-            TraumaLevelStr = eventObj.TraumaLevelId.ToString();
-            vitals = eventObj.Vitals;
-
-            foreach (var risk in eventObj.Risks)
-            {
-                refRiskData.TableData.Where(r => r.Id == risk.Id).FirstOrDefault().Selected = true;
-            }
-
-            foreach (var safetyDevice in eventObj.SafetyDevices)
-            {
-                refSafetyDevices.TableData.Where(r => r.Id == safetyDevice.Id).FirstOrDefault().Selected = true;
-            }
-
-            foreach (var injuryType in eventObj.InjuryTypes)
-            {
-                refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.Id).FirstOrDefault().Selected = true;
-            }
-
+            throw;
         }
     }
+
+    void SaveEvent()
+    {
+        try
+        {
+            //eventObj.SafetyDevices.Clear();
+
+            EventClient.PutEventAsync(eventObj.Id, eventObj);
+        }
+        catch (Exception ex)
+        {
+
+
+            throw;
+        }
+
+    }
+
+    async Task SaveSafetyDevices()
+    {
+        try
+        {
+            SafetyDevicesClient client = new SafetyDevicesClient();
+            foreach (var item in eventObj.SafetyDevices)
+            {
+                await client.DeleteSafetyDevicesAsync(item.Id);
+            }
+            foreach (var item in refSafetyDevices.TableData.Where(s => s.Selected == true))
+            {
+                await client.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+
     void cancel()
     {
         NavigationManager.NavigateTo("/patients");
@@ -330,12 +444,16 @@
 
     void AddVitals()
     {
-
+        vitalsDiagHeader = "Add New Vitals";
+        vitalsObj = new Vitals();
+        vitalsDiagOpen = true;
     }
 
     void EditVitals(int VitalsId)
     {
-
+        vitalsDiagHeader = "Add New Vitals";
+        vitalsObj = vitals.Where(v => v.Id == VitalsId).FirstOrDefault();
+        vitalsDiagOpen = true;
     }
 
     void DeleteVitals(int VitalsId)
@@ -343,4 +461,27 @@
 
     }
 
+    void SaveVitalsAndClose()
+    {
+        SaveVitals();
+        vitalsDiagOpen = false;
+    }
+
+    void SaveVitals()
+    {
+        try
+        {
+            var oldVitalsObj = vitals.Where(v => v.Id == vitalsObj.Id).FirstOrDefault();
+            vitals.Remove(oldVitalsObj);
+            vitals.Add(vitalsObj);
+            eventObj.Vitals = vitals;
+
+            Toaster.Add("Vitals Record updated successfully", MatToastType.Success, "Success", null, null);
+
+        }
+        catch (Exception ex)
+        {
+            Toaster.Add(ex.ToString(), MatToastType.Danger, "Error Saving Vitals Record.", null, null);
+        }
+    }
 }

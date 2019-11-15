@@ -450,10 +450,10 @@ namespace TraumaRegistry.Data
             event1.Injuries.Add(injury1p1);
             event1.Injuries.Add(injury2p1);
 
-            var vitals1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 22, 06, 8) };
-            var vitals2 = new Vitals { Diastolic = 81, Systolic = 121, Pulse = 99, RespiratoryRate = 25, SPO2 = 93, Temperature = "98.1", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 23, 06, 8) };
-            var vitals3 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 02, 36, 10) };
-            var vitals4 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 03, 05, 23) };
+            var vitals1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = 102.5m, Location = 1, TimeTaken = new DateTime(2004, 7, 2, 22, 06, 8) };
+            var vitals2 = new Vitals { Diastolic = 81, Systolic = 121, Pulse = 99, RespiratoryRate = 25, SPO2 = 93, Temperature = 98.1m, Location = 1, TimeTaken = new DateTime(2004, 7, 2, 23, 06, 8) };
+            var vitals3 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = 97.5m, Location = 1, TimeTaken = new DateTime(2004, 7, 3, 02, 36, 10) };
+            var vitals4 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = 97.5m, Location = 1, TimeTaken = new DateTime(2004, 7, 3, 03, 05, 23) };
 
             event1.Vitals.Add(vitals1);
             event1.Vitals.Add(vitals2);
@@ -519,10 +519,10 @@ namespace TraumaRegistry.Data
             event1.Injuries.Add(injury1p1);
             event1.Injuries.Add(injury2p1);
 
-            var vitals1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 22, 06, 8) };
-            var vitals2 = new Vitals { Diastolic = 81, Systolic = 121, Pulse = 99, RespiratoryRate = 25, SPO2 = 93, Temperature = "98.1", Location = 1, TimeTaken = new DateTime(2004, 7, 2, 23, 06, 8) };
-            var vitals3 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 02, 36, 10) };
-            var vitals4 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = "97.5", Location = 1, TimeTaken = new DateTime(2004, 7, 3, 03, 05, 23) };
+            var vitals1 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = 97.5m, Location = 1, TimeTaken = new DateTime(2004, 7, 2, 22, 06, 8) };
+            var vitals2 = new Vitals { Diastolic = 81, Systolic = 121, Pulse = 99, RespiratoryRate = 25, SPO2 = 93, Temperature =  98.1m, Location = 1, TimeTaken = new DateTime(2004, 7, 2, 23, 06, 8) };
+            var vitals3 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = 97.5m, Location = 1, TimeTaken = new DateTime(2004, 7, 3, 02, 36, 10) };
+            var vitals4 = new Vitals { Diastolic = 76, Systolic = 119, Pulse = 102, RespiratoryRate = 30, SPO2 = 91, Temperature = 97.5m, Location = 1, TimeTaken = new DateTime(2004, 7, 3, 03, 05, 23) };
 
             event1.Vitals.Add(vitals1);
             event1.Vitals.Add(vitals2);

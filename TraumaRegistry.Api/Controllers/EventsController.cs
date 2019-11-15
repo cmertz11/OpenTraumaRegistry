@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -68,13 +69,33 @@ namespace TraumaRegistry.Api.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(@event).State = EntityState.Modified;
-
             try
             {
+                var newSafetyDeviceList = @event.SafetyDevices.Select(s => s.RefSafetyDeviceId).ToList();
+                _context.Entry(@event).State = EntityState.Modified;
+
+                foreach (var item in @event.Vitals)
+                {
+                    _context.Entry(item).State = EntityState.Modified;
+                }
+
+                await _context.SaveChangesAsync();
+
+                var eventObj = _context.Events.Where(e => e.Id == @event.Id).FirstOrDefault();
+
+                foreach (var item in eventObj.SafetyDevices)
+                {
+                    _context.Remove(item);
+                }
+                await _context.SaveChangesAsync();
+                foreach (var item in newSafetyDeviceList)
+                {
+                    eventObj.SafetyDevices.Add(new SafetyDevices { RefSafetyDeviceId = item });
+                }
+
                 await _context.SaveChangesAsync();
             }
+
             catch (DbUpdateConcurrencyException)
             {
                 if (!EventExists(id))
@@ -86,7 +107,10 @@ namespace TraumaRegistry.Api.Controllers
                     throw;
                 }
             }
+            catch (Exception ex)
+            {
 
+            }
             return NoContent();
         }
 

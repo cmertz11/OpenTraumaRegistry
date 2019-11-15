@@ -14,17 +14,18 @@ namespace TraumaRegistry.Data
         public int Id { get; set; }
 
         //FK -> Not configured needs to point to RefLocation
-        public int Location { get; set; }
-        public int Systolic { get; set; }
-        public int Diastolic { get; set; }
-        public int Pulse { get; set; }
-        public int RespiratoryRate { get; set; }
-        public int SPO2 { get; set; }
-        public string Temperature { get; set; }
-        public decimal Height { get; set; }
-        public decimal Weight { get; set; }
+        public decimal? Location { get; set; }
+        public decimal? Systolic { get; set; }
+        public decimal? Diastolic { get; set; }
+        public decimal? Pulse { get; set; }
+        public decimal? RespiratoryRate { get; set; }
+        public decimal? SPO2 { get; set; }
+        [Column(TypeName = "decimal(4,1)")]
+        public decimal? Temperature { get; set; }
+        public decimal? Height { get; set; }
+        public decimal? Weight { get; set; }
         public string Note { get; set; }
-        public DateTime TimeTaken { get; set; }
+        public DateTime? TimeTaken { get; set; }
         public DateTime TimeStamp { get; set; }
         //FK
         public int EventId { get; set; } 

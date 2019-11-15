@@ -33,6 +33,7 @@ namespace TraumaRegistry.Data
         public DbSet<Consult> Consults { get; set; }
         public DbSet<RefOutcome> RefOutcome { get; set; }
         public DbSet<ReferenceTables> ReferenceTables { get; set; }
+        public DbSet<SafetyDevices> SafetyDevices { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 
