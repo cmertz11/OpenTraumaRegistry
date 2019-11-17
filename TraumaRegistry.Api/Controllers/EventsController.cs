@@ -71,23 +71,19 @@ namespace TraumaRegistry.Api.Controllers
             }
             try
             {
-                var newSafetyDeviceList = @event.SafetyDevices.Select(s => s.RefSafetyDeviceId).ToList();
+               
                 _context.Entry(@event).State = EntityState.Modified;
 
-                foreach (var item in @event.Vitals)
-                {
-                    _context.Entry(item).State = EntityState.Modified;
-                }
+                //foreach (var item in @event.Vitals)
+                //{
+                //    _context.Entry(item).State = EntityState.Modified;
+                //}
 
                 await _context.SaveChangesAsync();
 
-                var eventObj = _context.Events.Where(e => e.Id == @event.Id).FirstOrDefault();
-
-
-                await _context.SaveChangesAsync();
             }
 
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException dbucEx)
             {
                 if (!EventExists(id))
                 {

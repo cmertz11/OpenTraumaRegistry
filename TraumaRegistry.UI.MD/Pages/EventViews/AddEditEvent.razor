@@ -346,6 +346,7 @@
     ReferenceTableClient RefTableClient = new ReferenceTableClient();
     RiskDataClient riskDataClient = new RiskDataClient();
     InjuryTypesClient injuryTypesClient = new InjuryTypesClient();
+    VitalsClient vitalsClient = new VitalsClient();
 
     Patient patientObj = new Patient();
     Event eventObj = new Event();
@@ -428,11 +429,11 @@
         {
             foreach (var item in eventObj.Risks)
             {
-                await riskDataClient.DeleteRiskDataAsync(item.Id); 
+                await riskDataClient.DeleteRiskDataAsync(item.Id);
             }
             foreach (var item in refRiskData.TableData.Where(s => s.Selected == true))
             {
-               var newRiskDataRecord = await riskDataClient.PostRiskDataAsync(new RiskData { EventId = eventObj.Id, RefRiskDataId = item.Id });
+                var newRiskDataRecord = await riskDataClient.PostRiskDataAsync(new RiskData { EventId = eventObj.Id, RefRiskDataId = item.Id });
             }
 
         }
@@ -521,11 +522,12 @@
     {
         try
         {
-            var oldVitalsObj = vitals.Where(v => v.Id == vitalsObj.Id).FirstOrDefault();
-            vitals.Remove(oldVitalsObj);
-            vitals.Add(vitalsObj);
-            eventObj.Vitals = vitals;
 
+            foreach (var item in vitals)
+            {
+                await vitalsClient.PutVitalsAsync(item.Id, item);
+            }
+ 
             Toaster.Add("Vitals Record updated successfully", MatToastType.Success, "Success", null, null);
 
         }
