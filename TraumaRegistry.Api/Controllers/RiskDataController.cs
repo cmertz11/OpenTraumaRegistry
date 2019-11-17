@@ -12,48 +12,48 @@ namespace TraumaRegistry.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SafetyDevicesController : ControllerBase
+    public class RiskDataController : ControllerBase
     {
         private readonly Context _context;
 
-        public SafetyDevicesController(Context context)
+        public RiskDataController(Context context)
         {
             _context = context;
         }
 
-        // GET: api/SafetyDevices
+        // GET: api/RiskData
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SafetyDevices>>> GetSafetyDevices()
+        public async Task<ActionResult<IEnumerable<RiskData>>> GetRiskData()
         {
-            return await _context.SafetyDevices.ToListAsync();
+            return await _context.RiskData.ToListAsync();
         }
 
-        // GET: api/SafetyDevices/5
+        // GET: api/RiskData/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SafetyDevices>> GetSafetyDevices(int id)
+        public async Task<ActionResult<RiskData>> GetRiskData(int id)
         {
-            var safetyDevices = await _context.SafetyDevices.FindAsync(id);
+            var riskData = await _context.RiskData.FindAsync(id);
 
-            if (safetyDevices == null)
+            if (riskData == null)
             {
                 return NotFound();
             }
 
-            return safetyDevices;
+            return riskData;
         }
 
-        // PUT: api/SafetyDevices/5
+        // PUT: api/RiskData/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSafetyDevices(int id, SafetyDevices safetyDevices)
+        public async Task<IActionResult> PutRiskData(int id, RiskData riskData)
         {
-            if (id != safetyDevices.Id)
+            if (id != riskData.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(safetyDevices).State = EntityState.Modified;
+            _context.Entry(riskData).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace TraumaRegistry.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SafetyDevicesExists(id))
+                if (!RiskDataExists(id))
                 {
                     return NotFound();
                 }
@@ -74,38 +74,40 @@ namespace TraumaRegistry.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/SafetyDevices
+        // POST: api/RiskData
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<SafetyDevices>> PostSafetyDevices(SafetyDevices safetyDevices)
+        public async Task<ActionResult<RiskData>> PostRiskData(RiskData riskData)
         {
-            _context.SafetyDevices.Add(safetyDevices);
+            _context.RiskData.Add(riskData);
             await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetSafetyDevices", new { id = safetyDevices.Id }, safetyDevices);
-            return Ok(safetyDevices);
+            return Ok(riskData);
+
+            //return CreatedAtAction("GetRiskData", new { id = riskData.Id }, riskData);
+
         }
 
-        // DELETE: api/SafetyDevices/5
+        // DELETE: api/RiskData/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<SafetyDevices>> DeleteSafetyDevices(int id)
+        public async Task<ActionResult<RiskData>> DeleteRiskData(int id)
         {
-            var safetyDevices = await _context.SafetyDevices.FindAsync(id);
-            if (safetyDevices == null)
+            var riskData = await _context.RiskData.FindAsync(id);
+            if (riskData == null)
             {
                 return NotFound();
             }
 
-            _context.SafetyDevices.Remove(safetyDevices);
+            _context.RiskData.Remove(riskData);
             await _context.SaveChangesAsync();
 
-            return safetyDevices;
+            return riskData;
         }
 
-        private bool SafetyDevicesExists(int id)
+        private bool RiskDataExists(int id)
         {
-            return _context.SafetyDevices.Any(e => e.Id == id);
+            return _context.RiskData.Any(e => e.Id == id);
         }
     }
 }

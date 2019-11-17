@@ -22,10 +22,10 @@ namespace TraumaRegistry.Data.Models
         [MaxLength(1000)]
         public string InjuryDetailsNarrative { get; set; }
 
-        public bool? TimeInERHolder { get; set; }
-        public bool? FastExam { get; set; }
+        public bool TimeInERHolder { get; set; }
+        public bool FastExam { get; set; }
 
-        public bool? FastExamPositive { get; set; }
+        public bool FastExamPositive { get; set; }
 
         public string BloodProducts { get; set; }
 

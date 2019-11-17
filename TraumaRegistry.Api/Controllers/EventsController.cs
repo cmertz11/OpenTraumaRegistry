@@ -83,15 +83,6 @@ namespace TraumaRegistry.Api.Controllers
 
                 var eventObj = _context.Events.Where(e => e.Id == @event.Id).FirstOrDefault();
 
-                foreach (var item in eventObj.SafetyDevices)
-                {
-                    _context.Remove(item);
-                }
-                await _context.SaveChangesAsync();
-                foreach (var item in newSafetyDeviceList)
-                {
-                    eventObj.SafetyDevices.Add(new SafetyDevices { RefSafetyDeviceId = item });
-                }
 
                 await _context.SaveChangesAsync();
             }

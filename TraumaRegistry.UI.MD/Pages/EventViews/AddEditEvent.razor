@@ -14,7 +14,9 @@
     <MatAccordion>
         <MatExpansionPanel>
             <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>Safety Devices</MatExpansionPanelHeader>
+                <MatExpansionPanelHeader>
+                    Safety Devices
+                </MatExpansionPanelHeader>
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
@@ -25,9 +27,9 @@
                         <MatCheckbox @bind-Checked="@device.Selected" Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
                     }
                 }
-            <MatButton Icon="save" OnClick="@SaveSafetyDevices">Save</MatButton>
+                <MatButton Style="float: right;" Icon="save" OnClick="@SaveSafetyDevices">Save</MatButton>
             </MatExpansionPanelDetails>
-            
+
         </MatExpansionPanel>
     </MatAccordion>
 
@@ -36,7 +38,9 @@
     <MatAccordion>
         <MatExpansionPanel>
             <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>Injury Types</MatExpansionPanelHeader>
+                <MatExpansionPanelHeader>
+                    Injury Types
+                </MatExpansionPanelHeader>
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
@@ -47,12 +51,11 @@
                         <MatCheckbox @bind-Checked="@r.Selected" Value="@r.Id.ToString()" Label="@r.Description"></MatCheckbox>
                     }
                 }
+
+                <MatButton Style="float: right;" Icon="save" OnClick="@SaveInjuryTypes">Save</MatButton>
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
-
-
-
     <br />
     <MatAccordion>
         <MatExpansionPanel>
@@ -103,8 +106,7 @@
                                 {
                                     @foreach (var rec in vitals)
                                     {
-                                        <tr>
-
+                                        <tr> 
                                             <td>@rec.Systolic</td>
                                             <td>@rec.Diastolic</td>
                                             <td>@rec.Pulse</td>
@@ -133,7 +135,9 @@
     <MatAccordion>
         <MatExpansionPanel>
             <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>Risk Data (Comorbids)</MatExpansionPanelHeader>
+                <MatExpansionPanelHeader>
+                    Risk Data (Comorbids) 
+                </MatExpansionPanelHeader>
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
@@ -144,6 +148,7 @@
                         <MatCheckbox @bind-Checked="@r.Selected" Value="@r.Id.ToString()" Label="@r.Description"></MatCheckbox>
                     }
                 }
+                <MatButton Style="float: right;" Icon="save" OnClick="@SaveRiskData">Save</MatButton>
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -217,11 +222,11 @@
     <br />
     <MatDatePicker Label="Activation Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.ActivationDateTime"></MatDatePicker>
     <br />
-    <MatCheckbox @bind-Checked="@FastExam" Label="Fast Exam"></MatCheckbox>
+    <MatCheckbox @bind-Checked="@eventObj.FastExam" Label="Fast Exam"></MatCheckbox>
     <br />
-    <MatCheckbox @bind-Checked="@FastExamPositive" Label="Fast Exam Positive"></MatCheckbox>
+    <MatCheckbox @bind-Checked="@eventObj.FastExamPositive" Label="Fast Exam Positive"></MatCheckbox>
     <br />
-    <MatCheckbox @bind-Checked="@TimeInERHolder" Label="Time In ER Holder"></MatCheckbox>
+    <MatCheckbox @bind-Checked="@eventObj.TimeInERHolder" Label="Time In ER Holder"></MatCheckbox>
     <br />
     <MatDatePicker Label="Anesthesia Arrival Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
     <br />
@@ -233,7 +238,7 @@
     <br />
 
     <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
-    <MatButton type="submit" Icon="save">Save</MatButton>
+    <MatButton Icon="save" OnClick="@SaveEvent">Save</MatButton>
 
 </EditForm>
 
@@ -299,7 +304,7 @@
     </MatDialogActions>
 </MatDialog>
 
-<MatButton Icon="save" OnClick="@SaveEvent">Save</MatButton>
+
 @code {
     [Parameter]
     public int PatientId { get; set; } = 0;
@@ -337,13 +342,17 @@
     bool TimeInERHolder { get; set; } = false;
 
     EventsClient EventClient = new EventsClient();
+    SafetyDevicesClient safetyDevicesClient = new SafetyDevicesClient();
+    ReferenceTableClient RefTableClient = new ReferenceTableClient();
+    RiskDataClient riskDataClient = new RiskDataClient();
+    InjuryTypesClient injuryTypesClient = new InjuryTypesClient();
+
     Patient patientObj = new Patient();
     Event eventObj = new Event();
 
     protected override async Task OnInitializedAsync()
     {
 
-        ReferenceTableClient RefTableClient = new ReferenceTableClient();
         refInjuryTypeTable = await RefTableClient.GetRefTableDataAsync("RefInjuryType");
         refSafetyDevices = await RefTableClient.GetRefTableDataAsync("RefSafetyDevices");
         refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
@@ -366,7 +375,7 @@
                 patientObj = await EventClient.GetPatientWithEventsAsync(1);
                 eventObj = patientObj.Events.Where(e => e.Id == EventId).FirstOrDefault();
 
-                //InjuryTypeIdStr = eventObj.  <-- multi select is possible
+
                 ArrivedFromStr = eventObj.ArrivedFromId.ToString();
                 TransportStr = eventObj.TransportId.ToString();
                 TraumaLevelStr = eventObj.TraumaLevelId.ToString();
@@ -374,7 +383,7 @@
 
                 foreach (var risk in eventObj.Risks)
                 {
-                    refRiskData.TableData.Where(r => r.Id == risk.Id).FirstOrDefault().Selected = true;
+                    refRiskData.TableData.Where(r => r.Id == risk.RefRiskDataId).FirstOrDefault().Selected = true;
                 }
 
                 foreach (var safetyDevice in eventObj.SafetyDevices)
@@ -384,7 +393,7 @@
 
                 foreach (var injuryType in eventObj.InjuryTypes)
                 {
-                    refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.Id).FirstOrDefault().Selected = true;
+                    refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.RefInjuryTypeId).FirstOrDefault().Selected = true;
                 }
             }
         }
@@ -395,13 +404,14 @@
         }
     }
 
-    void SaveEvent()
+    async Task SaveEvent()
     {
         try
         {
-            //eventObj.SafetyDevices.Clear();
+            await SaveSafetyDevices();
+            await SaveVitals();
 
-            EventClient.PutEventAsync(eventObj.Id, eventObj);
+            await EventClient.PutEventAsync(eventObj.Id, eventObj);
         }
         catch (Exception ex)
         {
@@ -412,21 +422,61 @@
 
     }
 
+    async Task SaveRiskData()
+    {
+        try
+        {
+            foreach (var item in eventObj.Risks)
+            {
+                await riskDataClient.DeleteRiskDataAsync(item.Id); 
+            }
+            foreach (var item in refRiskData.TableData.Where(s => s.Selected == true))
+            {
+               var newRiskDataRecord = await riskDataClient.PostRiskDataAsync(new RiskData { EventId = eventObj.Id, RefRiskDataId = item.Id });
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+
     async Task SaveSafetyDevices()
     {
         try
         {
-            SafetyDevicesClient client = new SafetyDevicesClient();
             foreach (var item in eventObj.SafetyDevices)
             {
-                await client.DeleteSafetyDevicesAsync(item.Id);
+                await safetyDevicesClient.DeleteSafetyDevicesAsync(item.Id);
             }
             foreach (var item in refSafetyDevices.TableData.Where(s => s.Selected == true))
             {
-                await client.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
+                await safetyDevicesClient.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
             }
         }
         catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+
+    async Task SaveInjuryTypes()
+    {
+        try
+        {
+            foreach (var item in eventObj.InjuryTypes)
+            {
+                await injuryTypesClient.DeleteInjuryTypesAsync(item.Id);
+            }
+            foreach (var item in refInjuryTypeTable.TableData.Where(s => s.Selected == true))
+            {
+                await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefInjuryTypeId = item.Id });
+            }
+        }
+        catch (Exception)
         {
 
             throw;
@@ -467,7 +517,7 @@
         vitalsDiagOpen = false;
     }
 
-    void SaveVitals()
+    async Task SaveVitals()
     {
         try
         {
