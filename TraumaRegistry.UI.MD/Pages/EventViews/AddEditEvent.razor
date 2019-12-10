@@ -1,5 +1,5 @@
 ﻿@page "/addEvent/{PatientId:int}"
-@page "/editEvent/{EventId:int}"
+@page "/editEvent/{eventId:int}"
 @inject NavigationManager NavigationManager
 @inject IMatToaster Toaster
 
@@ -309,11 +309,12 @@
     [Parameter]
     public int PatientId { get; set; } = 0;
     [Parameter]
-    public int EventId { get; set; } = 0;
+    public int eventId { get; set; } = 0;
 
     decimal? test { get; set; }
 
     string mode = "add";
+    string vitalsMode = "add";
     bool vitalsDiagOpen = false;
     string vitalsDiagHeader = "";
 
@@ -370,11 +371,11 @@
             {
                 mode = "add";
             }
-            else if (EventId > 0)
+            else if (eventId > 0)
             {
                 mode = "edit";
                 patientObj = await EventClient.GetPatientWithEventsAsync(1);
-                eventObj = patientObj.Events.Where(e => e.Id == EventId).FirstOrDefault();
+                eventObj = patientObj.Events.Where(e => e.Id == eventId).FirstOrDefault();
 
 
                 ArrivedFromStr = eventObj.ArrivedFromId.ToString();
@@ -495,14 +496,15 @@
 
     void AddVitals()
     {
-        vitalsDiagHeader = "Add New Vitals";
-        vitalsObj = new Vitals();
+        vitalsObj = new Vitals() { EventId = eventId };
+        vitalsMode = "add";
         vitalsDiagOpen = true;
     }
 
     void EditVitals(int VitalsId)
     {
-        vitalsDiagHeader = "Add New Vitals";
+        vitalsDiagHeader = "Edit Vitals";
+        vitalsMode = "edit";
         vitalsObj = vitals.Where(v => v.Id == VitalsId).FirstOrDefault();
         vitalsDiagOpen = true;
     }
@@ -522,12 +524,21 @@
     {
         try
         {
-
-            foreach (var item in vitals)
+            if (vitalsMode == "add")
             {
-                await vitalsClient.PutVitalsAsync(item.Id, item);
+
+                vitals.Add(vitalsObj);
+                await vitalsClient.PostVitalsAsync(vitalsObj);
             }
- 
+            else
+            {
+                foreach (var item in vitals)
+                {
+
+                    await vitalsClient.PutVitalsAsync(item.Id, item);
+                }
+            }
+
             Toaster.Add("Vitals Record updated successfully", MatToastType.Success, "Success", null, null);
 
         }

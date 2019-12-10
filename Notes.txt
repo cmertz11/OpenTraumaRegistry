@@ -15,3 +15,5 @@ https://entityframeworkcore.com/knowledge-base/53275214/one-to-one-multiple-fore
 https://www.ryadel.com/en/current-net-sdk-not-support-net-core-3-0-fix/
 
 https://ankitsharmablogs.com/single-page-application-using-server-side-blazor/
+
+12/10/2019 - Vitals Time Taken needs a control on modal.  Timestamp needs to be handled at the controller.  Values are not being saved.
