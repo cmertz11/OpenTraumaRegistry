@@ -14,7 +14,6 @@ namespace TraumaRegistry.Api.Controllers
     public class VitalsController : ControllerBase
     {
         private readonly Context _context;
-
         public VitalsController(Context context)
         {
             _context = context;
@@ -51,7 +50,7 @@ namespace TraumaRegistry.Api.Controllers
             {
                 return BadRequest();
             }
-
+            vitals.TimeStamp = DateTime.Now;
             _context.Entry(vitals).State = EntityState.Modified;
 
             try
@@ -79,6 +78,7 @@ namespace TraumaRegistry.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Vitals>> PostVitals(Vitals vitals)
         {
+            vitals.TimeStamp = DateTime.Now;
             _context.Vitals.Add(vitals);
             await _context.SaveChangesAsync();
 

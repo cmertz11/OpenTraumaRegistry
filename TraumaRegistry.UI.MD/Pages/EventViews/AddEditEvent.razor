@@ -294,7 +294,7 @@
                                DecimalPlaces=0
                                Minimum=null Maximum=null>
         </MatNumericUpDownField>
-
+        <MatDatePicker Label="Time Taken" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@vitalsObj.TimeTaken"></MatDatePicker>
     </MatDialogContent>
 
     <MatDialogActions>
@@ -506,6 +506,7 @@
         vitalsDiagHeader = "Edit Vitals";
         vitalsMode = "edit";
         vitalsObj = vitals.Where(v => v.Id == VitalsId).FirstOrDefault();
+        vitals.Remove(vitalsObj);
         vitalsDiagOpen = true;
     }
 
@@ -526,15 +527,14 @@
         {
             if (vitalsMode == "add")
             {
-
                 vitals.Add(vitalsObj);
                 await vitalsClient.PostVitalsAsync(vitalsObj);
             }
             else
             {
+                vitals.Add(vitalsObj);
                 foreach (var item in vitals)
                 {
-
                     await vitalsClient.PutVitalsAsync(item.Id, item);
                 }
             }

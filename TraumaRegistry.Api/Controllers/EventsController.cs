@@ -73,16 +73,8 @@ namespace TraumaRegistry.Api.Controllers
             {
                
                 _context.Entry(@event).State = EntityState.Modified;
-
-                //foreach (var item in @event.Vitals)
-                //{
-                //    _context.Entry(item).State = EntityState.Modified;
-                //}
-
                 await _context.SaveChangesAsync();
-
             }
-
             catch (DbUpdateConcurrencyException dbucEx)
             {
                 if (!EventExists(id))
