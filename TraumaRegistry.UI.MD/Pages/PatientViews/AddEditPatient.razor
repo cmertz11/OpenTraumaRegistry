@@ -32,40 +32,40 @@
                     <MatDatePicker Label="DOB" FullWidth="true" @bind-Value="@patient.Dob"></MatDatePicker>
                 </p>
                 <p>
-                    <MatSelect Label="Gender" FullWidth="true" @bind-Value="@genderIdStr">
+                    <MatSelect Label="Gender" FullWidth="true" @bind-Value="@patient.GenderReferenceId">
 
                         @if (refGenderTable.TableData != null)
                         {
-                            <MatOption Value=""></MatOption>
+                            <MatOption Value=0></MatOption>
                             @foreach (var item in refGenderTable.TableData)
                             {
                                 if (item.Id == SelectedGenderId)
                                 {
-                                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                                    <MatOption Value=@item.Id selected>@item.Description</MatOption>
                                 }
                                 else
                                 {
-                                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                                    <MatOption Value=@item.Id>@item.Description</MatOption>
                                 }
                             }
                         }
                     </MatSelect>
                 </p>
                 <p>
-                    <MatSelect Label="Race" FullWidth="true" @bind-Value="@raceIdStr">
+                    <MatSelect Label="Race" FullWidth="true" @bind-Value="@patient.RaceReferenceId">
 
                         @if (refRaceTable.TableData != null)
                         {
-                            <MatOption Value=""></MatOption>
+                            <MatOption Value=0></MatOption>
                             @foreach (var item in refRaceTable.TableData)
                             {
                                 if (item.Id == SelectedRaceId)
                                 {
-                                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
+                                    <MatOption Value=@item.Id selected>@item.Description</MatOption>
                                 }
                                 else
                                 {
-                                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
+                                    <MatOption Value=@item.Id>@item.Description</MatOption>
                                 }
                             }
                         }

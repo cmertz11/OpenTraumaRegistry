@@ -22,6 +22,7 @@ namespace TraumaRegistry.UI.MD
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseSetting("detailedErrors", "true");
                     webBuilder.UseStartup<Startup>();
                 });
     }

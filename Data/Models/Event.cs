@@ -30,7 +30,7 @@ namespace TraumaRegistry.Data.Models
         public string BloodProducts { get; set; }
 
         #region Key Event DateTimes
-        public DateTime? InjuryDateTime { get; set; }
+            public DateTime? InjuryDateTime { get; set; }
             public DateTime? AgencyDispatchDateTime { get; set; }
             public DateTime? AgencyArriveSceneDateTime { get; set; }
             public DateTime? AgencyDepartSceneDateTime { get; set; }

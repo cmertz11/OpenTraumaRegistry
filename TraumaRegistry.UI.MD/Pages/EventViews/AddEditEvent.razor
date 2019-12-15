@@ -3,10 +3,10 @@
 @inject NavigationManager NavigationManager
 @inject IMatToaster Toaster
 
-<h3>AddEditEvent</h3>
+<h3>@mode.ToUpper() Event</h3>
 
 <EditForm Model="@eventObj" OnValidSubmit="@validateForm">
-    <MatDatePicker Label="Injury Date" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.InjuryDateTime"></MatDatePicker>
+    <MatDatePicker Label="Injury Date" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value=@eventObj.InjuryDateTime></MatDatePicker>
     <br />
     <MatTextField Label="Place of Occurance/ZIP" @bind-Value=@eventObj.OccuranceZipCode />
     <br />
@@ -20,39 +20,21 @@
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                @if (refSafetyDevices.TableData != null)
-                {
-                    @foreach (var device in refSafetyDevices.TableData)
-                    {
-                        <MatCheckbox @bind-Checked="@device.Selected" Value="@device.Id.ToString()" Label="@device.Description"></MatCheckbox>
-                    }
-                }
-                <MatButton Style="float: right;" Icon="save" OnClick="@SaveSafetyDevices">Save</MatButton>
+                <OptionSelectorComponent refTable="@refSafetyDevices" />
             </MatExpansionPanelDetails>
-
         </MatExpansionPanel>
     </MatAccordion>
-
     <br />
-
     <MatAccordion>
         <MatExpansionPanel>
             <MatExpansionPanelSummary>
                 <MatExpansionPanelHeader>
-                    Injury Types
+                    Injury Type(s)
                 </MatExpansionPanelHeader>
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                @if (refInjuryTypeTable.TableData != null)
-                {
-                    @foreach (var r in refInjuryTypeTable.TableData)
-                    {
-                        <MatCheckbox @bind-Checked="@r.Selected" Value="@r.Id.ToString()" Label="@r.Description"></MatCheckbox>
-                    }
-                }
-
-                <MatButton Style="float: right;" Icon="save" OnClick="@SaveInjuryTypes">Save</MatButton>
+                <OptionSelectorComponent refTable="@refInjuryTypeTable" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -64,96 +46,26 @@
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <div class="row">
-                    <div class="col-10">
-                        <table class="table table-striped table-hover table-sm">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Systolic
-                                    </th>
-                                    <th>
-                                        Diastolic
-                                    </th>
-                                    <th>
-                                        Pulse
-                                    </th>
-                                    <th>
-                                        Resp Rate
-                                    </th>
-                                    <th>
-                                        SPO2
-                                    </th>
-                                    <th>
-                                        Temp
-                                    </th>
-                                    <th>
-                                        Height
-                                    </th>
-                                    <th>
-                                        Weight
-                                    </th>
-                                    <th>
-                                        Time Taken
-                                    </th>
-                                    <th>
-                                        <MatButton style="float: right;" OnClick="@AddVitals" Icon="add">Add New</MatButton>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (vitals != null)
-                                {
-                                    @foreach (var rec in vitals)
-                                    {
-                                        <tr> 
-                                            <td>@rec.Systolic</td>
-                                            <td>@rec.Diastolic</td>
-                                            <td>@rec.Pulse</td>
-                                            <td>@rec.RespiratoryRate</td>
-                                            <td>@rec.SpO2</td>
-                                            <td>@rec.Temperature</td>
-                                            <td>@rec.Height</td>
-                                            <td>@rec.Weight</td>
-                                            <td>@rec.TimeTaken</td>
-                                            <td>
-                                                <MatButton Icon="edit" @onclick="@(() => EditVitals(rec.Id))">Edit</MatButton>
-                                                <MatButton Icon="delete" @onclick="@(() => DeleteVitals(rec.Id))">Delete </MatButton>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <VitalsComponent eventId="@eventId" vitals="@vitals" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
     <br />
-
     <MatAccordion>
         <MatExpansionPanel>
             <MatExpansionPanelSummary>
                 <MatExpansionPanelHeader>
-                    Risk Data (Comorbids) 
+                    Risk Data (Comorbids)
                 </MatExpansionPanelHeader>
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                @if (refRiskData.TableData != null)
-                {
-                    @foreach (var r in refRiskData.TableData)
-                    {
-                        <MatCheckbox @bind-Checked="@r.Selected" Value="@r.Id.ToString()" Label="@r.Description"></MatCheckbox>
-                    }
-                }
-                <MatButton Style="float: right;" Icon="save" OnClick="@SaveRiskData">Save</MatButton>
+                <OptionSelectorComponent refTable="@refRiskData" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
     <br />
-    <MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true"></MatTextField>
+    <MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true" FullWidth="true"></MatTextField>
     <br />
     <MatDatePicker Label="Agency Distpatch Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDispatchDateTime"></MatDatePicker>
     <br />
@@ -161,390 +73,242 @@
     <br />
     <MatDatePicker Label="Agnecy Depart Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
     <br />
-
-    <MatSelect Label="Arrived From" FullWidth="true" @bind-Value="@ArrivedFromStr">
-
-        @if (refArrivedFrom.TableData != null)
-        {
-            <MatOption Value=""></MatOption>
-            @foreach (var item in refArrivedFrom.TableData)
-            {
-                if (item.Id == SelectedArrivedFromID)
-                {
-                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-                }
-                else
-                {
-                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
-                }
-            }
-        }
-    </MatSelect>
+    <RefTableDropDown Id="@eventObj.ArrivedFromId" labelText="Arrived From:" refTable="@refArrivedFrom" IdChanged="arrivedFromIdChanged" />
     <br />
-    <MatSelect Label="Transport" FullWidth="true" @bind-Value="@TransportStr">
-
-        @if (refTransport.TableData != null)
-        {
-            <MatOption Value=""></MatOption>
-            @foreach (var item in refTransport.TableData)
-            {
-                if (item.Id == SelectedTransportId)
-                {
-                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-                }
-                else
-                {
-                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
-                }
-            }
-        }
-    </MatSelect>
+    <RefTableDropDown Id="@eventObj.TransportId" labelText="Transport:" refTable="@refTransport" IdChanged="transportIdChanged" />
     <br />
-    <MatSelect Label="Trauma Level" FullWidth="true" @bind-Value="@TraumaLevelStr">
-
-        @if (refTraumaLevel.TableData != null)
-        {
-            <MatOption Value=""></MatOption>
-            @foreach (var item in refTraumaLevel.TableData)
-            {
-                if (item.Id == SelectedTransportId)
-                {
-                    <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-                }
-                else
-                {
-                    <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
-                }
-            }
-        }
-    </MatSelect>
-
+    <RefTableDropDown Id="@Convert.ToInt32(eventObj.TraumaLevelId)" labelText="Trauma Level:" refTable="@refTraumaLevel" IdChanged="traumaLevelIdChanged" />
     <br />
     <MatDatePicker Label="Activation Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.ActivationDateTime"></MatDatePicker>
     <br />
-    <MatCheckbox @bind-Checked="@eventObj.FastExam" Label="Fast Exam"></MatCheckbox>
+    <MatCheckbox @bind-Value="@eventObj.FastExam" Label="Fast Exam"></MatCheckbox>
     <br />
-    <MatCheckbox @bind-Checked="@eventObj.FastExamPositive" Label="Fast Exam Positive"></MatCheckbox>
+    <MatCheckbox @bind-Value=@eventObj.FastExamPositive Label="Fast Exam Positive"></MatCheckbox>
     <br />
-    <MatCheckbox @bind-Checked="@eventObj.TimeInERHolder" Label="Time In ER Holder"></MatCheckbox>
+    <MatCheckbox @bind-Value=@eventObj.TimeInERHolder Label="Time In ER Holder"></MatCheckbox>
     <br />
     <MatDatePicker Label="Anesthesia Arrival Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
     <br />
-    <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts />
+    <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts FullWidth="true"/>
     <br />
     <MatDatePicker Label="Blood Products Start Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStartTime"></MatDatePicker>
     <br />
     <MatDatePicker Label="Blood Products Stop Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStopTime"></MatDatePicker>
     <br />
-
+    
     <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
     <MatButton Icon="save" OnClick="@SaveEvent">Save</MatButton>
+    @*
 
+    *@
 </EditForm>
-
-<MatDialog @bind-IsOpen="@vitalsDiagOpen">
-    <MatDialogTitle>@vitalsDiagHeader</MatDialogTitle>
-
-    <MatDialogContent>
-
-        <MatNumericUpDownField Label="Systolic"
-                               @bind-Value=@vitalsObj.Systolic
-                               DecimalPlaces=0
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-
-        <MatNumericUpDownField Label="Diastolic"
-                               @bind-Value=@vitalsObj.Diastolic
-                               DecimalPlaces=0
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-
-        <MatNumericUpDownField Label="Pulse"
-                               @bind-Value=@vitalsObj.Pulse
-                               DecimalPlaces=0
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-
-        <MatNumericUpDownField Label="Resp Rate"
-                               @bind-Value=@vitalsObj.RespiratoryRate
-                               DecimalPlaces=0
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-
-        <MatNumericUpDownField Label="SPO2"
-                               @bind-Value=@vitalsObj.SpO2
-                               DecimalPlaces=0
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-
-        <MatNumericUpDownField Label="Temp"
-                               @bind-Value=@vitalsObj.Temperature
-                               DecimalPlaces=1
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-
-        <MatNumericUpDownField Label="Height"
-                               @bind-Value=@vitalsObj.Height
-                               DecimalPlaces=0
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-
-        <MatNumericUpDownField Label="Weight"
-                               @bind-Value=@vitalsObj.Weight
-                               DecimalPlaces=0
-                               Minimum=null Maximum=null>
-        </MatNumericUpDownField>
-        <MatDatePicker Label="Time Taken" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@vitalsObj.TimeTaken"></MatDatePicker>
-    </MatDialogContent>
-
-    <MatDialogActions>
-        <MatButton Icon="cancel" OnClick="@(e => { vitalsDiagOpen = false; })">Cancel</MatButton>
-        <MatButton Icon="save" OnClick="@SaveVitals">Save</MatButton>
-        <MatButton Icon="save" OnClick="@SaveVitalsAndClose">Save & Close</MatButton>
-    </MatDialogActions>
-</MatDialog>
+    
+   
 
 
-@code {
-    [Parameter]
-    public int PatientId { get; set; } = 0;
-    [Parameter]
-    public int eventId { get; set; } = 0;
+    @code {
+        [Parameter]
+        public int PatientId { get; set; } = 0;
+        [Parameter]
+        public int eventId { get; set; } = 0;
 
-    decimal? test { get; set; }
+        string mode = "add";
 
-    string mode = "add";
-    string vitalsMode = "add";
-    bool vitalsDiagOpen = false;
-    string vitalsDiagHeader = "";
 
-    Vitals vitalsObj = new Vitals();
-    RefTableDTO refInjuryTypeTable = new RefTableDTO();
-    RefTableDTO refSafetyDevices = new RefTableDTO();
-    RefTableDTO refRiskData = new RefTableDTO();
-    RefTableDTO refArrivedFrom = new RefTableDTO();
-    RefTableDTO refTransport = new RefTableDTO();
-    RefTableDTO refTraumaLevel = new RefTableDTO();
-    ICollection<Vitals> vitals;
+        Vitals vitalsObj = new Vitals();
+        RefTableDTO refInjuryTypeTable = new RefTableDTO();
+        RefTableDTO refSafetyDevices = new RefTableDTO();
+        RefTableDTO refRiskData = new RefTableDTO();
+        RefTableDTO refArrivedFrom = new RefTableDTO();
+        RefTableDTO refTransport = new RefTableDTO();
+        RefTableDTO refTraumaLevel = new RefTableDTO();
+        ICollection<Vitals> vitals;
 
-    int SelectedArrivedFromID { get; set; } = 0;
+        int SelectedArrivedFromID { get; set; } = 0;
 
-    int SelectedInjuryTypeId { get; set; } = 0;
-    int SelectedTransportId { get; set; } = 0;
-    int SelectedTraumaLevelId { get; set; } = 0;
+        int SelectedInjuryTypeId { get; set; } = 0;
+        int SelectedTransportId { get; set; } = 0;
+        int SelectedTraumaLevelId { get; set; } = 0;
 
-    string InjuryTypeIdStr { get; set; }
-    string ArrivedFromStr { get; set; }
-    string TransportStr { get; set; }
-    string TraumaLevelStr { get; set; }
+        string InjuryTypeIdStr { get; set; }
+        string ArrivedFromStr { get; set; }
+        string TransportStr { get; set; }
+        string TraumaLevelStr { get; set; }
 
-    bool FastExam { get; set; } = false;
-    bool FastExamPositive { get; set; } = false;
-    bool TimeInERHolder { get; set; } = false;
+        bool FastExam { get; set; } = false;
+        bool FastExamPositive { get; set; } = false;
+        bool TimeInERHolder { get; set; } = false;
 
-    EventsClient EventClient = new EventsClient();
-    SafetyDevicesClient safetyDevicesClient = new SafetyDevicesClient();
-    ReferenceTableClient RefTableClient = new ReferenceTableClient();
-    RiskDataClient riskDataClient = new RiskDataClient();
-    InjuryTypesClient injuryTypesClient = new InjuryTypesClient();
-    VitalsClient vitalsClient = new VitalsClient();
+        EventsClient EventClient = new EventsClient();
+        SafetyDevicesClient safetyDevicesClient = new SafetyDevicesClient();
+        ReferenceTableClient RefTableClient = new ReferenceTableClient();
+        RiskDataClient riskDataClient = new RiskDataClient();
+        InjuryTypesClient injuryTypesClient = new InjuryTypesClient();
+        VitalsClient vitalsClient = new VitalsClient();
 
-    Patient patientObj = new Patient();
-    Event eventObj = new Event();
+        Patient patientObj = new Patient();
+        Event eventObj = new Event();
 
-    protected override async Task OnInitializedAsync()
-    {
-
-        refInjuryTypeTable = await RefTableClient.GetRefTableDataAsync("RefInjuryType");
-        refSafetyDevices = await RefTableClient.GetRefTableDataAsync("RefSafetyDevices");
-        refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
-        refArrivedFrom = await RefTableClient.GetRefTableDataAsync("RefArrivedFrom");
-        refTransport = await RefTableClient.GetRefTableDataAsync("RefTransport");
-        refTraumaLevel = await RefTableClient.GetRefTableDataAsync("RefTraumaLevel");
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        try
+        protected override async Task OnInitializedAsync()
         {
-            if (PatientId > 0)
+
+            refInjuryTypeTable = await RefTableClient.GetRefTableDataAsync("RefInjuryType");
+            refSafetyDevices = await RefTableClient.GetRefTableDataAsync("RefSafetyDevices");
+            refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
+            refArrivedFrom = await RefTableClient.GetRefTableDataAsync("RefArrivedFrom");
+            refTransport = await RefTableClient.GetRefTableDataAsync("RefTransport");
+            refTraumaLevel = await RefTableClient.GetRefTableDataAsync("RefTraumaLevel");
+        }
+
+        #region RefTableDropDownControl Callbacks
+
+            void arrivedFromIdChanged(int newId)
             {
-                mode = "add";
+                eventObj.ArrivedFromId = newId;
             }
-            else if (eventId > 0)
+
+            void transportIdChanged(int newId)
             {
-                mode = "edit";
-                patientObj = await EventClient.GetPatientWithEventsAsync(1);
-                eventObj = patientObj.Events.Where(e => e.Id == eventId).FirstOrDefault();
+                eventObj.TransportId = newId;
+            }
 
+            void traumaLevelIdChanged(int newId)
+            {
+                eventObj.TraumaLevelId = newId;
+            }
 
-                ArrivedFromStr = eventObj.ArrivedFromId.ToString();
-                TransportStr = eventObj.TransportId.ToString();
-                TraumaLevelStr = eventObj.TraumaLevelId.ToString();
-                vitals = eventObj.Vitals;
+        #endregion
 
-                foreach (var risk in eventObj.Risks)
+        protected override async Task OnParametersSetAsync()
+        {
+            try
+            {
+                if (PatientId > 0)
                 {
-                    refRiskData.TableData.Where(r => r.Id == risk.RefRiskDataId).FirstOrDefault().Selected = true;
+                    mode = "add";
                 }
-
-                foreach (var safetyDevice in eventObj.SafetyDevices)
+                else if (eventId > 0)
                 {
-                    refSafetyDevices.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
-                }
+                    mode = "edit";
+                    patientObj = await EventClient.GetPatientWithEventsAsync(1);
+                    eventObj = patientObj.Events.Where(e => e.Id == eventId).FirstOrDefault();
 
-                foreach (var injuryType in eventObj.InjuryTypes)
-                {
-                    refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.RefInjuryTypeId).FirstOrDefault().Selected = true;
+
+                    ArrivedFromStr = eventObj.ArrivedFromId.ToString();
+                    TransportStr = eventObj.TransportId.ToString();
+                    TraumaLevelStr = eventObj.TraumaLevelId.ToString();
+                    vitals = eventObj.Vitals;
+
+                    foreach (var risk in eventObj.Risks)
+                    {
+                        refRiskData.TableData.Where(r => r.Id == risk.RefRiskDataId).FirstOrDefault().Selected = true;
+                    }
+
+                    foreach (var safetyDevice in eventObj.SafetyDevices)
+                    {
+                        refSafetyDevices.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
+                    }
+
+                    foreach (var injuryType in eventObj.InjuryTypes)
+                    {
+                        refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.RefInjuryTypeId).FirstOrDefault().Selected = true;
+                    }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-
-    async Task SaveEvent()
-    {
-        try
-        {
-            await SaveSafetyDevices();
-            await SaveVitals();
-
-            await EventClient.PutEventAsync(eventObj.Id, eventObj);
-        }
-        catch (Exception ex)
-        {
-
-
-            throw;
-        }
-
-    }
-
-    async Task SaveRiskData()
-    {
-        try
-        {
-            foreach (var item in eventObj.Risks)
+            catch (Exception ex)
             {
-                await riskDataClient.DeleteRiskDataAsync(item.Id);
+
+                throw;
             }
-            foreach (var item in refRiskData.TableData.Where(s => s.Selected == true))
+        }
+
+        async Task SaveEvent()
+        {
+            try
             {
-                var newRiskDataRecord = await riskDataClient.PostRiskDataAsync(new RiskData { EventId = eventObj.Id, RefRiskDataId = item.Id });
+                await SaveSafetyDevices();
+                //await SaveVitals();
+
+                await EventClient.PutEventAsync(eventObj.Id, eventObj);
+            }
+            catch (Exception ex)
+            {
+
+
+                throw;
             }
 
         }
-        catch (Exception ex)
+
+        async Task SaveRiskData()
         {
-
-            throw;
-        }
-    }
-
-    async Task SaveSafetyDevices()
-    {
-        try
-        {
-            foreach (var item in eventObj.SafetyDevices)
+            try
             {
-                await safetyDevicesClient.DeleteSafetyDevicesAsync(item.Id);
-            }
-            foreach (var item in refSafetyDevices.TableData.Where(s => s.Selected == true))
-            {
-                await safetyDevicesClient.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
-            }
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-
-    async Task SaveInjuryTypes()
-    {
-        try
-        {
-            foreach (var item in eventObj.InjuryTypes)
-            {
-                await injuryTypesClient.DeleteInjuryTypesAsync(item.Id);
-            }
-            foreach (var item in refInjuryTypeTable.TableData.Where(s => s.Selected == true))
-            {
-                await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefInjuryTypeId = item.Id });
-            }
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-
-    void cancel()
-    {
-        NavigationManager.NavigateTo("/patients");
-    }
-
-    private async Task validateForm()
-    {
-    }
-
-    void AddVitals()
-    {
-        vitalsObj = new Vitals() { EventId = eventId };
-        vitalsMode = "add";
-        vitalsDiagOpen = true;
-    }
-
-    void EditVitals(int VitalsId)
-    {
-        vitalsDiagHeader = "Edit Vitals";
-        vitalsMode = "edit";
-        vitalsObj = vitals.Where(v => v.Id == VitalsId).FirstOrDefault();
-        vitals.Remove(vitalsObj);
-        vitalsDiagOpen = true;
-    }
-
-    void DeleteVitals(int VitalsId)
-    {
-
-    }
-
-    void SaveVitalsAndClose()
-    {
-        SaveVitals();
-        vitalsDiagOpen = false;
-    }
-
-    async Task SaveVitals()
-    {
-        try
-        {
-            if (vitalsMode == "add")
-            {
-                vitals.Add(vitalsObj);
-                await vitalsClient.PostVitalsAsync(vitalsObj);
-            }
-            else
-            {
-                vitals.Add(vitalsObj);
-                foreach (var item in vitals)
+                foreach (var item in eventObj.Risks)
                 {
-                    await vitalsClient.PutVitalsAsync(item.Id, item);
+                    await riskDataClient.DeleteRiskDataAsync(item.Id);
+                }
+                foreach (var item in refRiskData.TableData.Where(s => s.Selected == true))
+                {
+                    var newRiskDataRecord = await riskDataClient.PostRiskDataAsync(new RiskData { EventId = eventObj.Id, RefRiskDataId = item.Id });
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        async Task SaveSafetyDevices()
+        {
+            try
+            {
+                foreach (var item in eventObj.SafetyDevices)
+                {
+                    await safetyDevicesClient.DeleteSafetyDevicesAsync(item.Id);
+                }
+                foreach (var item in refSafetyDevices.TableData.Where(s => s.Selected == true))
+                {
+                    await safetyDevicesClient.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
                 }
             }
+            catch (Exception ex)
+            {
 
-            Toaster.Add("Vitals Record updated successfully", MatToastType.Success, "Success", null, null);
-
+                throw;
+            }
         }
-        catch (Exception ex)
+
+        async Task SaveInjuryTypes()
         {
-            Toaster.Add(ex.ToString(), MatToastType.Danger, "Error Saving Vitals Record.", null, null);
+            try
+            {
+                foreach (var item in eventObj.InjuryTypes)
+                {
+                    await injuryTypesClient.DeleteInjuryTypesAsync(item.Id);
+                }
+                foreach (var item in refInjuryTypeTable.TableData.Where(s => s.Selected == true))
+                {
+                    await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefInjuryTypeId = item.Id });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
+
+        void cancel()
+        {
+            NavigationManager.NavigateTo("/patients");
+        }
+
+        private async Task validateForm()
+        {
+        }
+
+
     }
-}

@@ -1,0 +1,19 @@
+﻿<div>
+    @if (refTable.TableData != null)
+    {
+        @foreach (var rec in refTable.TableData)
+        {
+            <MatCheckbox @bind-Value="@rec.Selected" Label=@rec.Description></MatCheckbox>
+        }
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string tableName { get; set; }
+
+    [Parameter]
+    public RefTableDTO refTable { get; set; }
+
+}

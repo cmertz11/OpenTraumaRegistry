@@ -1,42 +1,32 @@
 ﻿
-        <MatSelect Label=@PlaceHolder @onchange="@selectedIdChanged">
+    <MatSelect Label="@labelText" @bind-Value="Id" @onchange="selectedIdChanged">
 
-            @if (refTable.TableData != null)
+        @if (refTable.TableData != null)
+        {
+            <MatOption TValue="int" Value=0 ></MatOption>
+            @foreach (var item in refTable.TableData)
             {
-
-                @foreach (var item in refTable.TableData)
+                if (item.Id == Id)
                 {
-                    if (item.Id == SelectedId)
-                    {
-                        <MatOption Value=@item.Id.ToString() selected>@item.Description</MatOption>
-                    }
-                    else
-                    {
-                        <MatOption Value=@item.Id.ToString()>@item.Description</MatOption>
-                    }
+                    <MatOption TValue="int" Value=@item.Id selected>@item.Description</MatOption>
+                }
+                else
+                {
+                    <MatOption TValue="int" Value=@item.Id>@item.Description</MatOption>
                 }
             }
-        </MatSelect>
+        }
+    </MatSelect>
 
         @code {
             [Parameter]
-            public string TableName { get; set; }
+            public string labelText { get; set; }
             [Parameter]
-            public string PlaceHolder { get; set; }
+            public int Id {get; set;}
             [Parameter]
-            public int SelectedId {get; set;}
+            public RefTableDTO refTable { get; set; }
             [Parameter]
             public EventCallback<int> IdChanged { get; set; }
-
-
-
-            RefTableDTO refTable = new RefTableDTO();
-
-            protected override async Task OnInitializedAsync()
-            {
-                ReferenceTableClient client = new ReferenceTableClient();
-                refTable = await client.GetRefTableDataAsync(TableName);
-            }
 
             void selectedIdChanged(ChangeEventArgs e)
             {
