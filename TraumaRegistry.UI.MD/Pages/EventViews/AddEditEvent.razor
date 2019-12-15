@@ -2,10 +2,21 @@
 @page "/editEvent/{eventId:int}"
 @inject NavigationManager NavigationManager
 @inject IMatToaster Toaster
+@using TraumaRegistry.UI.MD.Pages.Components
 
-<h3>@mode.ToUpper() Event</h3>
-
+ 
+    <div style="width: 100%; overflow: hidden;">
+        <div style="width: 600px; float: left;">
+            <h3>@mode.ToUpper() Event</h3>
+        </div>
+        <div style="margin-left: 620px;">
+            <MatButton Icon="cancel" Style="float: right;" @onclick="@cancel">Cancel</MatButton>
+            <MatButton Icon="save" Style="float: right;" OnClick="@SaveEvent">Save</MatButton>
+        </div>
+    </div> 
+<hr />
 <EditForm Model="@eventObj" OnValidSubmit="@validateForm">
+
     <MatDatePicker Label="Injury Date" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value=@eventObj.InjuryDateTime></MatDatePicker>
     <br />
     <MatTextField Label="Place of Occurance/ZIP" @bind-Value=@eventObj.OccuranceZipCode />
@@ -89,15 +100,15 @@
     <br />
     <MatDatePicker Label="Anesthesia Arrival Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
     <br />
-    <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts FullWidth="true"/>
+    <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts FullWidth="true" />
     <br />
     <MatDatePicker Label="Blood Products Start Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStartTime"></MatDatePicker>
     <br />
     <MatDatePicker Label="Blood Products Stop Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStopTime"></MatDatePicker>
     <br />
-    
-    <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
-    <MatButton Icon="save" OnClick="@SaveEvent">Save</MatButton>
+
+    <MatButton Icon="cancel" Style="float: right;" @onclick="@cancel">Cancel</MatButton>
+    <MatButton Icon="save" Style="float: right;" OnClick="@SaveEvent">Save</MatButton>
     @*
 
     *@
@@ -125,19 +136,10 @@
         ICollection<Vitals> vitals;
 
         int SelectedArrivedFromID { get; set; } = 0;
-
         int SelectedInjuryTypeId { get; set; } = 0;
         int SelectedTransportId { get; set; } = 0;
         int SelectedTraumaLevelId { get; set; } = 0;
 
-        string InjuryTypeIdStr { get; set; }
-        string ArrivedFromStr { get; set; }
-        string TransportStr { get; set; }
-        string TraumaLevelStr { get; set; }
-
-        bool FastExam { get; set; } = false;
-        bool FastExamPositive { get; set; } = false;
-        bool TimeInERHolder { get; set; } = false;
 
         EventsClient EventClient = new EventsClient();
         SafetyDevicesClient safetyDevicesClient = new SafetyDevicesClient();
@@ -162,20 +164,20 @@
 
         #region RefTableDropDownControl Callbacks
 
-            void arrivedFromIdChanged(int newId)
-            {
-                eventObj.ArrivedFromId = newId;
-            }
+        void arrivedFromIdChanged(int newId)
+        {
+            eventObj.ArrivedFromId = newId;
+        }
 
-            void transportIdChanged(int newId)
-            {
-                eventObj.TransportId = newId;
-            }
+        void transportIdChanged(int newId)
+        {
+            eventObj.TransportId = newId;
+        }
 
-            void traumaLevelIdChanged(int newId)
-            {
-                eventObj.TraumaLevelId = newId;
-            }
+        void traumaLevelIdChanged(int newId)
+        {
+            eventObj.TraumaLevelId = newId;
+        }
 
         #endregion
 
@@ -193,10 +195,6 @@
                     patientObj = await EventClient.GetPatientWithEventsAsync(1);
                     eventObj = patientObj.Events.Where(e => e.Id == eventId).FirstOrDefault();
 
-
-                    ArrivedFromStr = eventObj.ArrivedFromId.ToString();
-                    TransportStr = eventObj.TransportId.ToString();
-                    TraumaLevelStr = eventObj.TraumaLevelId.ToString();
                     vitals = eventObj.Vitals;
 
                     foreach (var risk in eventObj.Risks)
@@ -227,15 +225,15 @@
             try
             {
                 await SaveSafetyDevices();
-                //await SaveVitals();
+                await SaveRiskData();
+                await SaveInjuryTypes();
 
                 await EventClient.PutEventAsync(eventObj.Id, eventObj);
+                Toaster.Add("Record Saved.", MatToastType.Success, "Record Saved", null, null);
             }
             catch (Exception ex)
-            {
-
-
-                throw;
+            { 
+                Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null); 
             }
 
         }
@@ -301,14 +299,13 @@
             }
         }
 
-        void cancel()
-        {
-            NavigationManager.NavigateTo("/patients");
-        }
-
         private async Task validateForm()
         {
         }
 
+        void cancel()
+        {
+            NavigationManager.NavigateTo("/patients");
+        }
 
     }

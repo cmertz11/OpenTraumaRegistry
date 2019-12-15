@@ -23,7 +23,7 @@
     <Content Update="Pages\ReferenceTableViews\ReferenceTables.razor">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="Pages\RefTableDropDown.razor">
+    <Content Update="Pages\Components\RefTableDropDown.razor">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
