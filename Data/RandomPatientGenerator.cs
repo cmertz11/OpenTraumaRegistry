@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TraumaRegistry.Data
+namespace OpenTraumaRegistry.Data
 {
     public class RandomPatientGenerator
     {

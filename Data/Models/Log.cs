@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace TraumaRegistry.Data.Models
+namespace OpenTraumaRegistry.Data.Models
 {
     public class Log
     {

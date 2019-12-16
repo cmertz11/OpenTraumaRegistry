@@ -1,8 +1,8 @@
-﻿using TraumaRegistry.Data.Models;
+﻿using OpenTraumaRegistry.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace TraumaRegistry.Data
+namespace OpenTraumaRegistry.Data
 {
     public class Context : DbContext
     {

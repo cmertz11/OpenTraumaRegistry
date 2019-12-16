@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
-using TraumaRegistry.Data;
+using OpenTraumaRegistry.Data;
 
-namespace TraumaRegistry.Api.Controllers
+namespace OpenTraumaRegistry.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

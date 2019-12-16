@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TraumaRegistry.Api.Controllers
+namespace OpenTraumaRegistry.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

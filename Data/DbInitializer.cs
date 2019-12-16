@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TraumaRegistry.Data.Models;
+using OpenTraumaRegistry.Data.Models;
 
 
-namespace TraumaRegistry.Data
+namespace OpenTraumaRegistry.Data
 {
     public static class DbInitializer
     {

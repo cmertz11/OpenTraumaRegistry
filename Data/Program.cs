@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
-namespace TraumaRegistry.Data
+namespace OpenTraumaRegistry.Data
 {
     public class Program
     {

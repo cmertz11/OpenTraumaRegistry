@@ -3,20 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.Data", "Data\TraumaRegistry.Data.csproj", "{80F258CA-B79B-4B10-95DA-F8C5EBD1B8EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.Data", "Data\OpenTraumaRegistry.Data.csproj", "{80F258CA-B79B-4B10-95DA-F8C5EBD1B8EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2A4A352A-16D3-439F-A97B-6A6C5D18A3C6}"
 	ProjectSection(SolutionItems) = preProject
 		Notes.txt = Notes.txt
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.Api", "TraumaRegistry.Api\TraumaRegistry.Api.csproj", "{6593C437-CFD7-49A4-AD22-42E8B024FA63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.Api", "TraumaRegistry.Api\OpenTraumaRegistry.Api.csproj", "{6593C437-CFD7-49A4-AD22-42E8B024FA63}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.Client", "TraumaRegistry.Client\TraumaRegistry.Client.csproj", "{635A3509-DBB4-412F-A3C4-F16A76498CA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.Client", "TraumaRegistry.Client\OpenTraumaRegistry.Client.csproj", "{635A3509-DBB4-412F-A3C4-F16A76498CA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.UnitTests", "TraumaRegistry.UnitTests\TraumaRegistry.UnitTests\TraumaRegistry.UnitTests.csproj", "{20F389D1-4677-4DA3-A4E4-C98879406FCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.UnitTests", "TraumaRegistry.UnitTests\TraumaRegistry.UnitTests\OpenTraumaRegistry.UnitTests.csproj", "{20F389D1-4677-4DA3-A4E4-C98879406FCB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraumaRegistry.UI.MD", "TraumaRegistry.UI.MD\TraumaRegistry.UI.MD.csproj", "{517FC5B5-865D-480C-8D9D-323281636E72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.UI.MD", "TraumaRegistry.UI.MD\OpenTraumaRegistry.UI.MD.csproj", "{517FC5B5-865D-480C-8D9D-323281636E72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

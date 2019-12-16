@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 
-using TraumaRegistry.Data;
+using OpenTraumaRegistry.Data;
 
-namespace TraumaRegistry.Api
+namespace OpenTraumaRegistry.Api
 {
     public class Startup
     {

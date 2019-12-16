@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
-    <StartupObject>TraumaRegistry.Data.Program</StartupObject>
+    <StartupObject>OpenTraumaRegistry.Data.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

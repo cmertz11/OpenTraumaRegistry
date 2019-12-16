@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using TraumaRegistry.Data.Models;
+using OpenTraumaRegistry.Data.Models;
 
-namespace TraumaRegistry.Data
+namespace OpenTraumaRegistry.Data
 {
     public class Vitals
     {

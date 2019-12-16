@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using MatBlazor;
 
 
-namespace TraumaRegistry.UI.MD
+namespace OpenTraumaRegistry.UI.MD
 {
     public class Startup
     {

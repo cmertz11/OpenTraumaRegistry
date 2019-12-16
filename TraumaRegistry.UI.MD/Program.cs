@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace TraumaRegistry.UI.MD
+namespace OpenTraumaRegistry.UI.MD
 {
     public class Program
     {

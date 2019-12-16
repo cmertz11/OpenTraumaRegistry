@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TraumaRegistry.Data;
+using OpenTraumaRegistry.Data;
 
-namespace TraumaRegistry.Api.Controllers
+namespace OpenTraumaRegistry.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

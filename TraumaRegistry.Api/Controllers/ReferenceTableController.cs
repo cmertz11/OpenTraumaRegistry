@@ -9,10 +9,10 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using TraumaRegistry.Data;
-using TraumaRegistry.Data.Models;
+using OpenTraumaRegistry.Data;
+using OpenTraumaRegistry.Data.Models;
 
-namespace TraumaRegistry.Api.Controllers
+namespace OpenTraumaRegistry.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

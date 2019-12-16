@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "TraumaRegistry.Api": {
+    "OpenTraumaRegistry.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/ping",

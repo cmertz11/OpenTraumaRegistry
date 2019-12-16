@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TraumaRegistry.Data.Models
+namespace OpenTraumaRegistry.Data.Models
 {
     public class Flag
     {

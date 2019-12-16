@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TraumaRegistry.Data.Models
+namespace OpenTraumaRegistry.Data.Models
 {
     public class Complication
     {

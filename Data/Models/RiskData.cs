@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using TraumaRegistry.Data.Models;
+using OpenTraumaRegistry.Data.Models;
 
-namespace TraumaRegistry.Data.Models
+namespace OpenTraumaRegistry.Data.Models
 {
     public class RiskData
     {
