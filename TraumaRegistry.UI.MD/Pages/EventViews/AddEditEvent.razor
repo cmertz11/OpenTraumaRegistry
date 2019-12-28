@@ -98,6 +98,12 @@
     <br />
     <MatCheckbox @bind-Value=@eventObj.TimeInERHolder Label="Time In ER Holder"></MatCheckbox>
     <br />
+    <MatTextField @bind-Value="@eventObj.HospitalDischargeOrder" Label="Hospital Discharge Order" TextArea="true" FullWidth="true"></MatTextField>
+    <br /> 
+    <MatDatePicker Label="ED Arrival Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdArrivalDateTime"></MatDatePicker>
+    <br />
+    <MatDatePicker Label="ED Discharge Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdDischargeDateTime"></MatDatePicker>
+    <br />
     <MatDatePicker Label="Anesthesia Arrival Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
     <br />
     <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts FullWidth="true" />
@@ -164,20 +170,20 @@
 
         #region RefTableDropDownControl Callbacks
 
-        void arrivedFromIdChanged(int newId)
-        {
-            eventObj.ArrivedFromId = newId;
-        }
+            void arrivedFromIdChanged(int newId)
+            {
+                eventObj.ArrivedFromId = newId;
+            }
 
-        void transportIdChanged(int newId)
-        {
-            eventObj.TransportId = newId;
-        }
+            void transportIdChanged(int newId)
+            {
+                eventObj.TransportId = newId;
+            }
 
-        void traumaLevelIdChanged(int newId)
-        {
-            eventObj.TraumaLevelId = newId;
-        }
+            void traumaLevelIdChanged(int newId)
+            {
+                eventObj.TraumaLevelId = newId;
+            }
 
         #endregion
 

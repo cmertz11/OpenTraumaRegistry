@@ -22,7 +22,13 @@ namespace OpenTraumaRegistry.Data
                 {
                    print("Database Created Successfully.  Starting data load process...", ref OutputString);
                    print("Starting data load process...", ref OutputString);
-                } 
+                }
+                if (!context.Users.Any())
+                {
+                    print("Loading Test User Account", ref OutputString);
+                    context.Users.Add(new User { Password = "Chris123!", EmailAddress = "cmertz11@gmail.com" });
+                    context.SaveChanges();
+                }
 
                 if (!context.RefGender.Any())
                 {

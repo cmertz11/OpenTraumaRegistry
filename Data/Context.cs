@@ -34,9 +34,10 @@ namespace OpenTraumaRegistry.Data
         public DbSet<RefOutcome> RefOutcome { get; set; }
         public DbSet<ReferenceTables> ReferenceTables { get; set; }
         public DbSet<SafetyDevices> SafetyDevices { get; set; }
-
         public DbSet<InjuryTypes> InjuryTypes { get; set; }
         public DbSet<RiskData> RiskData { get; set; }
+
+        public DbSet<User> Users { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 

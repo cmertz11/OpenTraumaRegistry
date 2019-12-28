@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 
 namespace OpenTraumaRegistry.Data
 {
@@ -40,6 +41,8 @@ namespace OpenTraumaRegistry.Data
                 default:
                     break;
             }
+
+
 
             using (Context ctx = new Context(optionsBuilder.Options))
             {

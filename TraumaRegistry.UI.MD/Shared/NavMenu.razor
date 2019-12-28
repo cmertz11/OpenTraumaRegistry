@@ -35,14 +35,14 @@
     </MatNavMenu>
 }
     @code {
-public bool IsLoggedIn = false;
+    public bool IsLoggedIn = false;
 
     [CascadingParameter]
     Task<AuthenticationState> authenticationStateTask { get; set; }
 
 
 
-    ReferenceTableClient client = new ReferenceTableClient();
+    ReferenceTableClient client = new ReferenceTableClient();   
     ICollection<ReferenceTables> refTables = null;
 
 
@@ -57,6 +57,7 @@ public bool IsLoggedIn = false;
             bool.TryParse(await setupClient.IsDatabaseConfiguredAsync(), out IsDatabaseConfigured);
             if (IsDatabaseConfigured)
             {
+                
                 refTables = await client.GetRefTableListAsync();
 
                 if (refTables == null)
