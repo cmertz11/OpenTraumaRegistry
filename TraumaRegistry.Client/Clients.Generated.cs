@@ -931,20 +931,20 @@ namespace OpenTraumaRegistry.Client
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<FileResponse> LoginAsync(string username, string password)
+        public System.Threading.Tasks.Task<string> LoginAsync(string email, string password)
         {
-            return LoginAsync(username, password, System.Threading.CancellationToken.None);
+            return LoginAsync(email, password, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<FileResponse> LoginAsync(string username, string password, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<string> LoginAsync(string email, string password, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Login?");
-            if (username != null) 
+            if (email != null) 
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("username") + "=").Append(System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("email") + "=").Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             if (password != null) 
             {
@@ -958,7 +958,7 @@ namespace OpenTraumaRegistry.Client
                 using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/octet-stream"));
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
     
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
@@ -978,12 +978,10 @@ namespace OpenTraumaRegistry.Client
                         ProcessResponse(client_, response_);
     
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200" || status_ == "206") 
+                        if (status_ == "200") 
                         {
-                            var responseStream_ = response_.Content == null ? System.IO.Stream.Null : await response_.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                            var fileResponse_ = new FileResponse((int)response_.StatusCode, headers_, responseStream_, client_, response_); 
-                            client_ = null; response_ = null; // response and client are disposed by FileResponse
-                            return fileResponse_;
+                            var objectResponse_ = await ReadObjectResponseAsync<string>(response_, headers_).ConfigureAwait(false);
+                            return objectResponse_.Object;
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -992,7 +990,7 @@ namespace OpenTraumaRegistry.Client
                             throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(FileResponse);
+                        return default(string);
                     }
                     finally
                     {

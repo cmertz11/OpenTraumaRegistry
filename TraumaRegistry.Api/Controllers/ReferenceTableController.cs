@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using OpenTraumaRegistry.Data.Models;
 
 namespace OpenTraumaRegistry.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ReferenceTableController : ControllerBase

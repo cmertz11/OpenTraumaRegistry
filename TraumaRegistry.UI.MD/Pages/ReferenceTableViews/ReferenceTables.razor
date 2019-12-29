@@ -4,6 +4,8 @@
 @inject NavigationManager NavigationManager
 @inject IMatToaster Toaster
 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 @if (table == null)
 {
     <p><em>Loading...</em></p>
@@ -81,7 +83,9 @@ else
 
     bool dialogIsOpen = false;
     string dialogHeader = "";
-    bool querying = false;
+    bool querying = true;
+    string token = "";
+    bool firstRender = true;
 
     ReferenceTableClient client = new ReferenceTableClient();
     RefTableDTO table = null;
@@ -90,10 +94,20 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        querying = true;
+        if (!firstRender)
+        {
+            await LoadReferenceTableData();
+        }
+    }
+
+    async Task LoadReferenceTableData()
+    {
+
         table = await client.GetRefTableDataAsync(tableName);
         querying = false;
+        this.StateHasChanged();
     }
+
 
     async Task AddRecord()
     {
@@ -170,6 +184,27 @@ else
     void toast(string message)
     {
         Toaster.Add(message, MatToastType.Success, "Success", null, null);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!NavigationManager.Uri.Contains("/login"))
+            {
+                token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
+
+
+                //check if token is old.
+                if (string.IsNullOrEmpty(token))
+                {
+                    NavigationManager.NavigateTo("/login");
+                }
+                client.SetBearerToken(token);
+                await LoadReferenceTableData();
+            }
+            this.firstRender = false;
+        }
     }
 
 }

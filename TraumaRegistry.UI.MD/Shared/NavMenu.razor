@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components;
 @using OpenTraumaRegistry.Client
 @inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 @if (refTables != null)
 {
@@ -34,7 +35,7 @@
 
     </MatNavMenu>
 }
-    @code {
+@code {
     public bool IsLoggedIn = false;
 
     [CascadingParameter]
@@ -42,35 +43,63 @@
 
 
 
-    ReferenceTableClient client = new ReferenceTableClient();   
+    ReferenceTableClient client = new ReferenceTableClient();
     ICollection<ReferenceTables> refTables = null;
 
 
     protected override async Task OnInitializedAsync()
     {
-        var setupClient = new SetupClient();
-        bool IsDatabaseConfigured = false;
+        //var setupClient = new SetupClient();
+        //bool IsDatabaseConfigured = false;
 
 
-        if (!NavigationManager.Uri.Contains("/setup"))
+        //if (!NavigationManager.Uri.Contains("/setup"))
+        //{
+        //    bool.TryParse(await setupClient.IsDatabaseConfiguredAsync(), out IsDatabaseConfigured);
+        //    if (IsDatabaseConfigured)
+        //    {
+
+        //        refTables = await client.GetRefTableListAsync();
+
+        //        if (refTables == null)
+        //        {
+        //            NavigationManager.NavigateTo("/setup");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        NavigationManager.NavigateTo("/setup");
+        //    }
+        //}
+
+    }
+
+    async Task LoadMenu()
+    {
+        refTables = await client.GetRefTableListAsync();
+        this.StateHasChanged();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
         {
-            bool.TryParse(await setupClient.IsDatabaseConfiguredAsync(), out IsDatabaseConfigured);
-            if (IsDatabaseConfigured)
-            {
-                
-                refTables = await client.GetRefTableListAsync();
 
-                if (refTables == null)
-                {
-                    NavigationManager.NavigateTo("/setup");
-                }
-            }
-            else
+            if (!NavigationManager.Uri.Contains("/login"))
             {
-                NavigationManager.NavigateTo("/setup");
+                var token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
+                if (string.IsNullOrEmpty(token))
+                {
+                    NavigationManager.NavigateTo("/login");
+                }
+                client.SetBearerToken(token);
+                await LoadMenu();
             }
         }
     }
+
 
     protected async Task ViewTable(string tableName)
     {
@@ -98,7 +127,4 @@
     }
 
 
-
-
-
-    }
+}

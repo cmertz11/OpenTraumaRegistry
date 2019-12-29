@@ -28,11 +28,11 @@ namespace OpenTraumaRegistry.Api.Controllers
             context = _context;
         }
 
-        public IActionResult Login(string email, string password)
+        public async Task<ActionResult<string>> Login(string email, string password)
         {
-            IActionResult response = Unauthorized();
+
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email))
-                return response;
+                return Unauthorized();
 
             Models.LoginModel login = new Models.LoginModel();
             login.Email = email;
@@ -42,10 +42,10 @@ namespace OpenTraumaRegistry.Api.Controllers
             if (user != null)
             {
                 var tokenStr = GenerateJSONWebToken(user);
-                response = Ok(new { token = tokenStr });
+                return tokenStr;
             }
 
-            return response;
+            return Unauthorized();
         }
         [HttpPost("Post")]
         public string Post()

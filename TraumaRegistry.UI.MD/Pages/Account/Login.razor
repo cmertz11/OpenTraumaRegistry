@@ -1,0 +1,67 @@
+﻿@page "/login"
+@inject NavigationManager NavigationManager
+@inject IMatToaster Toaster
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+
+<MatCard>
+    <div class="logo">
+        <img src="images/blazorboilerplate.svg" style="width:100px;" /><br />Blazor Boilerplate
+        <br />
+        <h4>Log In</h4>
+       
+    </div>
+    <EditForm Model="@loginModel" OnValidSubmit="@SubmitLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <fieldset>
+            <div class="form-group">
+                <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true"  Required="true"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+            </div>
+            <div class="form-group">
+                @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
+                <MatButton class="float-right" OnClick="@SubmitLogin" Raised="true">Login</MatButton>
+            </div>
+            <hr />
+            <NavLink href="account/register">
+                <h6 class="font-weight-normal text-center">Create account</h6>
+            </NavLink>
+        </fieldset>
+    </EditForm>
+</MatCard>
+
+
+@code {
+
+    LoginClient client = new LoginClient();
+    LoginModel loginModel = new LoginModel();
+
+    class LoginModel
+    {
+        public string Email { get; set; } = "cmertz11@gmail.com";
+        public string Password { get; set; } = "Chris123!";
+    }
+
+    protected override void OnInitialized()
+    {
+
+    }
+
+    async Task SubmitLogin()
+    {
+        try
+        {
+            var token = await client.LoginAsync(loginModel.Email, loginModel.Password);
+            await localStorage.SetItemAsync("OpenTraumaRegistry_Token", token);
+            NavigationManager.NavigateTo("/"); 
+        }
+        catch (Exception ex)
+        {
+            Toaster.Add(ex.Message, MatToastType.Danger, "Login Attempt Failed");
+        }
+    }
+
+}

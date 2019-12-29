@@ -4,17 +4,19 @@
 @using System.Threading
 @inject NavigationManager NavigationManager
 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<h2><i class="fa-user-injured"></i>Patients</h2> 
+
+<h2><i class="fa-user-injured"></i>Patients</h2>
 <MatProgressBar Indeterminate="@querying"></MatProgressBar>
- 
+
 @if (pagedData == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
- 
+
     <MatSelect Label="Filter" Enhanced="true" @bind-Value="query.FilterColumn">
         <MatOptionString value="Id">Id</MatOptionString>
         <MatOptionString value="MRN">MRN</MatOptionString>
@@ -26,7 +28,7 @@ else
     <MatTextField id="searchFilter" Label="Search" @bind-Value="query.Filter" />
     <MatButton Icon="search" @onclick="SearchAsync">Search </MatButton>
 
-   
+
     <MatSelect Label="Page Size" Enhanced="true" @bind-Value="pageSize">
         <MatOptionString value="5">5</MatOptionString>
         <MatOptionString selected="selected" value="10">10</MatOptionString>
@@ -74,17 +76,17 @@ else
         <tbody>
             @foreach (var patient in pagedData.Records)
             {
-            <tr>
-                <td>@patient.Id</td>
-                <td>@patient.Mrn</td>
-                <td>@patient.FirstName</td>
-                <td>@patient.LastName</td>
-                <td>@patient.Mi</td>
-                <td>@Convert.ToDateTime(patient.Dob).ToShortDateString()</td>
-                <td><MatButton Icon="edit" @onclick="@(() => EditPatient(patient.Id))">Edit</MatButton></td> 
-                <td><MatButton Icon="more" @onclick="@(() => ViewPatientEvents(patient.Id))">Events (@patient.EventCount)</MatButton></td>
+                <tr>
+                    <td>@patient.Id</td>
+                    <td>@patient.Mrn</td>
+                    <td>@patient.FirstName</td>
+                    <td>@patient.LastName</td>
+                    <td>@patient.Mi</td>
+                    <td>@Convert.ToDateTime(patient.Dob).ToShortDateString()</td>
+                    <td><MatButton Icon="edit" @onclick="@(() => EditPatient(patient.Id))">Edit</MatButton></td>
+                    <td><MatButton Icon="more" @onclick="@(() => ViewPatientEvents(patient.Id))">Events (@patient.EventCount)</MatButton></td>
 
-            </tr>
+                </tr>
             }
         </tbody>
     </table>
@@ -120,21 +122,26 @@ else
     string metrics = "";
     string pageSize = "10";
     int pageCount = 0;
-    bool querying = false; 
+    bool querying = true;
+    string token = "";
 
     UrlQuery query = new UrlQuery { PageNumber = 1, PageSize = 10, FilterColumn = "LastName", OrderBy = "Id", OrderByDirection = "asc" };
 
     protected async Task SearchAsync()
     {
-        querying = true;
+        client.SetBearerToken(token);
+
+
         Stopwatch sw = new Stopwatch();
         sw.Start();
         pagedData = await client.GetPatientsAsync(query);
+
         pageCount = (pagedData.RecordCount + query.PageSize - 1) / query.PageSize;
         sw.Stop();
         metrics = "Total Patients: " + pagedData.RecordCount + "." + Environment.NewLine + "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
-        querying = false; 
-    } 
+        querying = false;
+        this.StateHasChanged();
+    }
 
     protected async Task ViewPatientEvents(int Id)
     {
@@ -176,7 +183,25 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await SearchAsync();
+        // await SearchAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!NavigationManager.Uri.Contains("/login"))
+            {
+                token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
+                
+                await SearchAsync();
+                //check if token is old.
+                if (string.IsNullOrEmpty(token))
+                {
+                    NavigationManager.NavigateTo("/login");
+                }
+            }
+        }
     }
 
 

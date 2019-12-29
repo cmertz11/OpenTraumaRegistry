@@ -11,6 +11,7 @@ using OpenTraumaRegistry.Data.Models;
 
 namespace OpenTraumaRegistry.Api.Controllers
 {
+        
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
