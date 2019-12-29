@@ -12,9 +12,9 @@
         <MatNavItem Href="@NavigationManager.ToAbsoluteUri("Patients").AbsoluteUri">
             <MatIcon>people</MatIcon> <span class="miniHover">Patients</span>
         </MatNavItem>
-        <MatNavItem Href="@NavigationManager.ToAbsoluteUri("setup").AbsoluteUri">
+        @*<MatNavItem Href="@NavigationManager.ToAbsoluteUri("setup").AbsoluteUri">
             <MatIcon>build</MatIcon> <span class="miniHover">Setup</span>
-        </MatNavItem>
+        </MatNavItem>*@
         <MatNavSubMenu>
             <MatNavSubMenuHeader>
                 <MatNavItem AllowSelection="false">
@@ -49,28 +49,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //var setupClient = new SetupClient();
-        //bool IsDatabaseConfigured = false;
 
 
-        //if (!NavigationManager.Uri.Contains("/setup"))
-        //{
-        //    bool.TryParse(await setupClient.IsDatabaseConfiguredAsync(), out IsDatabaseConfigured);
-        //    if (IsDatabaseConfigured)
-        //    {
+                refTables = await client.GetRefTableListAsync();
 
-        //        refTables = await client.GetRefTableListAsync();
-
-        //        if (refTables == null)
-        //        {
-        //            NavigationManager.NavigateTo("/setup");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        NavigationManager.NavigateTo("/setup");
-        //    }
-        //}
 
     }
 
@@ -81,24 +63,24 @@
     }
 
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
 
-        if (firstRender)
-        {
+    //    if (firstRender)
+    //    {
 
-            if (!NavigationManager.Uri.Contains("/login"))
-            {
-                var token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
-                if (string.IsNullOrEmpty(token))
-                {
-                    NavigationManager.NavigateTo("/login");
-                }
-                client.SetBearerToken(token);
-                await LoadMenu();
-            }
-        }
-    }
+    //        if (!NavigationManager.Uri.Contains("/login"))
+    //        {
+    //            var token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
+    //            if (string.IsNullOrEmpty(token))
+    //            {
+    //                NavigationManager.NavigateTo("/login");
+    //            }
+    //            client.SetBearerToken(token);
+    //            await LoadMenu();
+    //        }
+    //    }
+    //}
 
 
     protected async Task ViewTable(string tableName)

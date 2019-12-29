@@ -14,8 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.Api", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.Client", "TraumaRegistry.Client\OpenTraumaRegistry.Client.csproj", "{635A3509-DBB4-412F-A3C4-F16A76498CA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.UnitTests", "TraumaRegistry.UnitTests\TraumaRegistry.UnitTests\OpenTraumaRegistry.UnitTests.csproj", "{20F389D1-4677-4DA3-A4E4-C98879406FCB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTraumaRegistry.UI.MD", "TraumaRegistry.UI.MD\OpenTraumaRegistry.UI.MD.csproj", "{517FC5B5-865D-480C-8D9D-323281636E72}"
 EndProject
 Global
@@ -36,10 +34,6 @@ Global
 		{635A3509-DBB4-412F-A3C4-F16A76498CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{635A3509-DBB4-412F-A3C4-F16A76498CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{635A3509-DBB4-412F-A3C4-F16A76498CA6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20F389D1-4677-4DA3-A4E4-C98879406FCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20F389D1-4677-4DA3-A4E4-C98879406FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20F389D1-4677-4DA3-A4E4-C98879406FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20F389D1-4677-4DA3-A4E4-C98879406FCB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{517FC5B5-865D-480C-8D9D-323281636E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{517FC5B5-865D-480C-8D9D-323281636E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{517FC5B5-865D-480C-8D9D-323281636E72}.Release|Any CPU.ActiveCfg = Release|Any CPU

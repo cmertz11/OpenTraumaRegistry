@@ -94,19 +94,11 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!firstRender)
-        {
-            await LoadReferenceTableData();
-        }
-    }
-
-    async Task LoadReferenceTableData()
-    {
-
         table = await client.GetRefTableDataAsync(tableName);
         querying = false;
         this.StateHasChanged();
     }
+
 
 
     async Task AddRecord()
@@ -186,25 +178,25 @@ else
         Toaster.Add(message, MatToastType.Success, "Success", null, null);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            if (!NavigationManager.Uri.Contains("/login"))
-            {
-                token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        if (!NavigationManager.Uri.Contains("/login"))
+    //        {
+    //            token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
 
 
-                //check if token is old.
-                if (string.IsNullOrEmpty(token))
-                {
-                    NavigationManager.NavigateTo("/login");
-                }
-                client.SetBearerToken(token);
-                await LoadReferenceTableData();
-            }
-            this.firstRender = false;
-        }
-    }
+    //            //check if token is old.
+    //            if (string.IsNullOrEmpty(token))
+    //            {
+    //                NavigationManager.NavigateTo("/login");
+    //            }
+    //            client.SetBearerToken(token);
+    //            await LoadReferenceTableData();
+    //        }
+    //        this.firstRender = false;
+    //    }
+    //}
 
 }

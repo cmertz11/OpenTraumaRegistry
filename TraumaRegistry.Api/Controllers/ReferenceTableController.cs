@@ -15,7 +15,7 @@ using OpenTraumaRegistry.Data.Models;
 
 namespace OpenTraumaRegistry.Api.Controllers
 {
-    [Authorize]
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ReferenceTableController : ControllerBase
