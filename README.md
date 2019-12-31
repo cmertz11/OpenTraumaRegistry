@@ -37,6 +37,9 @@ The goal of this project initally started as an avenue to learn the following te
  ![image](https://user-images.githubusercontent.com/5183421/71628673-0aecd180-2bc7-11ea-90ef-fdaec734ed12.png)
 
 - Create the database and prepopulate with test data 
-  The appsettings.json is defaulting to use sqlserver. OTR supports sqlserver, Postgresql, and MySql. Testing is incomplete this point and some funtionality may not be availabe in all but sqlserver.  I suggest using sqlserver for now.
-Right click OpenTraumaRegistry.Data --> debug  --> start new instance
+  The appsettings.json is defaulting to use sqlserver. OTR supports sqlserver, Postgresql, and MySql. Testing is incomplete this point and some funtionality may not be availabe in all but sqlserver.  I suggest using sqlserver for now. If you are brave, read the appsettings.json, there are commented lines on how to set the dbprovider and connectionString settings to use the other RDBMS.
+  
+Right click OpenTraumaRegistry.Data --> debug  --> start new instance this will create the database:
+![image](https://user-images.githubusercontent.com/5183421/71628852-3a500e00-2bc8-11ea-9a94-89d3d4671fcf.png)
+
  
