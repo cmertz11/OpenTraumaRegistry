@@ -15,3 +15,4 @@ The goal of this project initally started as an avenue to learn the following te
 
 ## Screen Shots
 ![image](https://user-images.githubusercontent.com/5183421/71624887-d7a04780-2bb2-11ea-9716-6f1661ccd7b1.png)
+![image](https://user-images.githubusercontent.com/5183421/71624963-39f94800-2bb3-11ea-8114-49411fd54159.png)
