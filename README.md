@@ -38,5 +38,5 @@ The goal of this project initally started as an avenue to learn the following te
 
 - Create the database and prepopulate with test data 
   The appsettings.json is defaulting to use sqlserver. OTR supports sqlserver, Postgresql, and MySql. Testing is incomplete this point and some funtionality may not be availabe in all but sqlserver.  I suggest using sqlserver for now.
- 
+Right click OpenTraumaRegistry.Data --> debug  --> start new instance
  
