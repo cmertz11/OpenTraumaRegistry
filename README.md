@@ -16,3 +16,16 @@ The goal of this project initally started as an avenue to learn the following te
 ## Screen Shots
 ![image](https://user-images.githubusercontent.com/5183421/71624887-d7a04780-2bb2-11ea-9716-6f1661ccd7b1.png)
 ![image](https://user-images.githubusercontent.com/5183421/71624963-39f94800-2bb3-11ea-8114-49411fd54159.png)
+
+## Projects used and or referenced
+- [Blazor](https://blazor.net)
+- [Blazorboilerplate](https://github.com/enkodellc/blazorboilerplate)
+- [MatBlazor](https://github.com/SamProf/MatBlazor)
+- [Blazored/LocalStorage](https://github.com/Blazored/LocalStorage)
+- NSwagStudio (https://github.com/RicoSuter/NSwag/wiki/NSwagStudio)
+
+## Prerequisites
+- [.Net Core SDK 3.1.0-preview4.19579.2](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+- Install the Latest Visual Studio 2019 Preview with the ASP.NET and web development workload selected.
+- Entity Framework Core on the command-line tools: **dotnet tool install --global dotnet-ef --version 3.1.0-preview4.19579.2**
+- NSwagStudio (https://github.com/RicoSuter/NSwag/wiki/NSwagStudio)
