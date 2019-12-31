@@ -29,3 +29,10 @@ The goal of this project initally started as an avenue to learn the following te
 - Install the Latest Visual Studio 2019 Preview with the ASP.NET and web development workload selected.
 - Entity Framework Core on the command-line tools: **dotnet tool install --global dotnet-ef --version 3.1.0-preview4.19579.2**
 - NSwagStudio (https://github.com/RicoSuter/NSwag/wiki/NSwagStudio)
+
+### How to run
+ I'm currently working on a step by step set of instructions to get Open Trauma Registry (OTR) up and running.
+ - Clone or Download
+ - 
+ 
+ 
