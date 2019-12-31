@@ -33,6 +33,10 @@ The goal of this project initally started as an avenue to learn the following te
 ### How to run
  I'm currently working on a step by step set of instructions to get Open Trauma Registry (OTR) up and running.
  - Clone or Download
- - 
+ - Ensure the Solution properties are set to Multiple startup project with OpentTraumaRegistry.Api starting first then OpenTruamaRegisty.UI.MD
+ ![image](https://user-images.githubusercontent.com/5183421/71628673-0aecd180-2bc7-11ea-90ef-fdaec734ed12.png)
+
+- Create the database and prepopulate with test data 
+  The appsettings.json is defaulting to use sqlserver. OTR supports sqlserver, Postgresql, and MySql. Testing is incomplete this point and some funtionality may not be availabe in all but sqlserver.  I suggest using sqlserver for now.
  
  
