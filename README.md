@@ -9,6 +9,8 @@ The goal of this project initally started as an avenue to learn the following te
 - NSwagStudio / https://github.com/RicoSuter/NSwag/wiki/NSwagStudio
 - Docker / https://www.docker.com/
 - EntityFrameworkCore / https://github.com/aspnet/EntityFrameworkCore
+## Notable links
+- http://www.traumavendoralliance.org/
 
 ## Demo 
 - Coming Soon! https://opentraumaregistry.com/
