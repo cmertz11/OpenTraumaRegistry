@@ -18,6 +18,7 @@ The goal of this project initally started as an avenue to learn the following te
 ## Screen Shots
 ![image](https://user-images.githubusercontent.com/5183421/71624887-d7a04780-2bb2-11ea-9716-6f1661ccd7b1.png)
 ![image](https://user-images.githubusercontent.com/5183421/71624963-39f94800-2bb3-11ea-8114-49411fd54159.png)
+![image](https://user-images.githubusercontent.com/5183421/71770476-df395680-2efa-11ea-9e4a-171ebe62555d.png)
 
 ## Projects used and or referenced
 - [Blazor](https://blazor.net)
@@ -39,7 +40,8 @@ The goal of this project initally started as an avenue to learn the following te
  ![image](https://user-images.githubusercontent.com/5183421/71628673-0aecd180-2bc7-11ea-90ef-fdaec734ed12.png)
 
 - Create the database and prepopulate with test data 
-  The appsettings.json is defaulting to use sqlserver. OTR supports sqlserver, Postgresql, and MySql. Testing is incomplete this point and some funtionality may not be availabe in all but sqlserver.  I suggest using sqlserver for now. If you are brave, read the appsettings.json, there are commented lines on how to set the dbprovider and connectionString settings to use the other RDBMS.
+  The appsettings.json is defaulting to use sqlserver. OTR supports sqlserver, Postgresql, and MySql. Testing is incomplete this point and some funtionality may not be availabe in all but sqlserver.  
+ - If you have a PostgreSql, or MySql instance you would rather use please ensure you update the connectionstring password.
   
 Right click OpenTraumaRegistry.Data --> debug  --> start new instance this will create the database:
 ![image](https://user-images.githubusercontent.com/5183421/71628852-3a500e00-2bc8-11ea-9a94-89d3d4671fcf.png)
