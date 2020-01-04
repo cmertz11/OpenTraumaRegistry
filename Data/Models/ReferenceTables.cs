@@ -10,7 +10,7 @@ namespace OpenTraumaRegistry.Data.Models
 
         public int Id { get; set; }
 
-        [MaxLength(20)]
+        [MaxLength(40)]
         public string Code { get; set; }
         [MaxLength(200)]
         public string Description { get; set; }

@@ -12,10 +12,10 @@ namespace OpenTraumaRegistry.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         //FK
-        public int RefInjuryTypeId { get; set; }
+        public int RefTraumaTypeId { get; set; }
 
-        [ForeignKey("RefInjuryTypeId ")]
-        public RefInjuryType RefInjuryType { get; set; }
+        [ForeignKey("RefTraumaTypeId ")]
+        public RefTraumaType RefTraumaType { get; set; }
         public int EventId { get; set; }
         public Event Event { get; set; }
     }

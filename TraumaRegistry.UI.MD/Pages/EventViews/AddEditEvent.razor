@@ -26,12 +26,26 @@
         <MatExpansionPanel>
             <MatExpansionPanelSummary>
                 <MatExpansionPanelHeader>
+                    Home Residence
+                </MatExpansionPanelHeader>
+                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+            </MatExpansionPanelSummary>
+            <MatExpansionPanelDetails>
+                <OptionSelectorComponent refTable="@refHomeResidence" />
+            </MatExpansionPanelDetails>
+        </MatExpansionPanel>
+    </MatAccordion>
+    <br />
+    <MatAccordion>
+        <MatExpansionPanel>
+            <MatExpansionPanelSummary>
+                <MatExpansionPanelHeader>
                     Safety Devices
                 </MatExpansionPanelHeader>
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@refSafetyDevices" />
+                <OptionSelectorComponent refTable="@RefProtectiveDevice" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -45,7 +59,7 @@
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@refInjuryTypeTable" />
+                <OptionSelectorComponent refTable="@RefTraumaTypeTable" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -99,7 +113,7 @@
     <MatCheckbox @bind-Value=@eventObj.TimeInERHolder Label="Time In ER Holder"></MatCheckbox>
     <br />
     <MatTextField @bind-Value="@eventObj.HospitalDischargeOrder" Label="Hospital Discharge Order" TextArea="true" FullWidth="true"></MatTextField>
-    <br /> 
+    <br />
     <MatDatePicker Label="ED Arrival Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdArrivalDateTime"></MatDatePicker>
     <br />
     <MatDatePicker Label="ED Discharge Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdDischargeDateTime"></MatDatePicker>
@@ -133,8 +147,9 @@
 
 
         Vitals vitalsObj = new Vitals();
-        RefTableDTO refInjuryTypeTable = new RefTableDTO();
-        RefTableDTO refSafetyDevices = new RefTableDTO();
+        RefTableDTO refHomeResidence = new RefTableDTO();
+        RefTableDTO RefTraumaTypeTable = new RefTableDTO();
+        RefTableDTO RefProtectiveDevice = new RefTableDTO();
         RefTableDTO refRiskData = new RefTableDTO();
         RefTableDTO refArrivedFrom = new RefTableDTO();
         RefTableDTO refTransport = new RefTableDTO();
@@ -160,8 +175,9 @@
         protected override async Task OnInitializedAsync()
         {
 
-            refInjuryTypeTable = await RefTableClient.GetRefTableDataAsync("RefInjuryType");
-            refSafetyDevices = await RefTableClient.GetRefTableDataAsync("RefSafetyDevices");
+            refHomeResidence = await RefTableClient.GetRefTableDataAsync("RefHomeResidence");
+            RefTraumaTypeTable = await RefTableClient.GetRefTableDataAsync("RefTraumaType");
+            RefProtectiveDevice = await RefTableClient.GetRefTableDataAsync("RefProtectiveDevice");
             refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
             refArrivedFrom = await RefTableClient.GetRefTableDataAsync("RefArrivedFrom");
             refTransport = await RefTableClient.GetRefTableDataAsync("RefTransport");
@@ -170,20 +186,20 @@
 
         #region RefTableDropDownControl Callbacks
 
-            void arrivedFromIdChanged(int newId)
-            {
-                eventObj.ArrivedFromId = newId;
-            }
+        void arrivedFromIdChanged(int newId)
+        {
+            eventObj.ArrivedFromId = newId;
+        }
 
-            void transportIdChanged(int newId)
-            {
-                eventObj.TransportId = newId;
-            }
+        void transportIdChanged(int newId)
+        {
+            eventObj.TransportId = newId;
+        }
 
-            void traumaLevelIdChanged(int newId)
-            {
-                eventObj.TraumaLevelId = newId;
-            }
+        void traumaLevelIdChanged(int newId)
+        {
+            eventObj.TraumaLevelId = newId;
+        }
 
         #endregion
 
@@ -210,12 +226,17 @@
 
                     foreach (var safetyDevice in eventObj.SafetyDevices)
                     {
-                        refSafetyDevices.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
+                        RefProtectiveDevice.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
                     }
 
                     foreach (var injuryType in eventObj.InjuryTypes)
                     {
-                        refInjuryTypeTable.TableData.Where(i => i.Id == injuryType.RefInjuryTypeId).FirstOrDefault().Selected = true;
+                        RefTraumaTypeTable.TableData.Where(i => i.Id == injuryType.RefTraumaTypeId).FirstOrDefault().Selected = true;
+                    }
+
+                    foreach (var homeResidence in eventObj.HomeResidences)
+                    {
+                       refHomeResidence.TableData.Where(i => i.Id == homeResidence.RefHomeResidenceId).FirstOrDefault().Selected = true;
                     }
                 }
             }
@@ -238,8 +259,8 @@
                 Toaster.Add("Record Saved.", MatToastType.Success, "Record Saved", null, null);
             }
             catch (Exception ex)
-            { 
-                Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null); 
+            {
+                Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
             }
 
         }
@@ -273,7 +294,7 @@
                 {
                     await safetyDevicesClient.DeleteSafetyDevicesAsync(item.Id);
                 }
-                foreach (var item in refSafetyDevices.TableData.Where(s => s.Selected == true))
+                foreach (var item in RefProtectiveDevice.TableData.Where(s => s.Selected == true))
                 {
                     await safetyDevicesClient.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
                 }
@@ -293,9 +314,9 @@
                 {
                     await injuryTypesClient.DeleteInjuryTypesAsync(item.Id);
                 }
-                foreach (var item in refInjuryTypeTable.TableData.Where(s => s.Selected == true))
+                foreach (var item in RefTraumaTypeTable.TableData.Where(s => s.Selected == true))
                 {
-                    await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefInjuryTypeId = item.Id });
+                    await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefTraumaTypeId = item.Id });
                 }
             }
             catch (Exception)

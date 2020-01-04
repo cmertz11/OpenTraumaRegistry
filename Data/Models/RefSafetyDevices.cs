@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OpenTraumaRegistry.Data.Models
 {
-    public class RefSafetyDevices
+    public class RefProtectiveDevice
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -30,6 +30,9 @@
                         Weight
                     </th>
                     <th>
+                        GCS
+                    </th>
+                    <th>
                         Time Taken
                     </th>
                     <th>
@@ -51,6 +54,7 @@
                             <td>@rec.Temperature</td>
                             <td>@rec.Height</td>
                             <td>@rec.Weight</td>
+                            <td>@rec.GlasgowComaScale</td>
                             <td>@rec.TimeTaken</td>
                             <td>
                                 <MatButton Icon="edit" @onclick="@(() => EditVitals(rec.Id))">Edit</MatButton>
@@ -114,6 +118,12 @@
 
         <MatNumericUpDownField Label="Weight"
                                @bind-Value=@vitalsObj.Weight
+                               DecimalPlaces=0
+                               Minimum=null Maximum=null>
+        </MatNumericUpDownField>
+
+        <MatNumericUpDownField Label="GCS"
+                               @bind-Value=@vitalsObj.GlasgowComaScale
                                DecimalPlaces=0
                                Minimum=null Maximum=null>
         </MatNumericUpDownField>

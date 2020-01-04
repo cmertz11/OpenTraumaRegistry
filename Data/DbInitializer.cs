@@ -41,20 +41,20 @@ namespace OpenTraumaRegistry.Data
                 {
                     print("Loading RefRace", ref OutputString);
                     context.RefRace.Add(new RefRace { Code = "A", Description = "Asian" });
-                    context.RefRace.Add(new RefRace { Code = "B", Description = "Black" });
-                    context.RefRace.Add(new RefRace { Code = "H", Description = "Hispanic" });
-                    context.RefRace.Add(new RefRace { Code = "I", Description = "Native American" });
-                    context.RefRace.Add(new RefRace { Code = "O", Description = "Other" });
+                    context.RefRace.Add(new RefRace { Code = "B", Description = "Native Hawaiian or Other Pacific Islander" });
+                    context.RefRace.Add(new RefRace { Code = "H", Description = "Other Race" });
+                    context.RefRace.Add(new RefRace { Code = "I", Description = "American Indian" });
+                    context.RefRace.Add(new RefRace { Code = "O", Description = "Black or African American" });
                     context.RefRace.Add(new RefRace { Code = "W", Description = "White" });
-                    context.RefRace.Add(new RefRace { Code = "P", Description = "Polinesian" });
                     context.SaveChanges();
                 }
-                if (!context.RefInjuryType.Any())
+                if (!context.RefTraumaType.Any())
                 {
-                    print("Loading RefInjuryType", ref OutputString); 
-                    context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Blunt" });
-                    context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Penetrating" });
-                    context.RefInjuryType.Add(new RefInjuryType { Code = "", Description = "Burn" });
+                    print("Loading RefTraumaType", ref OutputString); 
+                    context.RefTraumaType.Add(new RefTraumaType { Code = "", Description = "Blunt" });
+                    context.RefTraumaType.Add(new RefTraumaType { Code = "", Description = "Penetrating" });
+                    context.RefTraumaType.Add(new RefTraumaType { Code = "", Description = "Burn" });
+                    context.RefTraumaType.Add(new RefTraumaType { Code = "", Description = "Other" });
                     context.SaveChanges();
                 }
                 
@@ -95,18 +95,20 @@ namespace OpenTraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                if (!context.RefSafetyDevices.Any())
+                if (!context.RefProtectiveDevice.Any())
                 {
-                    print("Loading RefSafetyDevices", ref OutputString);
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Airbag" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Lap belt" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Shoulder belt" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Child restraint" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Eye protection" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Pads" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Helmet" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "Protective clothing" });
-                    context.RefSafetyDevices.Add(new RefSafetyDevices { Description = "None/unknown" });
+                    print("Loading RefProtectiveDevice", ref OutputString);
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "None" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Lap belt" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Personal Floatation Device" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Protective Non-Clothing Gear (E.g. Shin Guard)" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Eye protection" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Child Restraint (Booster Seat or Child Car Seat)" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Helmet (E.g. Bicycle, Skiing, Motorcycle)" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Airbag Present" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Protective Clothing (E.g. Padded Leather Pants)" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Shoulder Belt" });
+                    context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Other" });
 
                     context.SaveChanges();
                 }
@@ -145,6 +147,29 @@ namespace OpenTraumaRegistry.Data
 
                     context.SaveChanges();
                 }
+
+                print("Loading RefHomeResidence", ref OutputString);
+                if (!context.RefHomeResidence.Any())
+                {
+                    context.RefHomeResidence.Add(new RefHomeResidence { Description = "Homeless" });
+                    context.RefHomeResidence.Add(new RefHomeResidence { Description = "Undocumented Citizen" });
+                    context.RefHomeResidence.Add(new RefHomeResidence { Description = "Migrant Worker" });
+
+                    context.SaveChanges();
+                }
+
+                print("Loading RefTransportMode", ref OutputString);
+                if (!context.RefTransportMode.Any())
+                {
+                    context.RefTransportMode.Add(new RefTransportMode { Description = "Ground Ambulance" });
+                    context.RefTransportMode.Add(new RefTransportMode { Description = "Helicopter Ambulance" });
+                    context.RefTransportMode.Add(new RefTransportMode { Description = "Fixed-Wing Ambulance" });
+                    context.RefTransportMode.Add(new RefTransportMode { Description = "Private/Public Vehicle/Walk-In" });
+                    context.RefTransportMode.Add(new RefTransportMode { Description = "Police" });
+                    context.RefTransportMode.Add(new RefTransportMode { Description = "Other" });
+                    context.SaveChanges();
+                }
+
                 print("Loading RefOutcome", ref OutputString);
                 if (!context.RefOutcome.Any())
                 {
@@ -170,20 +195,31 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
+                print("Loading RefChildSpecificRestraint", ref OutputString);
+                if (!context.RefChildSpecificRestraint.Any())
+                {
+                    context.RefChildSpecificRestraint.Add(new RefChildSpecificRestraint { Description = "Child Car Seat" });
+                    context.RefChildSpecificRestraint.Add(new RefChildSpecificRestraint { Description = "Infant Car Seat" });
+                    context.RefChildSpecificRestraint.Add(new RefChildSpecificRestraint { Description = "Child Booster Seat" });
+                    context.SaveChanges();
+                }
+
                 print("Loading Reference Table List with Id, Code, Description Schema", ref OutputString);
                 if(!context.ReferenceTables.Any())
                 {
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefArrivedFrom", Description = "Arrived From" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefGender", Description = "Gender" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefInjuryType", Description = "Injury Types" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefTraumaType", Description = "Trauma Types" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefLocation", Description = "Locations" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefOutcome", Description = "Outcomes" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefRace", Description = "Race" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefRiskData", Description = "Risk Data" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefSafetyDevices", Description = "Safety Devices" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefProtectiveDevice", Description = "Protective Device" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefTransport", Description = "Transport" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefTraumaLevel", Description = "Trauma Level" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "ReferenceTables", Description = "Reference Tables" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefHomeResidence", Description = "Home Residence" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefChildSpecificRestraint", Description = "Child Specific Restraints" });
 
                     context.SaveChanges();
                 }
@@ -487,7 +523,7 @@ namespace OpenTraumaRegistry.Data
             event1.AgencyPreHospitalId = 1;
             event1.TraumaLevelId = 1;
 
-            var injuryType1 = new InjuryTypes { RefInjuryTypeId = 2 };
+            var injuryType1 = new InjuryTypes { RefTraumaTypeId = 2 };
             event1.InjuryTypes.Add(injuryType1);
             return event1;
         }
@@ -556,7 +592,7 @@ namespace OpenTraumaRegistry.Data
             event1.AgencyPreHospitalId = 1;
             event1.TraumaLevelId = 1;
 
-            var injuryType1 = new InjuryTypes { RefInjuryTypeId = 2 };
+            var injuryType1 = new InjuryTypes { RefTraumaTypeId = 2 };
             event1.InjuryTypes.Add(injuryType1);
             return event1;
         }

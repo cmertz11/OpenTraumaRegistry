@@ -20,8 +20,8 @@ namespace OpenTraumaRegistry.Data
         public DbSet<FlagType> FlagTypes { get; set; }
         public DbSet<Models.RefGender> RefGender { get; set; }
         public DbSet<RefRace> RefRace { get; set; }
-        public DbSet<RefInjuryType> RefInjuryType { get; set; }
-        public DbSet<RefSafetyDevices> RefSafetyDevices { get; set; }
+        public DbSet<RefTraumaType> RefTraumaType { get; set; }
+        public DbSet<RefProtectiveDevice> RefProtectiveDevice { get; set; }
         public DbSet<RefRiskData> RefRiskData { get; set; }
         public DbSet<RefLocation> RefLocation { get; set; }
         public DbSet<RefTransport> RefTransport { get; set; }
@@ -36,6 +36,11 @@ namespace OpenTraumaRegistry.Data
         public DbSet<SafetyDevices> SafetyDevices { get; set; }
         public DbSet<InjuryTypes> InjuryTypes { get; set; }
         public DbSet<RiskData> RiskData { get; set; }
+        public DbSet<RefHomeResidence> RefHomeResidence { get; set; }
+        public DbSet<HomeResidence> HomeResidences { get; set; }
+        public DbSet<RefChildSpecificRestraint> RefChildSpecificRestraint { get; set; }
+
+        public DbSet<RefTransportMode> RefTransportMode { get; set; }
 
         public DbSet<User> Users { get; set; }
         public Context() {}
@@ -79,6 +84,12 @@ namespace OpenTraumaRegistry.Data
                 .WithMany(b => b.SafetyDevices)
                 .HasForeignKey(p => p.EventId)
                 .HasConstraintName("ForeignKey_Event_SafetyDevices");
+
+            modelBuilder.Entity<HomeResidence>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.HomeResidences)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_HomeResidence");
 
             modelBuilder.Entity<Injury>()
                 .HasOne(p => p.Event)

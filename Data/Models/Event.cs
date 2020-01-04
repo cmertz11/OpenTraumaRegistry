@@ -63,6 +63,10 @@ namespace OpenTraumaRegistry.Data.Models
             [ForeignKey("TransportId")]
             public RefTransport Transport { get; set; }
 
+            public int? TransportModeId { get; set; }
+            [ForeignKey("TransportModeId")]
+            public RefTransportMode TransportMode { get; set; }
+
             public int? AgencyPreHospitalId { get; set; }
             [ForeignKey("AgencyPreHospitalId")]
             public RefAgency AgencyPreHospital { get; set; }
@@ -73,10 +77,16 @@ namespace OpenTraumaRegistry.Data.Models
             public int? AdmitPhysicianId { get; set; }
             [ForeignKey("AdmitPhysicianId")]
             public RefPhysician AdmitPhysician { get; set; }
+
+            public int? ChildSpecificRestraintId { get; set; }
+            [ForeignKey("ChildSpecificRestraintId")]
+            public RefChildSpecificRestraint ChildSpecificRestraint { get; set; }
         #endregion
 
         public List<InjuryTypes> InjuryTypes { get; set; } = new List<InjuryTypes>();
         public List<SafetyDevices> SafetyDevices { get; set; } = new List<SafetyDevices>();
+
+        public List<HomeResidence> HomeResidences { get; set; } = new List<HomeResidence>();
         public List<Vitals> Vitals { get; set; } = new List<Vitals>();
 
         public List<Injury> Injuries { get; set; } = new List<Injury>();

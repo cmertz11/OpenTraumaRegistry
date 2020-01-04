@@ -24,6 +24,8 @@ namespace OpenTraumaRegistry.Data
         public decimal? Temperature { get; set; }
         public decimal? Height { get; set; }
         public decimal? Weight { get; set; }
+
+        public decimal? GlasgowComaScale { get; set; }
         public string Note { get; set; }
         public DateTime? TimeTaken { get; set; }
         public DateTime TimeStamp { get; set; }
