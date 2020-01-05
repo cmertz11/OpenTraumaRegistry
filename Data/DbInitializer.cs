@@ -204,6 +204,27 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
+                print("Loading RefDrugScreen", ref OutputString);
+                if (!context.RefDrugScreen.Any())
+                {
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "AMP", Description = "AMP (Amphetamine)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "BAR", Description = "BAR (Barbiturate)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "BZO", Description = "BZO (Benzodiazepines)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "COC", Description = "COC (Cocaine)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "mAMP", Description = "mAMP (Methamphetamine)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "MDMA", Description = "MDMA (Ecstasy)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "MTD", Description = "MTD (Methadone)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "OPI", Description = "OPI (Opioid)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "OXY", Description = "OXY (Oxycodone)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "PCP", Description = "PCP (Phencyclidine)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "TCA", Description = "TCA (Tricyclic Antidepressant)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "THC", Description = "THC (Cannabinoid)" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "Other", Description = "Other" });
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "None", Description = "None" }); 
+                    context.RefDrugScreen.Add(new RefDrugScreen {Code = "Not Tested", Description = "Not Tested" });
+                    context.SaveChanges();
+                }
+
                 print("Loading Reference Table List with Id, Code, Description Schema", ref OutputString);
                 if(!context.ReferenceTables.Any())
                 {
@@ -220,6 +241,7 @@ namespace OpenTraumaRegistry.Data
                     context.ReferenceTables.Add(new ReferenceTables { Code = "ReferenceTables", Description = "Reference Tables" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefHomeResidence", Description = "Home Residence" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefChildSpecificRestraint", Description = "Child Specific Restraints" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefDrugScreen", Description = "Drug Screen" });
 
                     context.SaveChanges();
                 }

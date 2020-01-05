@@ -39,8 +39,9 @@ namespace OpenTraumaRegistry.Data
         public DbSet<RefHomeResidence> RefHomeResidence { get; set; }
         public DbSet<HomeResidence> HomeResidences { get; set; }
         public DbSet<RefChildSpecificRestraint> RefChildSpecificRestraint { get; set; }
-
         public DbSet<RefTransportMode> RefTransportMode { get; set; }
+        public DbSet<RefDrugScreen> RefDrugScreen { get; set; }
+        public DbSet<DrugScreen> DrugScreens { get; set; }
 
         public DbSet<User> Users { get; set; }
         public Context() {}
@@ -61,11 +62,23 @@ namespace OpenTraumaRegistry.Data
                 .HasForeignKey(p => p.EventId)
                 .HasConstraintName("ForeignKey_Event_Vitals");
 
+            modelBuilder.Entity<DrugScreen>()
+                .HasOne(p => p.Event) 
+                .WithMany(b => b.DrugScreens)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_DrugScreens");
+
             modelBuilder.Entity<Consult>()
                 .HasOne(p => p.Event)
                 .WithMany(b => b.Consults)
                 .HasForeignKey(p => p.EventId)
                 .HasConstraintName("ForeignKey_Event_Consults");
+
+            modelBuilder.Entity<DrugScreenSubstances>()
+                .HasOne(p => p.DrugScreen)
+                .WithMany(p => p.DrugScreenSubstances)
+                .HasForeignKey(p => p.DrugScreenId)
+                .HasConstraintName("ForeignKey_Event_DrugScreenSubstances");
 
             modelBuilder.Entity<RiskData>()
                 .HasOne(p => p.Event)

@@ -83,6 +83,7 @@ namespace OpenTraumaRegistry.Data.Models
             public RefChildSpecificRestraint ChildSpecificRestraint { get; set; }
         #endregion
 
+        public List<DrugScreen> DrugScreens { get; set; } = new List<DrugScreen>();
         public List<InjuryTypes> InjuryTypes { get; set; } = new List<InjuryTypes>();
         public List<SafetyDevices> SafetyDevices { get; set; } = new List<SafetyDevices>();
 
