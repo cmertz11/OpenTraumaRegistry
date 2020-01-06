@@ -13,7 +13,7 @@
 else
 {
 
-    <h3><i class="fas fa-table"></i>&nbsp; System Reference Data: @tableName</h3>
+    <h3><i class="fas fa-table"></i>&nbsp; System Reference Table: @tableName</h3>
     <MatProgressBar Indeterminate="@querying"></MatProgressBar>
 
     <div class="row">
@@ -78,8 +78,13 @@ else
 @code {
     [Parameter]
     public string tableName { get; set; }
+
+
     string mode = "List";
     string strId = "";
+
+    ReferenceTables refTable = null;
+
 
     bool dialogIsOpen = false;
     string dialogHeader = "";
@@ -88,12 +93,15 @@ else
     bool firstRender = true;
 
     ReferenceTableClient client = new ReferenceTableClient();
+
+
     RefTableDTO table = null;
 
     RefTable tableRec = new RefTable();
 
     protected override async Task OnParametersSetAsync()
     {
+
         table = await client.GetRefTableDataAsync(tableName);
         querying = false;
         this.StateHasChanged();

@@ -3,18 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OpenTraumaRegistry.Data.Models
 {
-    public class ReferenceTables
+    public class RefPatientsOccupationalIndustry
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-
         public int Id { get; set; }
 
-        [MaxLength(40)]
+        [MaxLength(20)]
         public string Code { get; set; }
         [MaxLength(200)]
         public string Description { get; set; }
-        [MaxLength(500)]
-        public string Documentation { get; set; }
     }
 }

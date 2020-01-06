@@ -100,6 +100,8 @@ namespace OpenTraumaRegistry.Data.Models
 
         public List<Consult> Consults { get; set; } = new List<Consult>();
 
+        public List<AlcoholScreenResult> AlcoholScreenResults { get; set; } = new List<AlcoholScreenResult>();
+
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
 

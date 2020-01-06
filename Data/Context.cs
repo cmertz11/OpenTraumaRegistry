@@ -18,7 +18,7 @@ namespace OpenTraumaRegistry.Data
         public DbSet<Flag> Flags { get; set; }
         public DbSet<FlagReminder> FlagReminders { get; set; }
         public DbSet<FlagType> FlagTypes { get; set; }
-        public DbSet<Models.RefGender> RefGender { get; set; }
+        public DbSet<Models.RefSex> RefSex { get; set; }
         public DbSet<RefRace> RefRace { get; set; }
         public DbSet<RefTraumaType> RefTraumaType { get; set; }
         public DbSet<RefProtectiveDevice> RefProtectiveDevice { get; set; }
@@ -41,7 +41,10 @@ namespace OpenTraumaRegistry.Data
         public DbSet<RefChildSpecificRestraint> RefChildSpecificRestraint { get; set; }
         public DbSet<RefTransportMode> RefTransportMode { get; set; }
         public DbSet<RefDrugScreen> RefDrugScreen { get; set; }
+        public DbSet<RefEdDischargeDisposition> RefEdDischargeDisposition { get; set; }
+        public DbSet<RefPatientsOccupationalIndustry> RefPatientsOccupationalIndustry { get; set; }
         public DbSet<DrugScreen> DrugScreens { get; set; }
+        public DbSet<AlcoholScreenResult> AlcoholScreenResults { get; set; }
 
         public DbSet<User> Users { get; set; }
         public Context() {}
@@ -73,6 +76,12 @@ namespace OpenTraumaRegistry.Data
                 .WithMany(b => b.Consults)
                 .HasForeignKey(p => p.EventId)
                 .HasConstraintName("ForeignKey_Event_Consults");
+
+            modelBuilder.Entity<AlcoholScreenResult>()
+                .HasOne(p => p.Event)
+                .WithMany(b => b.AlcoholScreenResults)
+                .HasForeignKey(p => p.EventId)
+                .HasConstraintName("ForeignKey_Event_AlcholScreenResults");
 
             modelBuilder.Entity<DrugScreenSubstances>()
                 .HasOne(p => p.DrugScreen)

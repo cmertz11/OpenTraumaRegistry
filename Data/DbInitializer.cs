@@ -30,11 +30,11 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                if (!context.RefGender.Any())
+                if (!context.RefSex.Any())
                 {
-                    print("Loading RefGender", ref OutputString);
-                    context.RefGender.Add(new Models.RefGender { Code = "M", Description = "Male" });
-                    context.RefGender.Add(new Models.RefGender { Code = "F", Description = "Female" });
+                    print("Loading RefSex", ref OutputString);
+                    context.RefSex.Add(new Models.RefSex { Code = "M", Description = "Male" });
+                    context.RefSex.Add(new Models.RefSex { Code = "F", Description = "Female" });
                     context.SaveChanges();
                 }
                 if (!context.RefRace.Any())
@@ -170,6 +170,24 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
+                print("Loading RefEdDischargeDisposition", ref OutputString);
+                if (!context.RefEdDischargeDisposition.Any())
+                {
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Floor Bed (General Admission, Non-Specialty Unit Bed)" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Observation Unit (Unit That Provides &lt; 24 Hour Stays)" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Telemetry/Step-Down Unit (Less Acuity than ICU)" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Home with Services" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Deceased/Expired" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Other (Jail, Institutional Care, Mental Health, Etc.)" });
+
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Operating Room" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Intensive Care Unit (ICU)" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Home Without Services" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Left Against Medical Advice" });
+                    context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Transferred to Another Hospital" });
+                    context.SaveChanges();
+                }
+
                 print("Loading RefOutcome", ref OutputString);
                 if (!context.RefOutcome.Any())
                 {
@@ -204,6 +222,27 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
+                print("Loading RefPatientsOccupationalIndustry", ref OutputString);
+                if (!context.RefPatientsOccupationalIndustry.Any())
+                {
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Finance, Insurance, and Real Estate" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Manufacturing" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Retail Trade" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Transportation and Public Utilities" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Agriculture, Forestry, Fishing" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Professional and Business Services" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Education and Health Services" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Construction" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Government" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Natural Resources and Mining" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Information Services" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Wholesale Trade" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Leisure and Hospitality" });
+                    context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Other Services" });
+                   
+                    context.SaveChanges();
+                }
+
                 print("Loading RefDrugScreen", ref OutputString);
                 if (!context.RefDrugScreen.Any())
                 {
@@ -229,19 +268,21 @@ namespace OpenTraumaRegistry.Data
                 if(!context.ReferenceTables.Any())
                 {
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefArrivedFrom", Description = "Arrived From" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefGender", Description = "Gender" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefTraumaType", Description = "Trauma Types" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefSex", Description = "Sex", Documentation = "The patient's sex." });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefTraumaType", Description = "Trauma Types", Documentation = "The main type of trauma injury sustained by the patient (e.g. blunt, penetrating)." });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefLocation", Description = "Locations" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefOutcome", Description = "Outcomes" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefRace", Description = "Race" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefRace", Description = "Race", Documentation= "The patient's race." });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefRiskData", Description = "Risk Data" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefProtectiveDevice", Description = "Protective Device" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefProtectiveDevice", Description = "Protective Device", Documentation = "Protective devices (safety equipment) in use or worn by the patient at the time of the injury." });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefTransport", Description = "Transport" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefTraumaLevel", Description = "Trauma Level" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "ReferenceTables", Description = "Reference Tables" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefHomeResidence", Description = "Home Residence" });
-                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefChildSpecificRestraint", Description = "Child Specific Restraints" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefHomeResidence", Description = "Home Residence", Documentation= "Documentation of the type of patient without a home ZIP code." });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefChildSpecificRestraint", Description = "Child Specific Restraints", Documentation = "Protective child restraint devices used by patient at the time of injury." });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefDrugScreen", Description = "Drug Screen" });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefEdDischargeDisposition", Description = "ED Discharge Disposition", Documentation = "The disposition of the patient at the time of discharge from the ED." });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefPatientsOccupationalIndustry", Description = "Patients Occupational Industry", Documentation = "The occupational industry associated with the patient's work environment." });
 
                     context.SaveChanges();
                 }

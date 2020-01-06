@@ -41,7 +41,7 @@ namespace OpenTraumaRegistry.Data.Models
         public int GenderReferenceId { get; set; }
 
         [ForeignKey("GenderReferenceId")]
-        public RefGender Gender { get; set; }
+        public RefSex Gender { get; set; }
 
         public int RaceReferenceId { get; set; }
 

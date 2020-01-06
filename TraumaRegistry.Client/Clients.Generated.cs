@@ -4927,7 +4927,7 @@ namespace OpenTraumaRegistry.Client
         public int GenderReferenceId { get; set; }
     
         [Newtonsoft.Json.JsonProperty("gender", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public RefGender Gender { get; set; }
+        public RefSex Gender { get; set; }
     
         [Newtonsoft.Json.JsonProperty("raceReferenceId", Required = Newtonsoft.Json.Required.Always)]
         public int RaceReferenceId { get; set; }
@@ -4942,7 +4942,7 @@ namespace OpenTraumaRegistry.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.2.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class RefGender 
+    public partial class RefSex 
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
         public int Id { get; set; }
@@ -5100,6 +5100,9 @@ namespace OpenTraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("childSpecificRestraint", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public RefChildSpecificRestraint ChildSpecificRestraint { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("drugScreens", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<DrugScreen> DrugScreens { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("injuryTypes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<InjuryTypes> InjuryTypes { get; set; }
     
@@ -5126,6 +5129,9 @@ namespace OpenTraumaRegistry.Client
     
         [Newtonsoft.Json.JsonProperty("consults", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Consult> Consults { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("alcoholScreenResults", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<AlcoholScreenResult> AlcoholScreenResults { get; set; }
     
         [Newtonsoft.Json.JsonProperty("patientId", Required = Newtonsoft.Json.Required.Always)]
         public int PatientId { get; set; }
@@ -5302,6 +5308,65 @@ namespace OpenTraumaRegistry.Client
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.2.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class RefChildSpecificRestraint 
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("code", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(20)]
+        public string Code { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Description { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.2.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class DrugScreen 
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("timeTaken", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? TimeTaken { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("drugScreenSubstances", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<DrugScreenSubstances> DrugScreenSubstances { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("eventId", Required = Newtonsoft.Json.Required.Always)]
+        public int EventId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("event", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Event Event { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.2.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class DrugScreenSubstances 
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("substanceId", Required = Newtonsoft.Json.Required.Always)]
+        public int SubstanceId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("substance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public RefDrugScreen Substance { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("drugScreenId", Required = Newtonsoft.Json.Required.Always)]
+        public int DrugScreenId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("drugScreen", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public DrugScreen DrugScreen { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.2.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class RefDrugScreen 
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
         public int Id { get; set; }
@@ -5653,6 +5718,27 @@ namespace OpenTraumaRegistry.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.2.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class AlcoholScreenResult 
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("bac", Required = Newtonsoft.Json.Required.Always)]
+        public decimal Bac { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("timeTaken", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? TimeTaken { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("eventId", Required = Newtonsoft.Json.Required.Always)]
+        public int EventId { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("event", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Event Event { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.2.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class Log 
     {
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
@@ -5757,6 +5843,10 @@ namespace OpenTraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(200)]
         public string Description { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("documentation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(500)]
+        public string Documentation { get; set; }
     
     
     }

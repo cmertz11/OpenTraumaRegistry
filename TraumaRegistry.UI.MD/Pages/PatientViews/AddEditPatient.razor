@@ -33,10 +33,10 @@
                 <p>
                     <MatSelect Label="Gender" FullWidth="true" @bind-Value="@patient.GenderReferenceId">
 
-                        @if (refGenderTable.TableData != null)
+                        @if (RefSexTable.TableData != null)
                         {
                             <MatOption Value=0></MatOption>
-                            @foreach (var item in refGenderTable.TableData)
+                            @foreach (var item in RefSexTable.TableData)
                             {
                                 if (item.Id == SelectedGenderId)
                                 {
@@ -100,13 +100,13 @@
                 string raceIdStr { get; set; }
 
 
-                RefTableDTO refGenderTable = new RefTableDTO();
+                RefTableDTO RefSexTable = new RefTableDTO();
                 RefTableDTO refRaceTable = new RefTableDTO();
 
                 protected override async Task OnInitializedAsync()
                 {
                     ReferenceTableClient client = new ReferenceTableClient();
-                    refGenderTable = await client.GetRefTableDataAsync("RefGender");
+                    RefSexTable = await client.GetRefTableDataAsync("RefSex");
                     refRaceTable = await client.GetRefTableDataAsync("RefRace");
                 }
 

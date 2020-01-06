@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OpenTraumaRegistry.Data.Models
 {
-    public class RefGender
+    public class RefSex
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
