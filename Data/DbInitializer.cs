@@ -222,6 +222,27 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
+                print("Loading RefEthnicity", ref OutputString);
+                if (!context.RefEthnicity.Any())
+                {
+                    context.RefEthnicity.Add(new RefEthnicity { Description = "Hispanic or Latino" });
+                    context.RefEthnicity.Add(new RefEthnicity { Description = "Not Hispanic or Latino" }); 
+                    context.SaveChanges();
+                }
+
+                print("Loading RefAgeUnits", ref OutputString);
+                if (!context.RefAgeUnits.Any())
+                {
+                    context.RefAgeUnits.Add(new RefAgeUnits { Description = "Hours" });
+                    context.RefAgeUnits.Add(new RefAgeUnits { Description = "Days" });
+                    context.RefAgeUnits.Add(new RefAgeUnits { Description = "Months" });
+                    context.RefAgeUnits.Add(new RefAgeUnits { Description = "Years" });
+                    context.RefAgeUnits.Add(new RefAgeUnits { Description = "Minutes" });
+                    context.RefAgeUnits.Add(new RefAgeUnits { Description = "Weeks" });
+                    context.SaveChanges();
+                }
+
+
                 print("Loading RefPatientsOccupationalIndustry", ref OutputString);
                 if (!context.RefPatientsOccupationalIndustry.Any())
                 {
@@ -243,7 +264,36 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefDrugScreen", ref OutputString);
+                print("Loading RefPatientsOccupationa", ref OutputString);
+                if (!context.RefPatientsOccupation.Any())
+                {
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Business and Financial Operations Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Architecture and Engineering Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Community and Social Services Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Education, Training, and Library Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Healthcare Practitioners and Technical Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Protective Service Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Building and Grounds Cleaning and Maintenance" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Sales and Related Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Farming, Fishing, and Forestry Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Installation, Maintenance, and Repair Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Transportation and Material Moving Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Management Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Computer and Mathematical Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Life, Physical, and Social Science Occupations" }); 
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Legal Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Arts, Design, Entertainment, Sports, and Media" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Healthcare Support Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Food Preparation and Serving Related" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Personal Care and Service Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Office and Administrative Support Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Construction and Extraction Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Production Occupations" });
+                    context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Military Specific Occupations" });
+
+                }
+
+                    print("Loading RefDrugScreen", ref OutputString);
                 if (!context.RefDrugScreen.Any())
                 {
                     context.RefDrugScreen.Add(new RefDrugScreen {Code = "AMP", Description = "AMP (Amphetamine)" });
@@ -265,7 +315,7 @@ namespace OpenTraumaRegistry.Data
                 }
 
                 print("Loading Reference Table List with Id, Code, Description Schema", ref OutputString);
-                if(!context.ReferenceTables.Any())
+                if (!context.ReferenceTables.Any())
                 {
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefArrivedFrom", Description = "Arrived From" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefSex", Description = "Sex", Documentation = "The patient's sex." });
@@ -283,6 +333,9 @@ namespace OpenTraumaRegistry.Data
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefDrugScreen", Description = "Drug Screen" });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefEdDischargeDisposition", Description = "ED Discharge Disposition", Documentation = "The disposition of the patient at the time of discharge from the ED." });
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefPatientsOccupationalIndustry", Description = "Patients Occupational Industry", Documentation = "The occupational industry associated with the patient's work environment." });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefPatientsOccupation", Description = "Patients Occupation", Documentation = "The occupation of the patient." });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefEthnicity", Description = "Ethnicity", Documentation = "The patient's ethnicity." });
+                    context.ReferenceTables.Add(new ReferenceTables { Code = "RefAgeUnits", Description = "Age Units", Documentation = "The units used to document the patient's age (Years, Months, Days, Hours)." });
 
                     context.SaveChanges();
                 }

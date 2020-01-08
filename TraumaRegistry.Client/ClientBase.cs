@@ -21,9 +21,7 @@ namespace OpenTraumaRegistry.Client
 
         // Called by implementing swagger client classes
         protected Task<HttpRequestMessage> CreateHttpRequestMessageAsync(CancellationToken cancellationToken)
-        {
-            
-
+        {        
             var msg = new HttpRequestMessage();
             // SET THE BEARER AUTH TOKEN
             msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", BearerToken);
