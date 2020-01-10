@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenTraumaRegistry.Api.Models;
 using OpenTraumaRegistry.Data;
 using OpenTraumaRegistry.Data.Models;
+using OpenTraumaRegistry.Shared;
 
 namespace OpenTraumaRegistry.Api.Controllers
 {
@@ -47,44 +48,76 @@ namespace OpenTraumaRegistry.Api.Controllers
 
             return Unauthorized();
         }
-        [HttpPost("Post")]
-        public string Post()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IList<Claim> claim = identity.Claims.ToList();
-            var userName = claim[0].Value;
-            return "Welcome To: " + userName;
-        }
 
         private string GenerateJSONWebToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
+            try
+            { 
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var claims = new[]
+                {  
+                    new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress), 
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
+                };
+           
+                if (user.SystemAdministrator) {
+                    claims.Append(new Claim(ClaimTypes.Role, "SystemAdministrator"));
+                }
+
+                if(user.FirstName != null)
+                {
+                    claims.Append(new Claim("FirstName", user.FirstName));
+                }
+                if(user.LastName != null)
+                {
+                    claims.Append(new Claim("LastName", user.LastName));
+                }
+                var token = new JwtSecurityToken(
+                    issuer: config["Jwt:Issuer"],
+                    audience: config["Jwt:Issuer"],
+                    claims,
+                
+                    expires: DateTime.Now.AddMinutes(Convert.ToInt32(config["Jwt:Expires"])),
+                    signingCredentials: credentials);
+
+                var encodedtoken = new JwtSecurityTokenHandler().WriteToken(token);
+                return encodedtoken;
+            }
+            catch (Exception ex)
             {
-                //new Claim(JwtRegisteredClaimNames.Sub, user.FirstName),
-                new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: config["Jwt:Issuer"],
-                audience: config["Jwt:Issuer"],
-                claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToInt32(config["Jwt:Expires"])),
-                signingCredentials: credentials);
-
-            var encodedtoken = new JwtSecurityTokenHandler().WriteToken(token);
-            return encodedtoken;
+                throw;
+            }
         }
 
         private User AuthenticateUser(LoginModel login)
         {
             try
             {
-                return context.Users.Where(u => u.EmailAddress == login.Email
-                && u.Password == login.Password).FirstOrDefault();
-
+                User user = null;
+                PasswordHelper passwordHasher = new PasswordHelper();
+ 
+                user = context.Users.Where(u => u.EmailAddress == login.Email).FirstOrDefault();
+                if(user != null)
+                {      
+                    if((!user.Locked) && (passwordHasher.AuthenticatePassword(login.Password, user.Password)))
+                    {
+                        user.LoginAttempts = 0;
+                        context.SaveChanges();
+                        return user; 
+                    }
+                    else
+                    {
+                        user.LoginAttempts = user.LoginAttempts++;
+                        if(user.LoginAttempts >= 5)
+                        {
+                            user.Locked = true;
+                        }
+                        context.SaveChanges();
+                        return null; 
+                    }
+                }
+                return null;
             }
             catch (Exception ex)
             {

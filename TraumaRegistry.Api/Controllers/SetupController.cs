@@ -26,59 +26,59 @@ namespace OpenTraumaRegistry.Api.Controllers
   
         }
 
-        [HttpGet]
-        [ActionName("SetupDatabase")]
-        public string SetupDatabase(string dbProvider, string connectionString)
-        {
-            if (string.IsNullOrEmpty(dbProvider) || (string.IsNullOrEmpty(connectionString)))
-            {
-                return "Please provide the Database Provider and Database Connection String.";
-            }
-            var builder = new ConfigurationBuilder()
-                     .SetBasePath(Directory.GetCurrentDirectory())
-                     .AddJsonFile("appsettings.json").Build();
+        //[HttpGet]
+        //[ActionName("SetupDatabase")]
+        //public string SetupDatabase(string dbProvider, string connectionString)
+        //{
+        //    if (string.IsNullOrEmpty(dbProvider) || (string.IsNullOrEmpty(connectionString)))
+        //    {
+        //        return "Please provide the Database Provider and Database Connection String.";
+        //    }
+        //    var builder = new ConfigurationBuilder()
+        //             .SetBasePath(Directory.GetCurrentDirectory())
+        //             .AddJsonFile("appsettings.json").Build();
 
-            IConfiguration Configuration = builder;
+        //    IConfiguration Configuration = builder;
 
-            SaveToAppSettings(dbProvider, connectionString);
+        //    SaveToAppSettings(dbProvider, connectionString);
 
-            var optionsBuilder = new DbContextOptionsBuilder<Context>();
+        //    var optionsBuilder = new DbContextOptionsBuilder<Context>();
 
-            switch (dbProvider)
-            {
-                case "sqlserver":
-                    optionsBuilder.UseSqlServer(connectionString); 
-                     break;
+        //    switch (dbProvider)
+        //    {
+        //        case "sqlserver":
+        //            optionsBuilder.UseSqlServer(connectionString); 
+        //             break;
 
-                case "postgresql":
-                    optionsBuilder.UseNpgsql(connectionString); 
-                    break;
+        //        case "postgresql":
+        //            optionsBuilder.UseNpgsql(connectionString); 
+        //            break;
 
-                case "mysql":
-                    optionsBuilder.UseMySql(connectionString);
-                    //https://bugs.mysql.com/bug.php?id=96990
-                    //throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
-                    break;
-                default:
-                    return "Unable to create database with submitted configuration.";
+        //        case "mysql":
+        //            optionsBuilder.UseMySql(connectionString);
+        //            //https://bugs.mysql.com/bug.php?id=96990
+        //            //throw new Exception("MySQL is not implemented due to mysql bug 96990 for dotnetcore 3.0 ");
+        //            break;
+        //        default:
+        //            return "Unable to create database with submitted configuration.";
                      
-            }
-            try
-            { 
-                using (Context ctx = new Context(optionsBuilder.Options))
-                { 
-                    DbInitializer.Initialize(ctx, ref outputString);
-                    return outputString;
-                }
+        //    }
+        //    try
+        //    { 
+        //        //using (Context ctx = new Context(optionsBuilder.Options))
+        //        //{ 
+        //        //    DbInitializer.Initialize(ctx, ref outputString);
+        //        //    return outputString;
+        //        //}
                 
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ex.ToString();
+        //    }
 
              
-        }
+        //}
 
         private void SaveToAppSettings(string dbProvider, string connectionString)
         {

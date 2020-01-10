@@ -50,7 +50,12 @@ namespace OpenTraumaRegistry.Data
 
         public DbSet<RefAgeUnits> RefAgeUnits { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users {get; set;}
+        public DbSet<Facility> Facilities {get; set;}
+        public DbSet<UserFacility> UserFacilities{get; set;}
+
+
+ 
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 

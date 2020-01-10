@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MatBlazor;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.SessionStorage;
 
 namespace OpenTraumaRegistry.UI.MD
 {
@@ -37,8 +39,11 @@ namespace OpenTraumaRegistry.UI.MD
                 config.ShowCloseButton = true;
                 config.MaximumOpacity = 95;
                 config.VisibleStateDuration = 3000;
-            }); 
-            services.AddBlazoredLocalStorage();
+            });
+            //services.AddBlazoredLocalStorage();
+            services.AddBlazoredSessionStorage();
+
+            services.AddScoped<AuthenticationStateProvider, _otrAuthenticationStateProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,9 +59,10 @@ namespace OpenTraumaRegistry.UI.MD
                 app.UseExceptionHandler("/Error");
             }
             
-            app.UseStaticFiles();
-
+            app.UseStaticFiles(); 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

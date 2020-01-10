@@ -16,5 +16,10 @@ namespace OpenTraumaRegistry.Data.Models
         public string EmailAddress { get; set; }
 
         public string Password { get; set; }
+
+        public int LoginAttempts { get; set; }
+
+        public bool Locked { get; set; }
+        public bool SystemAdministrator { get; set; }
     }
 }

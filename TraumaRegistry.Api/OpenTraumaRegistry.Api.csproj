@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Data\OpenTraumaRegistry.Data.csproj" />
+    <ProjectReference Include="..\OpenTraumaRegistry.Shared\OpenTraumaRegistry.Shared.csproj" />
   </ItemGroup>
 
 </Project>

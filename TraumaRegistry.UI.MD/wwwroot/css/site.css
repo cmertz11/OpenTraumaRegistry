@@ -8,6 +8,8 @@ app {
     /*flex-direction: column;*/
 }
 
+ 
+
 /** scroll bar */
 ::-webkit-scrollbar {
     width: 9px;
@@ -41,6 +43,7 @@ app {
 }
 .mdc-icon-button .fa {
     font-size: 30px;
+  
 }
 
 /* Loading page */
@@ -145,7 +148,7 @@ app {
 /* app bar */
 .mdc-top-app-bar__row {
     background-color: #455a64;
-    color: #b0bec5;
+    /*color: #b0bec5;*/
 }
 
 .mdc-top-app-bar__section .mdc-icon-button i {

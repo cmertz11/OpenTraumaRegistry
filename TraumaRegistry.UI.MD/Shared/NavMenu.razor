@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components;
 @using OpenTraumaRegistry.Client
 @inject NavigationManager NavigationManager
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@*@inject Blazored.LocalStorage.ILocalStorageService localStorage*@
 
 @if (refTables != null)
 {
@@ -32,7 +32,6 @@
                 }
             </MatNavSubMenuList>
         </MatNavSubMenu>
-
     </MatNavMenu>
 }
 @code {

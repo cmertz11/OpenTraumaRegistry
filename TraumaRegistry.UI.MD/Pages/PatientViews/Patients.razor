@@ -4,205 +4,206 @@
 @using System.Threading
 @inject NavigationManager NavigationManager
 
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@*@inject Blazored.LocalStorage.ILocalStorageService localStorage*@
 
+    
+        @*<h2><i class="fa fa-user" aria-hidden="true"></i>&nbsp; Patients</h2>*@
+        <h2><MatIcon>people</MatIcon> Patients</h2>
+        <MatProgressBar Indeterminate="@querying"></MatProgressBar>
 
-<h2><i class="fa-user-injured"></i>Patients</h2>
-<MatProgressBar Indeterminate="@querying"></MatProgressBar>
-
-@if (pagedData == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-
-    <MatSelect Label="Filter" Enhanced="true" @bind-Value="query.FilterColumn">
-        <MatOptionString value="Id">Id</MatOptionString>
-        <MatOptionString value="MRN">MRN</MatOptionString>
-        <MatOptionString value="FirstName">First Name</MatOptionString>
-        <MatOptionString value="LastName">Last Name</MatOptionString>
-        <MatOptionString value="MI">MI</MatOptionString>
-    </MatSelect>
-
-    <MatTextField id="searchFilter" Label="Search" @bind-Value="query.Filter" />
-    <MatButton Icon="search" @onclick="SearchAsync">Search </MatButton>
-
-
-    <MatSelect Label="Page Size" Enhanced="true" @bind-Value="pageSize">
-        <MatOptionString value="5">5</MatOptionString>
-        <MatOptionString selected="selected" value="10">10</MatOptionString>
-        <MatOptionString value="25">25</MatOptionString>
-        <MatOptionString value="50">50</MatOptionString>
-    </MatSelect>
-
-
-    <table class="table table-striped table-hover table-sm">
-        <thead>
-            <tr>
-                <th>
-                    Id
-                    <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("Id"))"></MatButton>
-
-                </th>
-                <th>
-                    MRN
-                    <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("MRN"))"></MatButton>
-
-                </th>
-                <th>
-                    First Name
-                    <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("FirstName"))"></MatButton>
-                </th>
-                <th>
-                    Last Name
-                    <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("LastName"))"></MatButton>
-
-                </th>
-                <th>
-                    MI
-                    <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("MI"))"></MatButton>
-                </th>
-                <th>
-                    DOB
-                    <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("DOB"))"></MatButton>
-                </th>
-                <th></th>
-                <th>
-                    <MatButton Style="float: right;" Icon="add" @onclick="@AddNewPatient">Add New</MatButton>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var patient in pagedData.Records)
-            {
-                <tr>
-                    <td>@patient.Id</td>
-                    <td>@patient.Mrn</td>
-                    <td>@patient.FirstName</td>
-                    <td>@patient.LastName</td>
-                    <td>@patient.Mi</td>
-                    <td>@Convert.ToDateTime(patient.Dob).ToShortDateString()</td>
-                    <td><MatButton Icon="edit" @onclick="@(() => EditPatient(patient.Id))">Edit</MatButton></td>
-                    <td><MatButton Icon="more" @onclick="@(() => ViewPatientEvents(patient.Id))">Events (@patient.EventCount)</MatButton></td>
-
-                </tr>
-            }
-        </tbody>
-    </table>
-    @if (pageCount > 1)
-    {
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                @{
-                    string previousButtonClass = query.PageNumber == 1 ? "page-item disabled" : "page-item";
-                    string nextButtonClass = query.PageNumber == pageCount ? "page-item disabled" : "page-item";
-
-                }
-                <li class="@previousButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) - 1))">Previous</a></li>
-
-                @for (int i = 1; i < pageCount + 1; i++)
-                {
-                    var local_i = i;
-                    string pageItemClass = query.PageNumber == i ? "page-item active" : "page-item";
-                    <li class="@pageItemClass"><a class="page-link" @onclick="@(() => SetPage(local_i))"> @i</a></li>
-                }
-                <li class="@nextButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) + 1))">Next</a></li>
-            </ul>
-        </nav>
-    }
-    <label>@metrics</label>
-}
-
-@code {
-
-    PagedData pagedData;
-    PatientsPagedClient client = new PatientsPagedClient();
-    string sortIcon = "keyboard_arrow_up";
-    string metrics = "";
-    string pageSize = "10";
-    int pageCount = 0;
-    bool querying = true;
-    string token = "";
-
-    UrlQuery query = new UrlQuery { PageNumber = 1, PageSize = 10, FilterColumn = "LastName", OrderBy = "Id", OrderByDirection = "asc" };
-
-    protected async Task SearchAsync()
-    {
-        client.SetBearerToken(token);
-
-
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
-        pagedData = await client.GetPatientsAsync(query);
-
-        pageCount = (pagedData.RecordCount + query.PageSize - 1) / query.PageSize;
-        sw.Stop();
-        metrics = "Total Patients: " + pagedData.RecordCount + "." + Environment.NewLine + "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
-        querying = false;
-        this.StateHasChanged();
-    }
-
-    protected async Task ViewPatientEvents(int Id)
-    {
-        NavigationManager.NavigateTo("/events/" + Id);
-    }
-
-    protected async Task EditPatient(int Id)
-    {
-        NavigationManager.NavigateTo("/addeditpatient/" + Id);
-    }
-
-    protected async Task AddNewPatient()
-    {
-        NavigationManager.NavigateTo("/addeditpatient");
-    }
-
-    async Task SetPage(int page)
-    {
-        query.PageNumber = page;
-        await SearchAsync();
-    }
-
-    async Task SetOrderByColumn(string orderBy)
-    {
-        query.OrderBy = orderBy;
-
-        if (query.OrderByDirection == "asc")
+        @if (pagedData == null)
         {
-            query.OrderByDirection = "desc";
-            sortIcon = "keyboard_arrow_down";
+            <p><em>Loading...</em></p>
         }
         else
         {
-            query.OrderByDirection = "asc";
-            sortIcon = "keyboard_arrow_up";
-        }
-        await SearchAsync();
-    }
 
-    protected override async Task OnInitializedAsync()
-    {
-        // await SearchAsync();
-    }
+            <MatSelect Label="Filter" Enhanced="true" @bind-Value="query.FilterColumn">
+                <MatOptionString value="Id">Id</MatOptionString>
+                <MatOptionString value="MRN">MRN</MatOptionString>
+                <MatOptionString value="FirstName">First Name</MatOptionString>
+                <MatOptionString value="LastName">Last Name</MatOptionString>
+                <MatOptionString value="MI">MI</MatOptionString>
+            </MatSelect>
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            if (!NavigationManager.Uri.Contains("/login"))
+            <MatTextField id="searchFilter" Label="Search" @bind-Value="query.Filter" />
+            <MatButton Icon="search" @onclick="SearchAsync">Search </MatButton>
+
+
+            <MatSelect Label="Page Size" Enhanced="true" @bind-Value="pageSize">
+                <MatOptionString value="5">5</MatOptionString>
+                <MatOptionString selected="selected" value="10">10</MatOptionString>
+                <MatOptionString value="25">25</MatOptionString>
+                <MatOptionString value="50">50</MatOptionString>
+            </MatSelect>
+
+
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>
+                            Id
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("Id"))"></MatButton>
+
+                        </th>
+                        <th>
+                            MRN
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("MRN"))"></MatButton>
+
+                        </th>
+                        <th>
+                            First Name
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("FirstName"))"></MatButton>
+                        </th>
+                        <th>
+                            Last Name
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("LastName"))"></MatButton>
+
+                        </th>
+                        <th>
+                            MI
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("MI"))"></MatButton>
+                        </th>
+                        <th>
+                            DOB
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("DOB"))"></MatButton>
+                        </th>
+                        <th></th>
+                        <th>
+                            <MatButton Style="float: right;" Icon="add" @onclick="@AddNewPatient">Add New</MatButton>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in pagedData.Records)
+                    {
+                        <tr>
+                            <td>@patient.Id</td>
+                            <td>@patient.Mrn</td>
+                            <td>@patient.FirstName</td>
+                            <td>@patient.LastName</td>
+                            <td>@patient.Mi</td>
+                            <td>@Convert.ToDateTime(patient.Dob).ToShortDateString()</td>
+                            <td><MatButton Icon="edit" @onclick="@(() => EditPatient(patient.Id))">Edit</MatButton></td>
+                            <td><MatButton Icon="more" @onclick="@(() => ViewPatientEvents(patient.Id))">Events (@patient.EventCount)</MatButton></td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (pageCount > 1)
             {
-                token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
-                
-                await SearchAsync();
-                //check if token is old.
-                if (string.IsNullOrEmpty(token))
-                {
-                    NavigationManager.NavigateTo("/login");
-                }
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        @{
+                            string previousButtonClass = query.PageNumber == 1 ? "page-item disabled" : "page-item";
+                            string nextButtonClass = query.PageNumber == pageCount ? "page-item disabled" : "page-item";
+
+                        }
+                        <li class="@previousButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) - 1))">Previous</a></li>
+
+                        @for (int i = 1; i < pageCount + 1; i++)
+                        {
+                            var local_i = i;
+                            string pageItemClass = query.PageNumber == i ? "page-item active" : "page-item";
+                            <li class="@pageItemClass"><a class="page-link" @onclick="@(() => SetPage(local_i))"> @i</a></li>
+                        }
+                        <li class="@nextButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) + 1))">Next</a></li>
+                    </ul>
+                </nav>
             }
+            <label>@metrics</label>
         }
-    }
+
+        @code {
+
+            PagedData pagedData;
+            PatientsPagedClient client = new PatientsPagedClient();
+            string sortIcon = "keyboard_arrow_up";
+            string metrics = "";
+            string pageSize = "10";
+            int pageCount = 0;
+            bool querying = true;
+            string token = "";
+
+            UrlQuery query = new UrlQuery { PageNumber = 1, PageSize = 10, FilterColumn = "LastName", OrderBy = "Id", OrderByDirection = "asc" };
+
+            protected async Task SearchAsync()
+            {
+                client.SetBearerToken(token);
 
 
-}
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                pagedData = await client.GetPatientsAsync(query);
+
+                pageCount = (pagedData.RecordCount + query.PageSize - 1) / query.PageSize;
+                sw.Stop();
+                metrics = "Total Patients: " + pagedData.RecordCount + "." + Environment.NewLine + "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
+                querying = false;
+                this.StateHasChanged();
+            }
+
+            protected async Task ViewPatientEvents(int Id)
+            {
+                NavigationManager.NavigateTo("/events/" + Id);
+            }
+
+            protected async Task EditPatient(int Id)
+            {
+                NavigationManager.NavigateTo("/addeditpatient/" + Id);
+            }
+
+            protected async Task AddNewPatient()
+            {
+                NavigationManager.NavigateTo("/addeditpatient");
+            }
+
+            async Task SetPage(int page)
+            {
+                query.PageNumber = page;
+                await SearchAsync();
+            }
+
+            async Task SetOrderByColumn(string orderBy)
+            {
+                query.OrderBy = orderBy;
+
+                if (query.OrderByDirection == "asc")
+                {
+                    query.OrderByDirection = "desc";
+                    sortIcon = "keyboard_arrow_down";
+                }
+                else
+                {
+                    query.OrderByDirection = "asc";
+                    sortIcon = "keyboard_arrow_up";
+                }
+                await SearchAsync();
+            }
+
+            protected override async Task OnInitializedAsync()
+            {
+                await SearchAsync();
+            }
+
+            protected override async Task OnAfterRenderAsync(bool firstRender)
+            {
+                //if (firstRender)
+                //{
+                //    if (!NavigationManager.Uri.Contains("/login"))
+                //    {
+                //        token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
+
+                //        await SearchAsync();
+                //        //check if token is old.
+                //        if (string.IsNullOrEmpty(token))
+                //        {
+                //            NavigationManager.NavigateTo("/login");
+                //        }
+                //    }
+                //}
+            }
+
+
+        }

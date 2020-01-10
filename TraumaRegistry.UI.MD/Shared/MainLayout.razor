@@ -1,17 +1,29 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager navigationManager
+@inject AuthenticationStateProvider  authenticationStateProvider
+
 
 <MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@bbDrawerClass">
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
+            
             <div class="drawer-logo">
+                <i class="fa fa-medkit" aria-hidden="true"></i> &nbsp;
                 <a class="miniHover" href="/">Open Trauma Registry</a>
             </div>
         </header>
-        <NavMenu />
+        <AuthorizeView>
+            <Authorized>
+                <NavMenu />
+            </Authorized>
+            <NotAuthorized>
+
+            </NotAuthorized>
+        </AuthorizeView>
+       
         <footer class="drawer-footer">
             <MatTooltip Tooltip="Help">
-                <MatButton Icon="help" RefBack="@context" Link="https://github.com/enkodellc/blazorboilerplate"><span class="miniHover">Help & Support</span></MatButton>
+                <MatButton Icon="help" RefBack="@context" Link="https://github.com/cmertz11/OpenTraumaRegistry"><span class="miniHover">Help & Support</span></MatButton>
             </MatTooltip>
         </footer>
         <footer class="drawer-footer">
@@ -32,20 +44,33 @@
                             </MatTooltip>
                  
                             <MatTooltip Tooltip="Minify Navigation">
-                                <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+                                <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton> 
                             </MatTooltip>
  
                         </div>
                     </MatAppBarSection>
                     <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                        <MatTooltip Tooltip="Donate to Support">
-                            <MatIconButton Link="https://www.paypal.me/enkodellc" RefBack="@context"><i class="fa fa-cc-paypal"></i></MatIconButton>
-                        </MatTooltip>
-                        <MatTooltip Tooltip="Github Repository">
-                            <MatIconButton Link="https://github.com/enkodellc/blazorboilerplate" RefBack="@context"><i class="fa fa-github" aria-hidden="true"></i></MatIconButton>
-                        </MatTooltip>
-                    
+                        @*<MatTooltip Tooltip="Donate to Support">
+                            <MatIconButton Link="" RefBack="@context"><i class="fa fa-cc-paypal"></i></MatIconButton>
+                        </MatTooltip>*@
+
                     </MatAppBarSection>
+
+                    <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                        <MatTooltip Tooltip="Github Repository">
+                            <MatIconButton Link="https://github.com/cmertz11/OpenTraumaRegistry" RefBack="@context"><i class="fa fa-github" aria-hidden="true"></i></MatIconButton>
+                        </MatTooltip>
+                        <AuthorizeView>
+                            <Authorized>
+
+                                <a href="/login" @onclick="(() => Logout())">Logout</a>
+                            </Authorized>
+                            <NotAuthorized>
+                                <a href="/login">Login</a>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </MatAppBarSection>
+                     
                 </MatAppBarRow>
             </MatAppBar>
             <MatAppBarContent>
@@ -73,16 +98,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Uncomment to secure entire app
-        //navigationManager.NavigateTo("/account/login");
-
-        // Set Default landing page if you want
-        //navigationManager.NavigateTo("/");
-
-        //var user = (await authenticationStateTask).User;
 
 
     }
+
+    public void Logout()
+    {
+        ((_otrAuthenticationStateProvider)authenticationStateProvider).SetUserAsLoggedOut();
+    }
+
 
     void NavToggle()
     {

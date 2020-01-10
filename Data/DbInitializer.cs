@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenTraumaRegistry.Data.Models;
-
+using OpenTraumaRegistry.Shared;
 
 namespace OpenTraumaRegistry.Data
 {
     public static class DbInitializer
     {
         public static string SystemId { get; set; } = Guid.NewGuid().ToString();  //Get System Id from Identity 
-        public static void Initialize(Context context, ref string OutputString)
+        public static void Initialize(Context context, string UserEmail, string Password, string Facilityname, ref string OutputString)
         {
             try
             {
@@ -25,11 +25,22 @@ namespace OpenTraumaRegistry.Data
                 }
                 if (!context.Users.Any())
                 {
-                    print("Loading Test User Account", ref OutputString);
-                    context.Users.Add(new User { Password = "Chris123!", EmailAddress = "cmertz11@gmail.com" });
+                    print("Loading User Account", ref OutputString);
+                    PasswordHelper passwordHasher = new PasswordHelper();
+                    context.Users.Add(new User { Password = passwordHasher.Hash(Password), EmailAddress = UserEmail, SystemAdministrator = true, LoginAttempts = 0, Locked = false }); ;
+                    context.SaveChanges(); 
+                }
+                if(!context.Facilities.Any())
+                {
+                    print("Loading Facility", ref OutputString);
+                    context.Facilities.Add(new Facility { FacilityName = Facilityname });
                     context.SaveChanges();
                 }
-
+                if(!context.UserFacilities.Any())
+                {
+                    print(string.Format("Attaching {0} to {1}", UserEmail, Facilityname), ref OutputString);
+                    context.UserFacilities.Add(new UserFacility { UserId = 1, FacilityId = 1 });
+                }
                 if (!context.RefSex.Any())
                 {
                     print("Loading RefSex", ref OutputString);

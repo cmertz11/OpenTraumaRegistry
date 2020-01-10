@@ -1,48 +1,50 @@
 ﻿@page "/login"
 @inject NavigationManager NavigationManager
 @inject IMatToaster Toaster
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
+ 
+        <MatCard Style="width: 300px; align-self: center;">
+            <div class="logo">
+                <img src="" style="width:100px;" /><br />Open Trauma Registry
+                <br />
+                <h4>Log In</h4>
 
-<MatCard>
-    <div class="logo">
-        <img src="images/blazorboilerplate.svg" style="width:100px;" /><br />Blazor Boilerplate
-        <br />
-        <h4>Log In</h4>
-       
-    </div>
-    <EditForm Model="@loginModel" OnValidSubmit="@SubmitLogin">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <fieldset>
-            <div class="form-group">
-                <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true"  Required="true"></MatTextField>
             </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-            </div>
-            <div class="form-group">
-                @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
-                <MatButton class="float-right" OnClick="@SubmitLogin" Raised="true">Login</MatButton>
-            </div>
-            <hr />
-            <NavLink href="account/register">
-                <h6 class="font-weight-normal text-center">Create account</h6>
-            </NavLink>
-        </fieldset>
-    </EditForm>
-</MatCard>
-
-
+            <EditForm Model="@loginModel" OnValidSubmit="@AuthenticateUser">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <fieldset>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
+                        <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton> 
+                    </div>
+                    <hr />
+                    <NavLink href="account/register">
+                        <h6 class="font-weight-normal text-center">Create account</h6>
+                    </NavLink>
+                </fieldset>
+            </EditForm>
+            <label>@AuthResponse</label>
+        </MatCard>
+ 
 @code {
 
     LoginClient client = new LoginClient();
     LoginModel loginModel = new LoginModel();
+    string AuthResponse = "";
 
     class LoginModel
     {
-        public string Email { get; set; } = "cmertz11@gmail.com";
-        public string Password { get; set; } = "Chris123!";
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
     }
 
     protected override void OnInitialized()
@@ -50,17 +52,26 @@
 
     }
 
-    async Task SubmitLogin()
+    async Task AuthenticateUser()
     {
+        AuthResponse = "";
+        string token = "";
         try
         {
-            var token = await client.LoginAsync(loginModel.Email, loginModel.Password);
-            await localStorage.SetItemAsync("OpenTraumaRegistry_Token", token);
-            NavigationManager.NavigateTo("/"); 
+            token = await client.LoginAsync(loginModel.Email, loginModel.Password);
+            if (!string.IsNullOrEmpty(token))
+            {
+                ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcated(loginModel.Email);
+                NavigationManager.NavigateTo("/");
+
+                await sessionStorage.SetItemAsync("emailAddress", loginModel.Email);
+                await sessionStorage.SetItemAsync("token", token);
+            }
         }
         catch (Exception ex)
         {
-            Toaster.Add(ex.Message, MatToastType.Danger, "Login Attempt Failed");
+            // Increment Login Attempts??
+            AuthResponse = "Invalid Email or Password.";
         }
     }
 
