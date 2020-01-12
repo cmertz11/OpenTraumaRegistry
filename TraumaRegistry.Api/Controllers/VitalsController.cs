@@ -23,7 +23,9 @@ namespace OpenTraumaRegistry.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Vitals>>> GetVitals()
         {
-            return await _context.Vitals.ToListAsync();
+            var rec = await _context.Vitals.ToListAsync();
+
+            return rec;
         }
 
         // GET: api/Vitals/5

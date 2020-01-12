@@ -3,8 +3,9 @@
 @inject IMatToaster Toaster
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
-
  
+ 
+
         <MatCard Style="width: 300px; align-self: center;">
             <div class="logo">
                 <img src="" style="width:100px;" /><br />Open Trauma Registry
@@ -37,7 +38,8 @@
  
 @code {
 
-    LoginClient client = new LoginClient();
+    LoginClient loginClient = new LoginClient();
+    UsersClient userClient = new UsersClient();
     LoginModel loginModel = new LoginModel();
     string AuthResponse = "";
 
@@ -58,14 +60,18 @@
         string token = "";
         try
         {
-            token = await client.LoginAsync(loginModel.Email, loginModel.Password);
+            token = await loginClient.LoginAsync(loginModel.Email, loginModel.Password);
             if (!string.IsNullOrEmpty(token))
             {
                 ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcated(loginModel.Email);
-                NavigationManager.NavigateTo("/");
+                userClient.SetBearerToken(token);
+                var _user = await userClient.GetUserAsync(loginModel.Email);
+                _user.Token = token;
 
-                await sessionStorage.SetItemAsync("emailAddress", loginModel.Email);
-                await sessionStorage.SetItemAsync("token", token);
+                await sessionStorage.SetItemAsync("_otrUser", _user); 
+
+                NavigationManager.NavigateTo("/");
+                
             }
         }
         catch (Exception ex)

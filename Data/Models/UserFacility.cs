@@ -8,7 +8,7 @@ namespace OpenTraumaRegistry.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
+        public bool Administrator { get; set; }
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }

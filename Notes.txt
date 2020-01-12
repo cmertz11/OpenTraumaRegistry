@@ -18,3 +18,6 @@ https://ankitsharmablogs.com/single-page-application-using-server-side-blazor/
 
 12/10/2019 - Vitals Time Taken needs a control on modal.  Timestamp needs to be handled at the controller.  Values are not being saved.
 12/10/2019 - Vitals Time taken behaves oddly on save. I suspect it it the control and/or a need to simply referesh the list of vitals from the db.
+
+Identity research
+1/11/2020 - https://gunnarpeipman.com/client-side-blazor-authorizeview/

@@ -58,21 +58,9 @@ namespace OpenTraumaRegistry.Api.Controllers
                 var claims = new[]
                 {  
                     new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress), 
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) 
                 };
            
-                if (user.SystemAdministrator) {
-                    claims.Append(new Claim(ClaimTypes.Role, "SystemAdministrator"));
-                }
-
-                if(user.FirstName != null)
-                {
-                    claims.Append(new Claim("FirstName", user.FirstName));
-                }
-                if(user.LastName != null)
-                {
-                    claims.Append(new Claim("LastName", user.LastName));
-                }
                 var token = new JwtSecurityToken(
                     issuer: config["Jwt:Issuer"],
                     audience: config["Jwt:Issuer"],

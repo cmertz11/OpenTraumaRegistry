@@ -1,10 +1,14 @@
 ﻿@page "/"
 
-<AuthorizeView>
+<AuthorizeView Policy="SystemAdminstrator">
     <Authorized>
         <p>Welcome, @context.User.Identity.Name to the Open Trauma Registry.</p>
     </Authorized>
+  
+
     <NotAuthorized>
         <p>Please Login!</p>
     </NotAuthorized>
 </AuthorizeView>
+
+ 
