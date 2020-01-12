@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components;
 @using OpenTraumaRegistry.Client
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @*@inject Blazored.LocalStorage.ILocalStorageService localStorage*@
 
 @if (refTables != null)
@@ -13,46 +14,64 @@
             <MatIcon>people</MatIcon> <span class="miniHover">Patients</span>
         </MatNavItem>
         @*<MatNavItem Href="@NavigationManager.ToAbsoluteUri("setup").AbsoluteUri">
-            <MatIcon>build</MatIcon> <span class="miniHover">Setup</span>
-        </MatNavItem>*@
-        <MatNavSubMenu>
-            <MatNavSubMenuHeader>
-                <MatNavItem AllowSelection="false">
-                    <MatIcon>settings</MatIcon><span class="miniHover">System Tables</span>
-                </MatNavItem>
-            </MatNavSubMenuHeader>
-            <MatNavSubMenuList>
-                @foreach (var item in refTables)
-                {
-                    var local_Table = item;
+                <MatIcon>build</MatIcon> <span class="miniHover">Setup</span>
+            </MatNavItem>*@
 
-                    <MatNavItem Href="@NavigationManager.ToAbsoluteUri("referencetables/"+local_Table.Code).AbsoluteUri">
-                        <MatIcon>settings</MatIcon> <span class="miniHover">@item.Description</span>
-                    </MatNavItem>
-                }
-            </MatNavSubMenuList>
-        </MatNavSubMenu>
+
+        @{ if (IsSystemAdministrator)
+            {
+
+                <MatNavItem Href="@NavigationManager.ToAbsoluteUri("Users").AbsoluteUri">
+                    <MatIcon>people</MatIcon> <span class="miniHover">Users</span>
+                </MatNavItem>
+
+                <MatNavSubMenu>
+
+
+                    <MatNavSubMenuHeader>
+                        <MatNavItem AllowSelection="false">
+                            <MatIcon>settings</MatIcon><span class="miniHover">System Tables</span>
+                        </MatNavItem>
+                    </MatNavSubMenuHeader>
+
+                    <MatNavSubMenuList>
+                        @foreach (var item in refTables)
+                        {
+                            var local_Table = item;
+
+                            <MatNavItem Href="@NavigationManager.ToAbsoluteUri("referencetables/" + local_Table.Code).AbsoluteUri">
+                                <MatIcon>settings</MatIcon> <span class="miniHover">@item.Description</span>
+                            </MatNavItem>
+                        }
+                    </MatNavSubMenuList>
+
+                </MatNavSubMenu>
+            }
+        }
+
     </MatNavMenu>
 }
+
+
 @code {
-    public bool IsLoggedIn = false;
+    public bool Authenticated = false;
+    public bool IsSystemAdministrator = false;
 
     [CascadingParameter]
-    Task<AuthenticationState> authenticationStateTask { get; set; }
+    Task<AuthenticationState>
+        authenticationStateTask
+    { get; set; }
 
 
 
     ReferenceTableClient client = new ReferenceTableClient();
-    ICollection<ReferenceTables> refTables = null;
+    ICollection<ReferenceTables>
+        refTables = null;
 
 
     protected override async Task OnInitializedAsync()
     {
-
-
-                refTables = await client.GetRefTableListAsync();
-
-
+        refTables = await client.GetRefTableListAsync();
     }
 
     async Task LoadMenu()
@@ -62,24 +81,6 @@
     }
 
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-
-    //    if (firstRender)
-    //    {
-
-    //        if (!NavigationManager.Uri.Contains("/login"))
-    //        {
-    //            var token = await localStorage.GetItemAsync<string>("OpenTraumaRegistry_Token");
-    //            if (string.IsNullOrEmpty(token))
-    //            {
-    //                NavigationManager.NavigateTo("/login");
-    //            }
-    //            client.SetBearerToken(token);
-    //            await LoadMenu();
-    //        }
-    //    }
-    //}
 
 
     protected async Task ViewTable(string tableName)
@@ -92,19 +93,21 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        IsLoggedIn = false;
-        //var user = (await authenticationStateTask).User;
+        Authenticated = false;
+        var user = (await authenticationStateTask).User;
 
-        //if (user.Identity.IsAuthenticated)
-        //{
-        //    IsLoggedIn = true;
-        //}
+        try
+        {
+            IsSystemAdministrator = Convert.ToBoolean(user.FindFirst(c => c.Type == "SystemAdministrator").Value);
+        }
+        catch { }
 
-        //https://gist.github.com/SteveSandersonMS/175a08dcdccb384a52ba760122cd2eda Examples
-        //if (user.IsInRole("Admin"))
-        //{
-        // Perform some action only available to users in the 'admin' role
-        //}
+
+        if (user.Identity.IsAuthenticated)
+        {
+            Authenticated = user.Identity.IsAuthenticated;
+            this.StateHasChanged();
+        }
     }
 
 

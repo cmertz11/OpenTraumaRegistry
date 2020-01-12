@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenTraumaRegistry.Data;
+using OpenTraumaRegistry.Data.Models;
 
 namespace OpenTraumaRegistry.Api.Controllers
 {
@@ -19,23 +20,42 @@ namespace OpenTraumaRegistry.Api.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
         // GET: api/Vitals/5
         [HttpGet("{emailAddress}")]
+        // TODO: _User should be changed to _dtoUser to avoid confusion.
         public async Task<ActionResult<_User>> GetUser(string emailAddress)
         {
-            _User dtoUser = new _User();
-            var user = await _context.Users.Where(u => u.EmailAddress == emailAddress).FirstOrDefaultAsync();
-            dtoUser.FirstName = user.FirstName;
-            dtoUser.LastName = user.LastName;
-            dtoUser.email = user.EmailAddress;
-            dtoUser.SystemAdministrator = user.SystemAdministrator;
-
-            var recs = await _context.UserFacilities.Where(u => u.UserId == user.Id).ToListAsync();
-            foreach (var item in recs)
+            try
             {
-                dtoUser.userFacilities.Add(new _UserFacility { FacilityId = item.FacilityId, FacilityName = item.Facility.FacilityName, Administrator = item.Administrator });
+                _User dtoUser = new _User();
+                var user = await _context.Users.Where(u => u.EmailAddress == emailAddress).FirstOrDefaultAsync();
+                dtoUser.FirstName = user.FirstName;
+                dtoUser.LastName = user.LastName;
+                dtoUser.email = user.EmailAddress;
+                dtoUser.SystemAdministrator = user.SystemAdministrator;
+
+                var recs = await _context.UserFacilities.
+                    Where(u => u.UserId == user.Id)
+                    .Include(f => f.Facility)
+                    .ToListAsync();
+                foreach (var item in recs)
+                {
+                    dtoUser.userFacilities.Add(new _UserFacility { FacilityId = item.FacilityId, FacilityName = item.Facility.FacilityName, Administrator = item.Administrator });
+                }
+                return dtoUser;
             }
-            return dtoUser;
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
 
         public class _User
@@ -47,7 +67,7 @@ namespace OpenTraumaRegistry.Api.Controllers
             public bool SystemAdministrator { get; set; }
             public string Token { get; set; }
 
-            public List<_UserFacility> userFacilities = new List<_UserFacility>();
+            public List<_UserFacility> userFacilities { get; set; } = new List<_UserFacility>();
         }
         public class _UserFacility
         {

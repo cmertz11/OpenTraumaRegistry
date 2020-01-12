@@ -45,8 +45,14 @@ namespace OpenTraumaRegistry.Api.Controllers
                 var tokenStr = GenerateJSONWebToken(user);
                 return tokenStr;
             }
-
+             
             return Unauthorized();
+        }
+
+        private void FailedLoginAttempt(User user)
+        {
+            user.LoginAttempts = user.LoginAttempts++;
+            context.SaveChanges();
         }
 
         private string GenerateJSONWebToken(User user)
@@ -96,7 +102,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                     }
                     else
                     {
-                        user.LoginAttempts = user.LoginAttempts++;
+                        user.LoginAttempts = user.LoginAttempts + 1;
                         if(user.LoginAttempts >= 5)
                         {
                             user.Locked = true;

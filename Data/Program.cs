@@ -13,6 +13,9 @@ namespace OpenTraumaRegistry.Data
         public IConfiguration Configuration { get; }
         public static string UserEmail;
         public static string Password { get; set; }
+
+        public static string FirstName { get; set; }
+        public static string LastName { get; set; }
         public static string PasswordConfirm { get; set; } = "*";  // Ensure Password and PasswordConfirm do not match prior initial interation of password capture loop.
         public static string FacilityName { get; set; }
         public static bool ArgsCorrect { get; set; } = false;
@@ -66,7 +69,7 @@ namespace OpenTraumaRegistry.Data
             using (Context ctx = new Context(optionsBuilder.Options))
             {
                 string outputString = "";
-                 DbInitializer.Initialize(ctx, UserEmail, Password, FacilityName, ref outputString);
+                 DbInitializer.Initialize(ctx, UserEmail, Password, FirstName, LastName, FacilityName, ref outputString);
             }
         }
 
@@ -115,19 +118,39 @@ namespace OpenTraumaRegistry.Data
                         PasswordFormatValid = false;
                     }
                 }
-                Console.WriteLine("");
 
+                Console.WriteLine("");
+                while (string.IsNullOrEmpty(FirstName))
+                {
+                    Console.WriteLine("Enter your First Name:");
+                    FirstName = Console.ReadLine();
+                }
+
+                Console.WriteLine("");
+                while (string.IsNullOrEmpty(LastName))
+                {
+                    Console.WriteLine("Enter your Last Name:");
+                    LastName = Console.ReadLine();
+                }
+
+                Console.WriteLine(""); 
                 while (string.IsNullOrEmpty(FacilityName))
                 {
                     Console.WriteLine("Enter the Name of the Facility:");
                     FacilityName = Console.ReadLine();
-                }
-
+                } 
                 Console.WriteLine("");
                 Console.WriteLine("Your Choices: ");
                 Console.WriteLine("");
                 Console.WriteLine(string.Format("System Administrator Email: {0}", UserEmail));
                 Console.WriteLine("");
+
+                Console.WriteLine(string.Format("First Name: {0}", FirstName));
+                Console.WriteLine("");
+
+                Console.WriteLine(string.Format("Last Name: {0}", LastName));
+                Console.WriteLine("");
+
                 Console.WriteLine(string.Format("Name of the Facility: {0}", FacilityName));
                 Console.WriteLine("");
                 Console.WriteLine("Is the correct Y or N?");

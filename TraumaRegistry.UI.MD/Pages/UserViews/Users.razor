@@ -1,0 +1,189 @@
+﻿@page "/users"
+@using System.Diagnostics
+@using System.Threading
+@using OpenTraumaRegistry.Client;
+ 
+
+@inject NavigationManager NavigationManager
+
+        <h2><MatIcon>people</MatIcon> Users</h2>
+        <MatProgressBar Indeterminate="@querying"></MatProgressBar>
+
+        @if (pagedData == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+
+<MatSelect Label="Filter" Enhanced="true" @bind-Value="query.FilterColumn">
+    <MatOptionString value="Id">Id</MatOptionString>
+    <MatOptionString value="FirstName">First Name</MatOptionString>
+    <MatOptionString value="LastName">Last Name</MatOptionString>
+    <MatOptionString value="EmailAddress">Email Address</MatOptionString>
+    <MatOptionString value="Locked">Email Address</MatOptionString>
+    <MatOptionString value="LoginAttempts">Login Attempts</MatOptionString>
+    <MatOptionString value="SytemAdministrator">Is System Administrator</MatOptionString>
+</MatSelect>
+
+            <MatTextField id="searchFilter" Label="Search" @bind-Value="query.Filter" />
+            <MatButton Icon="search" @onclick="SearchAsync">Search </MatButton>
+
+
+            <MatSelect Label="Page Size" Enhanced="true" @bind-Value="pageSize">
+                <MatOptionString value="5">5</MatOptionString>
+                <MatOptionString selected="selected" value="10">10</MatOptionString>
+                <MatOptionString value="25">25</MatOptionString>
+                <MatOptionString value="50">50</MatOptionString>
+            </MatSelect>
+
+
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>
+                            Id
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("Id"))"></MatButton>
+
+                        </th>
+                        <th>
+                            First Name
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("FirstName"))"></MatButton>
+                        </th>
+                        <th>
+                            Last Name
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("LastName"))"></MatButton>
+
+                        </th>
+                        <th>
+                            Email Address
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("EmailAddress"))"></MatButton>
+                        </th>
+                        <th>
+                            Login Attempts
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("LoginAttempts"))"></MatButton>
+                        </th>
+                        <th>
+                            Is System Administrator
+                            <MatButton Icon="@sortIcon" @onclick="@(() => SetOrderByColumn("SystemAdministrator"))"></MatButton>
+                        </th>
+                        <th></th>
+                        <th>
+                            <MatButton Style="float: right;" Icon="add" @onclick="@AddNewUser">Add New</MatButton>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in pagedData.Records)
+                    {
+                        <tr>
+                            <td>@patient.Id</td>
+                            <td>@patient.FirstName</td>
+                            <td>@patient.LastName</td>
+                            <td>@patient.EmailAddress</td>
+                            <td>@patient.LoginAttempts</td>
+                            <td>@patient.SystemAdministrator</td>
+                            <td><MatButton Icon="edit" @onclick="@(() => EditUser(patient.Id))">Edit</MatButton></td>
+                            <td><MatButton Icon="lock" @onclick="@(() => LockUser(patient.Id))">Lock</MatButton></td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (pageCount > 1)
+            {
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        @{
+                            string previousButtonClass = query.PageNumber == 1 ? "page-item disabled" : "page-item";
+                            string nextButtonClass = query.PageNumber == pageCount ? "page-item disabled" : "page-item";
+
+                        }
+                        <li class="@previousButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) - 1))">Previous</a></li>
+
+                        @for (int i = 1; i < pageCount + 1; i++)
+                        {
+                            var local_i = i;
+                            string pageItemClass = query.PageNumber == i ? "page-item active" : "page-item";
+                            <li class="@pageItemClass"><a class="page-link" @onclick="@(() => SetPage(local_i))"> @i</a></li>
+                        }
+                        <li class="@nextButtonClass"><a class="page-link" @onclick="@(() => SetPage(Convert.ToInt32(query.PageNumber) + 1))">Next</a></li>
+                    </ul>
+                </nav>
+            }
+            <label>@metrics</label>
+        }
+
+        @code {
+
+            PagedUserData pagedData;
+            UsersPagedClient client = new UsersPagedClient();
+            string sortIcon = "keyboard_arrow_up";
+            string metrics = "";
+            string pageSize = "10";
+            int pageCount = 0;
+            bool querying = true;
+            string token = "";
+
+            UrlQuery query = new UrlQuery { PageNumber = 1, PageSize = 10, FilterColumn = "LastName", OrderBy = "Id", OrderByDirection = "asc" };
+
+            protected async Task SearchAsync()
+            {
+                client.SetBearerToken(token);
+
+
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                pagedData = await client.GetUsersAsync(query);
+
+                pageCount = (pagedData.RecordCount + query.PageSize - 1) / query.PageSize;
+                sw.Stop();
+                metrics = "Total System Users: " + pagedData.RecordCount + "." + Environment.NewLine + "Data returned in " + sw.ElapsedMilliseconds.ToString() + " Milliseconds";
+                querying = false;
+                this.StateHasChanged();
+            }
+
+            protected async Task LockUser(int Id)
+            {
+                NavigationManager.NavigateTo("/addedituser/" + Id);
+            }
+
+            protected async Task EditUser(int Id)
+            {
+                NavigationManager.NavigateTo("/addedituser/" + Id);
+            }
+
+            protected async Task AddNewUser()
+            {
+                NavigationManager.NavigateTo("/addeditpatient");
+            }
+
+            async Task SetPage(int page)
+            {
+                query.PageNumber = page;
+                await SearchAsync();
+            }
+
+            async Task SetOrderByColumn(string orderBy)
+            {
+                query.OrderBy = orderBy;
+
+                if (query.OrderByDirection == "asc")
+                {
+                    query.OrderByDirection = "desc";
+                    sortIcon = "keyboard_arrow_down";
+                }
+                else
+                {
+                    query.OrderByDirection = "asc";
+                    sortIcon = "keyboard_arrow_up";
+                }
+                await SearchAsync();
+            }
+
+            protected override async Task OnInitializedAsync()
+            {
+                await SearchAsync();
+            }
+
+        }

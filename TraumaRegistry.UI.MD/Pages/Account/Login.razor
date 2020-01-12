@@ -63,13 +63,13 @@
             token = await loginClient.LoginAsync(loginModel.Email, loginModel.Password);
             if (!string.IsNullOrEmpty(token))
             {
-                ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcated(loginModel.Email);
+
                 userClient.SetBearerToken(token);
                 var _user = await userClient.GetUserAsync(loginModel.Email);
                 _user.Token = token;
 
-                await sessionStorage.SetItemAsync("_otrUser", _user); 
-
+                await sessionStorage.SetItemAsync("_otrUser", _user);
+                await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
                 NavigationManager.NavigateTo("/");
                 
             }

@@ -9,7 +9,7 @@ namespace OpenTraumaRegistry.Data
     public static class DbInitializer
     {
         public static string SystemId { get; set; } = Guid.NewGuid().ToString();  //Get System Id from Identity 
-        public static void Initialize(Context context, string UserEmail, string Password, string Facilityname, ref string OutputString)
+        public static void Initialize(Context context, string UserEmail, string Password, string FirstName, string LastName, string Facilityname, ref string OutputString)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace OpenTraumaRegistry.Data
                 {
                     print("Loading User Account", ref OutputString);
                     PasswordHelper passwordHasher = new PasswordHelper();
-                    context.Users.Add(new User { Password = passwordHasher.Hash(Password), EmailAddress = UserEmail, SystemAdministrator = true, LoginAttempts = 0, Locked = false }); ;
+                    context.Users.Add(new User { Password = passwordHasher.Hash(Password), EmailAddress = UserEmail, FirstName = FirstName, LastName = LastName, SystemAdministrator = true, LoginAttempts = 0, Locked = false }); ;
                     context.SaveChanges(); 
                 }
                 if(!context.Facilities.Any())
@@ -39,7 +39,7 @@ namespace OpenTraumaRegistry.Data
                 if(!context.UserFacilities.Any())
                 {
                     print(string.Format("Attaching {0} to {1}", UserEmail, Facilityname), ref OutputString);
-                    context.UserFacilities.Add(new UserFacility { UserId = 1, FacilityId = 1 });
+                    context.UserFacilities.Add(new UserFacility { UserId = 1, FacilityId = 1, Administrator = true });
                 }
                 if (!context.RefSex.Any())
                 {

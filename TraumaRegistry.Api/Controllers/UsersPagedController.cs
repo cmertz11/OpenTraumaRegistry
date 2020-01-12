@@ -13,35 +13,30 @@ namespace OpenTraumaRegistry.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PatientsPagedController : ControllerBase
+    public class UsersPagedController : ControllerBase
     {
         private readonly Context _context;
         private IConfiguration _configuration;
         private string _databasename;
-        public PatientsPagedController(Context context, IConfiguration configuration)
+        public UsersPagedController(Context context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
-        public ActionResult<pagedPatientData> GetPatients(UrlQuery urlQuery)
+        public ActionResult<pagedUserData> GetUsers(UrlQuery urlQuery)
         {
-            string tableName = "Patients";
+            string tableName = "Users";
             _databasename = _context.Database.GetDbConnection().Database;
             tableName = AdjustDBEntityNameForProvider(tableName);
-            pagedPatientData data = new pagedPatientData();
+            pagedUserData data = new pagedUserData();
             var pageNumber = Convert.ToInt32(urlQuery.PageNumber);
             data.recordCount = _context.Patients.Count();
             string sql = GenerateSql(urlQuery, tableName, data); 
-            data.records = _context.Patients.FromSqlRaw(sql).ToList();
-            foreach (var item in data.records)
-            {
-                item.EventCount = _context.Events.Where(e => e.Patient.Id == item.Id).Count();
-            }
-
+            data.records = _context.Users.FromSqlRaw(sql).ToList();
             return data;
         }
 
-        private string GenerateSql(UrlQuery urlQuery, string tableName, pagedPatientData data)
+        private string GenerateSql(UrlQuery urlQuery, string tableName, pagedUserData data)
         {
             var provider = _configuration.GetSection("TraumaRegistrySettings")["dbProvider"];
             switch (provider)
@@ -133,13 +128,14 @@ namespace OpenTraumaRegistry.Api.Controllers
         }
 
     } 
-    public class pagedPatientData
+    public class pagedUserData
     {
-        public IEnumerable<Patient> records { get; set; }
+        public IEnumerable<User> records { get; set; }
         public int recordCount { get; set; }
 
         public int eventCount { get; set; }
     }
+
 
 
 }

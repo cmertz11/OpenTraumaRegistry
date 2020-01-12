@@ -38,15 +38,16 @@
 
                         </MatAppBarTitle>
                         <div class="hidden-mdc-down">
-                    
+                        @if (Authenticated)
+                        {
                             <MatTooltip Tooltip="Toggle Navigation">
                                 <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
                             </MatTooltip>
-                 
+
                             <MatTooltip Tooltip="Minify Navigation">
                                 <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton> 
                             </MatTooltip>
- 
+                        }
                         </div>
                     </MatAppBarSection>
                     <MatAppBarSection Align="@MatAppBarSectionAlign.End">
@@ -92,6 +93,7 @@
     bool _navMenuOpened = true;
     bool _navMinified = false;
     public string bbDrawerClass = "";
+    public bool Authenticated = false;
 
     [CascadingParameter]
     Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -99,14 +101,19 @@
     protected override async Task OnInitializedAsync()
     {
 
-
     }
-
+    protected override async Task OnParametersSetAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        Authenticated = user.Identity.IsAuthenticated;
+        _navMenuOpened = Authenticated;
+    }
     public void Logout()
     {
         ((_otrAuthenticationStateProvider)authenticationStateProvider).SetUserAsLoggedOut();
+        Authenticated = false;
+        this.StateHasChanged();
     }
-
 
     void NavToggle()
     {

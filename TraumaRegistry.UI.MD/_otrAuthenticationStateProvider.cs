@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using OpenTraumaRegistry.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -13,26 +11,28 @@ namespace OpenTraumaRegistry.UI.MD
     public class _otrAuthenticationStateProvider : AuthenticationStateProvider
     {
         private ISessionStorageService sessionStorage;
-        public _otrAuthenticationStateProvider(ISessionStorageService _sessionStorage)
+        private ISyncSessionStorageService syncSessionStorage;
+        public _otrAuthenticationStateProvider(ISessionStorageService _sessionStorage, ISyncSessionStorageService _syncSessionStorage)
         {
             sessionStorage = _sessionStorage;
+            syncSessionStorage = _syncSessionStorage;
         }
 
-        
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
 
             var _user = await sessionStorage.GetItemAsync<_User>("_otrUser");
             ClaimsIdentity identity;
-            
-            if(_user != null)
+
+            if (_user != null)
             {
                 identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Email, _user.Email),
                     new Claim(ClaimTypes.Name, _user.FirstName),
                     new Claim("SystemAdministrator", _user.SystemAdministrator.ToString())
-                },  "apiuth_type");
+                }, "apiuth_type");
 
             }
             else
@@ -49,7 +49,7 @@ namespace OpenTraumaRegistry.UI.MD
         {
 
             var _user = await sessionStorage.GetItemAsync<_User>("_otrUser");
-            ClaimsIdentity identity; 
+            ClaimsIdentity identity;
             identity = new ClaimsIdentity(new[]
 {
                     new Claim(ClaimTypes.Email, _user.Email),
@@ -68,36 +68,45 @@ namespace OpenTraumaRegistry.UI.MD
             var user = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
-    }
- 
 
-    public class _otrAuthorizationHandler : AuthorizationHandler<_otrSystemRoleRequirement>
-    {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, _otrSystemRoleRequirement requirement)
+        public _User GetUserFromSession()
         {
-            //if (!context.User.HasClaim(c => c.Type == ClaimTypes.Email))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
-            //var emailAddress = context.User.FindFirst(c => c.Type == ClaimTypes.Email).Value;
-
-            //if (emailAddress.EndsWith(requirement.CompanyDomain))
-            //{
-            //    return context.Succeed(requirement);
-            //}
-
-            return Task.CompletedTask;
+            return syncSessionStorage.GetItem<_User>("_otrUser");
         }
-    }
 
-    public class _otrSystemRoleRequirement : IAuthorizationRequirement
+    }
+        public class _otrAuthorizationHandler : AuthorizationHandler<_otrSystemRoleRequirement>
     {
-        public string role { get; }
 
-        public _otrSystemRoleRequirement(string _role)
-        {
-            role = _role;
+            protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, _otrSystemRoleRequirement requirement)
+            {
+                bool IsSystemAdministrator = false;
+
+                try
+                {
+                    IsSystemAdministrator = Convert.ToBoolean(context.User.FindFirst(c => c.Type == requirement.role).Value);
+                }
+                catch(Exception ex)
+                { }
+                    
+                 
+                if (IsSystemAdministrator)
+                {
+                    context.Succeed(requirement);
+                }
+
+                return Task.CompletedTask;
+            }
         }
-    }
+
+        public class _otrSystemRoleRequirement : IAuthorizationRequirement
+        {
+            public string role { get; }
+
+            public _otrSystemRoleRequirement(string _role)
+            {
+                role = _role;
+            }
+        }
+    
 }
