@@ -26,6 +26,16 @@ namespace OpenTraumaRegistry.Api.Controllers
             return await _context.Users.ToListAsync();
         }
 
+        // POST: api/Patients
+        [HttpPost]
+        public async Task<ActionResult<User>> PostPatient(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPatient", new { id = user.Id }, user);
+        }
+
         // GET: api/Vitals/5
         [HttpGet("{emailAddress}")]
         // TODO: _User should be changed to _dtoUser to avoid confusion.
