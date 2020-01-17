@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OpenTraumaRegistry.Data.Models
@@ -17,9 +18,17 @@ namespace OpenTraumaRegistry.Data.Models
 
         public string Password { get; set; }
 
+        public DateTime PasswordExpires { get; set; }
+
         public int LoginAttempts { get; set; }
 
         public bool Locked { get; set; }
+
+        public bool EmailConfirmed { get; set; }
         public bool SystemAdministrator { get; set; }
+
+        public DateTime LastUpdate { get; set; }
+
+        public int LastUpdatedBy { get; set; }
     }
 }

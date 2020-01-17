@@ -94,7 +94,10 @@ namespace OpenTraumaRegistry.Api.Controllers
                 user = context.Users.Where(u => u.EmailAddress == login.Email).FirstOrDefault();
                 if(user != null)
                 {      
-                    if((!user.Locked) && (passwordHasher.AuthenticatePassword(login.Password, user.Password)))
+                    if((!user.Locked) && 
+                        (user.PasswordExpires > DateTime.Now) && 
+                        (user.EmailConfirmed) && 
+                        (passwordHasher.AuthenticatePassword(login.Password, user.Password)))
                     {
                         user.LoginAttempts = 0;
                         context.SaveChanges();

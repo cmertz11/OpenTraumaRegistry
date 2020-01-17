@@ -57,12 +57,7 @@
     public bool Authenticated = false;
     public bool IsSystemAdministrator = false;
 
-    [CascadingParameter]
-    Task<AuthenticationState>
-        authenticationStateTask
-    { get; set; }
-
-
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; } 
 
     ReferenceTableClient client = new ReferenceTableClient();
     ICollection<ReferenceTables>

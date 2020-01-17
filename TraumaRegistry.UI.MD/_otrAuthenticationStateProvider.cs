@@ -31,7 +31,8 @@ namespace OpenTraumaRegistry.UI.MD
                 {
                     new Claim(ClaimTypes.Email, _user.Email),
                     new Claim(ClaimTypes.Name, _user.FirstName),
-                    new Claim("SystemAdministrator", _user.SystemAdministrator.ToString())
+                    new Claim("SystemAdministrator", _user.SystemAdministrator.ToString()),
+                    new Claim("Id", _user.UserId.ToString())
                 }, "apiuth_type");
 
             }
@@ -54,7 +55,8 @@ namespace OpenTraumaRegistry.UI.MD
 {
                     new Claim(ClaimTypes.Email, _user.Email),
                     new Claim(ClaimTypes.Name, _user.FirstName),
-                    new Claim("SystemAdministrator", _user.SystemAdministrator.ToString())
+                    new Claim("SystemAdministrator", _user.SystemAdministrator.ToString()),
+                    new Claim("Id", _user.UserId.ToString())
                 }, "apiuth_type");
 
             var user = new ClaimsPrincipal(identity);

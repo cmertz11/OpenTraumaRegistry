@@ -27,7 +27,19 @@ namespace OpenTraumaRegistry.Data
                 {
                     print("Loading User Account", ref OutputString);
                     PasswordHelper passwordHasher = new PasswordHelper();
-                    context.Users.Add(new User { Password = passwordHasher.Hash(Password), EmailAddress = UserEmail, FirstName = FirstName, LastName = LastName, SystemAdministrator = true, LoginAttempts = 0, Locked = false }); ;
+                    context.Users.Add(new User {
+                        Password = passwordHasher.Hash(Password),
+                        EmailAddress = UserEmail,
+                        FirstName = FirstName,
+                        LastName = LastName,
+                        EmailConfirmed = true, //TODO: Once email functionality is up, force email confirmation.
+                        LastUpdate = DateTime.Now,
+                        LastUpdatedBy = 0, // 0 UserID is System
+                        PasswordExpires = DateTime.Now.AddDays(90), //TODO: This may need to be a config setting.
+                        SystemAdministrator = true,
+                        LoginAttempts = 0,
+                        Locked = false });                 
+                    ; 
                     context.SaveChanges(); 
                 }
                 if(!context.Facilities.Any())

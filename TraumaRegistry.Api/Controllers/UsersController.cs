@@ -45,6 +45,7 @@ namespace OpenTraumaRegistry.Api.Controllers
             {
                 _User dtoUser = new _User();
                 var user = await _context.Users.Where(u => u.EmailAddress == emailAddress).FirstOrDefaultAsync();
+                dtoUser.UserId = user.Id;
                 dtoUser.FirstName = user.FirstName;
                 dtoUser.LastName = user.LastName;
                 dtoUser.email = user.EmailAddress;

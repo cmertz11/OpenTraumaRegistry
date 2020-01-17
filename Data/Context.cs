@@ -163,6 +163,12 @@ namespace OpenTraumaRegistry.Data
                 .WithOne(b => b.RiskData)
                 .HasForeignKey<RiskData>(u => u.RefRiskDataId)
                 .HasConstraintName("ForeignKey_RiskData_RefRiskData");
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(e => e.EmailAddress).IsUnique();
+            });
+                
                 
         }
     }

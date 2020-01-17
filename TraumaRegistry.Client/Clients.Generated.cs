@@ -6244,14 +6244,28 @@ namespace OpenTraumaRegistry.Client
         [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Password { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("passwordExpires", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTime PasswordExpires { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("loginAttempts", Required = Newtonsoft.Json.Required.Always)]
         public int LoginAttempts { get; set; }
     
         [Newtonsoft.Json.JsonProperty("locked", Required = Newtonsoft.Json.Required.Always)]
         public bool Locked { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("emailConfirmed", Required = Newtonsoft.Json.Required.Always)]
+        public bool EmailConfirmed { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("systemAdministrator", Required = Newtonsoft.Json.Required.Always)]
         public bool SystemAdministrator { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("lastUpdate", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTime LastUpdate { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("lastUpdatedBy", Required = Newtonsoft.Json.Required.Always)]
+        public int LastUpdatedBy { get; set; }
     
     
     }

@@ -2,144 +2,135 @@
 @page "/addedituser/{Id:int}"
 
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IMatToaster Toaster
 
 
-    <AuthorizeView Context="AuthorizedContext" Policy="SystemAdminstrator">
-        <Authorized>
-            <div class="container">
-                <div class="row">
-                    <div class="col-4">
-                        <h3><MatIcon>people</MatIcon>@pageHeader</h3>
-                        <EditForm Model="@user" OnValidSubmit="@validateForm">
-                            <DataAnnotationsValidator />
-                            <p>
-                                
-                            </p>
-                            <p>
-                                <MatTextField id="patientFirstName" Label="First Name" FullWidth="true" @bind-Value=@user.FirstName />
-
-                                <ValidationMessage For="@(() => user.FirstName)" />
-                            </p>
-                            <p>
-                                <MatTextField id="patientLastName" Label="Last Name" FullWidth="true" @bind-Value=@user.LastName />
-                                <ValidationMessage For="@(() => user.LastName)" />
-                            </p>
-                            <p>
-                             
-                            </p>
-                            <p>
-                               
-                            </p>
-                            <p>
-                              
-                            </p>
-                            <p>
-
-                            </p>
-                            <p>
-                                <MatTextField id="patientEmail" Label="E-mail" FullWidth="true" @bind-Value=@user.EmailAddress /> <br />
-                                <ValidationMessage For="@(() => user.EmailAddress)" />
-                            </p>
-
-                            <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
-                            <MatButton type="submit" Icon="save">Save</MatButton>
-                        </EditForm>
-                    </div>
+<AuthorizeView Context="AuthorizedContext" Policy="SystemAdminstrator">
+    <Authorized>
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <h3><MatIcon>people</MatIcon>@pageHeader</h3>
+                    <EditForm Model="@user" OnValidSubmit="@validateForm">
+                        <DataAnnotationsValidator />
+                        <p>
+                            <MatTextField id="patientEmail" Label="E-mail" FullWidth="true" @bind-Value=@user.EmailAddress /> <br />
+                            <ValidationMessage For="@(() => user.EmailAddress)" />
+                        </p>
+                        <p>
+                            <MatTextField id="patientFirstName" Label="First Name" FullWidth="true" @bind-Value=@user.FirstName />
+                            <ValidationMessage For="@(() => user.FirstName)" />
+                        </p>
+                        <p>
+                            <MatTextField id="patientLastName" Label="Last Name" FullWidth="true" @bind-Value=@user.LastName />
+                            <ValidationMessage For="@(() => user.LastName)" />
+                        </p>
+                        <p>
+                            <MatCheckbox @bind-Value=@user.SystemAdministrator Label="System Administrator"></MatCheckbox>
+                        </p>
+                        <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
+                        <MatButton type="submit" Icon="save">Save</MatButton>
+                    </EditForm>
                 </div>
             </div>
-        </Authorized>
+        </div>
+    </Authorized>
+
+    <NotAuthorized>
+        <RedirectToError />
+    </NotAuthorized>
+
+</AuthorizeView>
 
 
-        <NotAuthorized>
-            <RedirectToError/>
-        </NotAuthorized>
-    </AuthorizeView>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    int genderId;
+    int raceId;
+    User user = new User();
+    bool success = false;
+    string mode = "add";
+    string pageHeader = "Add Patient";
+    PatientsClient client = new PatientsClient();
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    int SelectedGenderId { get; set; } = 0;
+    int SelectedRaceId { get; set; } = 0;
+
+    string genderIdStr { get; set; }
+    string raceIdStr { get; set; }
 
 
+    RefTableDTO RefSexTable = new RefTableDTO();
+    RefTableDTO refRaceTable = new RefTableDTO();
 
-            @code {
-                [Parameter]
-                public int Id { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
 
-                int genderId;
-                int raceId;
-                User user = new User();
-                bool success = false;
-                string mode = "add";
-                string pageHeader = "Add Patient";
-                PatientsClient client = new PatientsClient();
+    }
 
-                int SelectedGenderId { get; set; } = 0;
-                int SelectedRaceId { get; set; } = 0;
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id > 0)
+        {
+            mode = "edit";
+            pageHeader = "Edit User: " + Id;
 
-                string genderIdStr { get; set; }
-                string raceIdStr { get; set; }
+            //TO DO:
+            //user = await client.GetPatientAsync(Id);
 
+        }
+        else
+        {
+            mode = "add";
+            pageHeader = "Add New User";
+        }
+    }
 
-                RefTableDTO RefSexTable = new RefTableDTO();
-                RefTableDTO refRaceTable = new RefTableDTO();
+    void cancel()
+    {
+        NavigationManager.NavigateTo("/patients");
+    }
 
-                protected override async Task OnInitializedAsync()
-                {
+    async Task saveUser()
+    {
+        try
+        {
+            var currentuser = (await authenticationStateTask).User;
+            UsersClient client = new UsersClient();
 
-                }
+            var timeStamp = System.DateTime.Now;
 
-                protected override async Task OnParametersSetAsync()
-                {
-                    if (Id > 0)
-                    {
-                        mode = "edit";
-                        pageHeader = "Edit User: " + Id;
+            //TO DO:
+            user.LastUpdate = timeStamp;
+            user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
 
-                        //TO DO:
-                        //user = await client.GetPatientAsync(Id);
-
-                    }
-                    else
-                    {
-                        mode = "add";
-                        pageHeader = "Add New User";
-                    }
-                }
-
-                void cancel()
-                {
-                    NavigationManager.NavigateTo("/patients");
-                }
-
-                async Task saveUser()
-                {
-                    try
-                    {
-                        UsersClient client = new UsersClient();
-
-                        var timeStamp = System.DateTime.Now;
-                        //TO DO:
-                        //user.LastUpdate = timeStamp;
-
-                        if (mode == "add")
-                        {
-                            //TO DO:
-                            //user.Created = timeStamp;
-                            //var rec = client.PostPatientAsync(patient);
-                            Toaster.Add("User Added Successfully!", MatToastType.Success, "Success", null, null);
-                        }
-                        else
-                        {
-                            //TODO:
-                            //var rec = await client.PutPatientAsync(Id, patient);
-                            //Toaster.Add("User Updated Successfully!", MatToastType.Success, "Success", null, null);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
-                    }
-                }
-
-                private async Task validateForm()
-                {
-                    await saveUser();
-                }
+                    if (mode == "add")
+            {
+                //TO DO:
+                //user.Created = timeStamp;
+                //var rec = client.PostPatientAsync(patient);
+                Toaster.Add("User Added Successfully!", MatToastType.Success, "Success", null, null);
             }
+            else
+            {
+                //TODO:
+                //var rec = await client.PutPatientAsync(Id, patient);
+                //Toaster.Add("User Updated Successfully!", MatToastType.Success, "Success", null, null);
+            }
+        }
+        catch (Exception ex)
+        {
+            Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
+        }
+    }
+
+    private async Task validateForm()
+    {
+        await saveUser();
+    }
+}
