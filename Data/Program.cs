@@ -10,6 +10,8 @@ namespace OpenTraumaRegistry.Data
 {
     public class Program
     {
+
+
         public IConfiguration Configuration { get; }
         public static string UserEmail;
         public static string Password { get; set; }
@@ -23,6 +25,7 @@ namespace OpenTraumaRegistry.Data
         static void Main(string[] args)
         {
      
+
             if (args.Length == 3)
             {
                 UserEmail = args[0];
@@ -69,7 +72,7 @@ namespace OpenTraumaRegistry.Data
             using (Context ctx = new Context(optionsBuilder.Options))
             {
                 string outputString = "";
-                 DbInitializer.Initialize(ctx, UserEmail, Password, FirstName, LastName, FacilityName, ref outputString);
+                 DbInitializer.Initialize(ctx, UserEmail, Password, FirstName, LastName, FacilityName);
             }
         }
 

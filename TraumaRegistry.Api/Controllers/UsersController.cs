@@ -28,12 +28,54 @@ namespace OpenTraumaRegistry.Api.Controllers
 
         // POST: api/Patients
         [HttpPost]
-        public async Task<ActionResult<User>> PostPatient(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+        public async Task<ActionResult<User>> PostUser(User user)
+        { 
+            try 
+	        {	        
+		            _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                    return CreatedAtAction("GetPatient", new { id = user.Id }, user);
+	        }
+	        catch (Exception ex)
+	        {
+                return BadRequest("Could not add user.");
+	        } 
+        }
 
-            return CreatedAtAction("GetPatient", new { id = user.Id }, user);
+
+        // PUT: api/Patients/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, User user)
+        {
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.Users.Any(e => e.Id == id);
         }
 
         // GET: api/Vitals/5
@@ -50,6 +92,10 @@ namespace OpenTraumaRegistry.Api.Controllers
                 dtoUser.LastName = user.LastName;
                 dtoUser.email = user.EmailAddress;
                 dtoUser.SystemAdministrator = user.SystemAdministrator;
+                dtoUser.ConfirmationToken = user.ConfirmationToken;
+                dtoUser.ConfirmationTokenExpires = user.ConfirmationTokenExpires;
+                dtoUser.PasswordExpires = user.PasswordExpires;
+                dtoUser.EmailConfirmed = user.EmailConfirmed;
 
                 var recs = await _context.UserFacilities.
                     Where(u => u.UserId == user.Id)
@@ -68,6 +114,22 @@ namespace OpenTraumaRegistry.Api.Controllers
             }
 
         }
+        [HttpGet("{Token}/{Id}")]
+        public async Task<ActionResult<bool>> ConfirmEmailToken(string Token, int Id)
+        {
+            if (string.IsNullOrEmpty(Token) || Id < 0)
+            {
+                return false;
+            }
+
+            var user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            if (user.ConfirmationToken == Token && user.ConfirmationTokenExpires > DateTime.Now)
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public class _User
         {
@@ -76,8 +138,11 @@ namespace OpenTraumaRegistry.Api.Controllers
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public bool SystemAdministrator { get; set; }
+            public DateTime PasswordExpires { get; set; }
             public string Token { get; set; }
-
+            public bool EmailConfirmed { get; set; }
+            public string ConfirmationToken { get; set; }
+            public DateTime ConfirmationTokenExpires { get; set; }
             public List<_UserFacility> userFacilities { get; set; } = new List<_UserFacility>();
         }
         public class _UserFacility

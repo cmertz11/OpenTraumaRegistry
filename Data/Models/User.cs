@@ -25,6 +25,11 @@ namespace OpenTraumaRegistry.Data.Models
         public bool Locked { get; set; }
 
         public bool EmailConfirmed { get; set; }
+
+        public string ConfirmationToken { get; set; }
+
+        public DateTime ConfirmationTokenExpires { get; set; }
+
         public bool SystemAdministrator { get; set; }
 
         public DateTime LastUpdate { get; set; }

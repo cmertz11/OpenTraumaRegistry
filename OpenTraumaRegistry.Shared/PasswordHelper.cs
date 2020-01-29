@@ -134,5 +134,10 @@ namespace OpenTraumaRegistry.Shared
             return new string(chars.ToArray());
         }
 
+        public string GenerateConfirmationToken()
+        {
+            return GenerateRandomPassword(new PasswordOptions { RequiredLength = 50, RequireDigit = true, RequiredUniqueChars = 1, RequireLowercase = true, RequireNonAlphanumeric = true, RequireUppercase = true });
+        }
+
     }
 }

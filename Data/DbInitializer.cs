@@ -1,33 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using OpenTraumaRegistry.Data.Models;
 using OpenTraumaRegistry.Shared;
+
 
 namespace OpenTraumaRegistry.Data
 {
     public static class DbInitializer
     {
         public static string SystemId { get; set; } = Guid.NewGuid().ToString();  //Get System Id from Identity 
-        public static void Initialize(Context context, string UserEmail, string Password, string FirstName, string LastName, string Facilityname, ref string OutputString)
+        public static void Initialize(Context context, string UserEmail, string Password, string FirstName, string LastName, string Facilityname)
         {
+
+
             try
             {
                 if(!context.Database.EnsureCreated())
                 {
-                   print ("The database was not created.  Check if a database with that name already exsist.", ref OutputString);
+                   print ("The database was not created.  Check if a database with that name already exsist.");
                    return;
                 }
                 else
                 {
-                   print("Database Created Successfully.  Starting data load process...", ref OutputString);
-                   print("Starting data load process...", ref OutputString);
+                   print("Database Created Successfully.  Starting data load process...");
+                   print("Starting data load process...");
                 }
                 if (!context.Users.Any())
                 {
-                    print("Loading User Account", ref OutputString);
+                    print("Loading User Account");
                     PasswordHelper passwordHasher = new PasswordHelper();
-                    context.Users.Add(new User {
+                    var systemAdmin = new User {
                         Password = passwordHasher.Hash(Password),
                         EmailAddress = UserEmail,
                         FirstName = FirstName,
@@ -38,31 +42,65 @@ namespace OpenTraumaRegistry.Data
                         PasswordExpires = DateTime.Now.AddDays(90), //TODO: This may need to be a config setting.
                         SystemAdministrator = true,
                         LoginAttempts = 0,
-                        Locked = false });                 
-                    ; 
-                    context.SaveChanges(); 
+                        //ConfirmationToken = passwordHasher.GenerateRandomPassword(),
+                        //ConfirmationTokenExpires = DateTime.Now.AddMinutes(20),
+                        Locked = false };
+
+                    context.Users.Add(systemAdmin);            
+                    context.SaveChanges();
+
+
+
+                  //  EmailHelper emailHelper = new EmailHelper("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");
+                  //  EmailObj email = new EmailObj
+                  //  { 
+                  //      from = "cmertz11@gmail.com", //TODO: from address needs to be a setting
+                  //      fromdisplayname = "Open Trauma Registry", //TODO fromdisplayname should be a setting
+                  //      to = systemAdmin.EmailAddress,
+                  //      subject = "New Open Trauma Registry Account",
+                  //      htmlcontent = emailHelper.GenerateEmailConfirmationNonLink(systemAdmin.FirstName, systemAdmin.ConfirmationToken)
+                  //  };
+                    
+                  //emailHelper.SendAsync(email).Wait();
+
+                  //  Console.Clear();
+                  //  Console.WriteLine("An email has been sent to your account.  Please go to the email and get the confirmation code and enter it below:");
+                  //  string codeEntered = "";
+                  //  int i = 0;
+                  //  while (codeEntered != systemAdmin.ConfirmationToken)
+                  //  {
+                  //      if(i >= 5)
+                  //      {
+
+                  //      }
+                  //      codeEntered = Console.ReadLine();
+                  //  }
+                  //  Console.WriteLine("Confirmation code accepted");
                 }
+
+
+
                 if(!context.Facilities.Any())
                 {
-                    print("Loading Facility", ref OutputString);
+                    print("Loading Facility");
                     context.Facilities.Add(new Facility { FacilityName = Facilityname });
                     context.SaveChanges();
                 }
                 if(!context.UserFacilities.Any())
                 {
-                    print(string.Format("Attaching {0} to {1}", UserEmail, Facilityname), ref OutputString);
+                    print(string.Format("Attaching {0} to {1}", UserEmail, Facilityname));
                     context.UserFacilities.Add(new UserFacility { UserId = 1, FacilityId = 1, Administrator = true });
                 }
                 if (!context.RefSex.Any())
                 {
-                    print("Loading RefSex", ref OutputString);
+                    print("Loading RefSex");
                     context.RefSex.Add(new Models.RefSex { Code = "M", Description = "Male" });
                     context.RefSex.Add(new Models.RefSex { Code = "F", Description = "Female" });
                     context.SaveChanges();
                 }
                 if (!context.RefRace.Any())
                 {
-                    print("Loading RefRace", ref OutputString);
+                    print("Loading RefRace");
                     context.RefRace.Add(new RefRace { Code = "A", Description = "Asian" });
                     context.RefRace.Add(new RefRace { Code = "B", Description = "Native Hawaiian or Other Pacific Islander" });
                     context.RefRace.Add(new RefRace { Code = "H", Description = "Other Race" });
@@ -73,7 +111,7 @@ namespace OpenTraumaRegistry.Data
                 }
                 if (!context.RefTraumaType.Any())
                 {
-                    print("Loading RefTraumaType", ref OutputString); 
+                    print("Loading RefTraumaType"); 
                     context.RefTraumaType.Add(new RefTraumaType { Code = "", Description = "Blunt" });
                     context.RefTraumaType.Add(new RefTraumaType { Code = "", Description = "Penetrating" });
                     context.RefTraumaType.Add(new RefTraumaType { Code = "", Description = "Burn" });
@@ -83,7 +121,7 @@ namespace OpenTraumaRegistry.Data
                 
                 if (!context.RefRiskData.Any())
                 {
-                    print("Loading RefRiskData", ref OutputString);
+                    print("Loading RefRiskData");
                     context.RefRiskData.Add(new RefRiskData { Code = "", Description = "Advanced Directive LC" });
                     context.RefRiskData.Add(new RefRiskData { Code = "", Description = "ADD_ADHD" });
                     context.RefRiskData.Add(new RefRiskData { Code = "", Description = "ANGINA" });
@@ -120,7 +158,7 @@ namespace OpenTraumaRegistry.Data
                 }
                 if (!context.RefProtectiveDevice.Any())
                 {
-                    print("Loading RefProtectiveDevice", ref OutputString);
+                    print("Loading RefProtectiveDevice");
                     context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "None" });
                     context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Lap belt" });
                     context.RefProtectiveDevice.Add(new RefProtectiveDevice { Description = "Personal Floatation Device" });
@@ -135,7 +173,7 @@ namespace OpenTraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefLocation", ref OutputString);
+                print("Loading RefLocation");
                 if (!context.RefLocation.Any())
                 {
                     context.RefLocation.Add(new RefLocation { Code = "ED", Description = "Emergency Department" });
@@ -145,7 +183,7 @@ namespace OpenTraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefTransport", ref OutputString);
+                print("Loading RefTransport");
                 if (!context.RefTransport.Any())
                 {
                     context.RefTransport.Add(new RefTransport { Code = "POV", Description = "Privately Owned vehicle" });
@@ -153,7 +191,7 @@ namespace OpenTraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefArrivedFrom", ref OutputString);
+                print("Loading RefArrivedFrom");
                 if (!context.RefArrivedFrom.Any())
                 {
                     context.RefArrivedFrom.Add(new RefArrivedFrom { Code = "SCENE", Description = "SCENE" });
@@ -161,7 +199,7 @@ namespace OpenTraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefTraumaLevel", ref OutputString);
+                print("Loading RefTraumaLevel");
                 if (!context.RefTraumaLevel.Any())
                 {
                     context.RefTraumaLevel.Add(new RefTraumaLevel { Code = "F", Description = "FULL" });
@@ -171,7 +209,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefHomeResidence", ref OutputString);
+                print("Loading RefHomeResidence");
                 if (!context.RefHomeResidence.Any())
                 {
                     context.RefHomeResidence.Add(new RefHomeResidence { Description = "Homeless" });
@@ -181,7 +219,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefTransportMode", ref OutputString);
+                print("Loading RefTransportMode");
                 if (!context.RefTransportMode.Any())
                 {
                     context.RefTransportMode.Add(new RefTransportMode { Description = "Ground Ambulance" });
@@ -193,7 +231,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefEdDischargeDisposition", ref OutputString);
+                print("Loading RefEdDischargeDisposition");
                 if (!context.RefEdDischargeDisposition.Any())
                 {
                     context.RefEdDischargeDisposition.Add(new RefEdDischargeDisposition { Description = "Floor Bed (General Admission, Non-Specialty Unit Bed)" });
@@ -211,7 +249,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefOutcome", ref OutputString);
+                print("Loading RefOutcome");
                 if (!context.RefOutcome.Any())
                 {
                     context.RefOutcome.Add(new RefOutcome { Code = "A", Description = "Alive" });
@@ -219,7 +257,7 @@ namespace OpenTraumaRegistry.Data
 
                     context.SaveChanges();
                 }
-                print("Loading RefAgency", ref OutputString);
+                print("Loading RefAgency");
                 if (!context.RefAgency.Any())
                 {
                     context.RefAgency.Add(new RefAgency { AgencyName = "Mackinaw Emergency Transport", Address1 = "115 Ducharme St.", Address2 = "", City = "Mackinaw City", Phone = "555-889-4765", Zip = "49701", Zip4 = "4586" });
@@ -227,7 +265,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefPhysicians", ref OutputString);
+                print("Loading RefPhysicians");
                 if (!context.RefPhysicians.Any())
                 {
                     context.RefPhysicians.Add(new RefPhysician { LastName = "Strange", FirstName = "Stephen", MI = "V" });
@@ -236,7 +274,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefChildSpecificRestraint", ref OutputString);
+                print("Loading RefChildSpecificRestraint");
                 if (!context.RefChildSpecificRestraint.Any())
                 {
                     context.RefChildSpecificRestraint.Add(new RefChildSpecificRestraint { Description = "Child Car Seat" });
@@ -245,7 +283,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefEthnicity", ref OutputString);
+                print("Loading RefEthnicity");
                 if (!context.RefEthnicity.Any())
                 {
                     context.RefEthnicity.Add(new RefEthnicity { Description = "Hispanic or Latino" });
@@ -253,7 +291,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefAgeUnits", ref OutputString);
+                print("Loading RefAgeUnits");
                 if (!context.RefAgeUnits.Any())
                 {
                     context.RefAgeUnits.Add(new RefAgeUnits { Description = "Hours" });
@@ -266,7 +304,7 @@ namespace OpenTraumaRegistry.Data
                 }
 
 
-                print("Loading RefPatientsOccupationalIndustry", ref OutputString);
+                print("Loading RefPatientsOccupationalIndustry");
                 if (!context.RefPatientsOccupationalIndustry.Any())
                 {
                     context.RefPatientsOccupationalIndustry.Add(new RefPatientsOccupationalIndustry { Description = "Finance, Insurance, and Real Estate" });
@@ -287,7 +325,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading RefPatientsOccupationa", ref OutputString);
+                print("Loading RefPatientsOccupationa");
                 if (!context.RefPatientsOccupation.Any())
                 {
                     context.RefPatientsOccupation.Add(new RefPatientsOccupation { Description = "Business and Financial Operations Occupations" });
@@ -316,7 +354,7 @@ namespace OpenTraumaRegistry.Data
 
                 }
 
-                    print("Loading RefDrugScreen", ref OutputString);
+                    print("Loading RefDrugScreen");
                 if (!context.RefDrugScreen.Any())
                 {
                     context.RefDrugScreen.Add(new RefDrugScreen {Code = "AMP", Description = "AMP (Amphetamine)" });
@@ -337,7 +375,7 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Loading Reference Table List with Id, Code, Description Schema", ref OutputString);
+                print("Loading Reference Table List with Id, Code, Description Schema");
                 if (!context.ReferenceTables.Any())
                 {
                     context.ReferenceTables.Add(new ReferenceTables { Code = "RefArrivedFrom", Description = "Arrived From" });
@@ -363,16 +401,16 @@ namespace OpenTraumaRegistry.Data
                     context.SaveChanges();
                 }
 
-                print("Begin load of larger or advanced data sets.  This may take a while.", ref OutputString);
-                print("Loading ICD10 Codes", ref OutputString);
+                print("Begin load of larger or advanced data sets.  This may take a while.");
+                print("Loading ICD10 Codes");
                 LoadICD10Codes(context);
 
-                 LoadTestData(context, ref OutputString);
-                print("Database has been successfully Created.", ref OutputString);
+                 LoadTestData(context);
+                print("Database has been successfully Created.");
             }
             catch (Exception ex)
             {
-                print(ex.ToString(), ref OutputString);
+                print(ex.ToString());
                 throw;
             }
         }
@@ -390,55 +428,55 @@ namespace OpenTraumaRegistry.Data
             }
         }
 
-        private static void LoadTestData(Context context, ref string OutputString)
+        private static void LoadTestData(Context context)
         { 
-            print("Loading Units", ref OutputString);
-            loadTestUnits(context, ref OutputString);
+            print("Loading Units");
+            loadTestUnits(context);
 
-            print("Loading Test Patients", ref OutputString);
-            loadTestPatients(context, ref OutputString);
+            print("Loading Test Patients");
+            loadTestPatients(context);
         }
 
-        private static void loadTestUnits(Context context, ref string OutputString)
+        private static void loadTestUnits(Context context)
         {
             //throw new NotImplementedException();
-            print("NOT IMPLEMENTED", ref OutputString);
+            print("NOT IMPLEMENTED");
         }
 
-        private static void loadTestPatients(Context context, ref string OutputString)
+        private static void loadTestPatients(Context context)
         {
 
-            AddPatient1(context, ref  OutputString);
-            AddPatient2(context, ref  OutputString);
-            AddPatient3(context, ref  OutputString);
-            AddPatient4(context, ref  OutputString);
-            AddPatient5(context, ref  OutputString);
-            AddPatient6(context, ref  OutputString);
-            AddPatient7(context, ref  OutputString);
-            AddPatient8(context, ref  OutputString);
-            AddPatient9(context, ref  OutputString);
-            AddPatient10(context, ref  OutputString);
+            AddPatient1(context);
+            AddPatient2(context);
+            AddPatient3(context);
+            AddPatient4(context);
+            AddPatient5(context);
+            AddPatient6(context);
+            AddPatient7(context);
+            AddPatient8(context);
+            AddPatient9(context);
+            AddPatient10(context);
 
             context.SaveChanges();
             for (int i = 0; i < 20; i++)
             {
-                AddPatientRND(context, i, ref OutputString);
+                AddPatientRND(context, i);
                 context.SaveChanges();
             }
 
         }
 
-        private static void AddPatient1(Context context, ref string OutputString)
+        private static void AddPatient1(Context context)
         {
-            print("Adding Test Patient 1", ref OutputString);
+            print("Adding Test Patient 1");
             var patient = new Patient { FirstName = "Natasha", LastName = "Romanoff", MI = "L", DOB = new DateTime(1984, 6, 28), GenderReferenceId = 2, RaceReferenceId = 6 , Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId};
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 1", ref OutputString);
+            print("Adding Test Event 1 for Patient 1");
             Event event1 = AddPatientEvent1();
             patient.Events.Add(event1);
 
-            print("Adding Test Event 2 for Patient 1", ref OutputString);
+            print("Adding Test Event 2 for Patient 1");
             Event event2 = AddPatientEvent2();
             patient.Events.Add(event2);
 
@@ -447,13 +485,13 @@ namespace OpenTraumaRegistry.Data
         }
 
 
-        private static void AddPatient2(Context context, ref string OutputString)
+        private static void AddPatient2(Context context)
         {
-            print("Adding Test Patient 2", ref OutputString);
+            print("Adding Test Patient 2");
             var patient = new Patient { FirstName = "Steve", LastName = "Rogers", MI = "J", DOB = new DateTime(1918, 7, 4), GenderReferenceId = 1, RaceReferenceId = 6 };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 2", ref OutputString);
+            print("Adding Test Event 1 for Patient 2");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -461,13 +499,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient3(Context context, ref string OutputString)
+        private static void AddPatient3(Context context)
         {
-            print("Adding Test Patient 3", ref OutputString);
+            print("Adding Test Patient 3");
             var patient = new Patient { FirstName = "Carol", LastName = "Danvers", MI = "H", DOB = new DateTime(1961, 2, 12), GenderReferenceId = 2, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 3", ref OutputString);
+            print("Adding Test Event 1 for Patient 3");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -475,13 +513,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient4(Context context, ref string OutputString)
+        private static void AddPatient4(Context context)
         {
-            print("Adding Test Patient 4", ref OutputString);
+            print("Adding Test Patient 4");
             var patient = new Patient { FirstName = "Tony", LastName = "Stark", MI = "", DOB = new DateTime(1970, 5, 29), GenderReferenceId = 1, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 4", ref OutputString);
+            print("Adding Test Event 1 for Patient 4");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -489,13 +527,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient5(Context context, ref string OutputString)
+        private static void AddPatient5(Context context)
         {
-            print("Adding Test Patient 5", ref OutputString);
+            print("Adding Test Patient 5");
             var patient = new Patient { FirstName = "Wanda", LastName = "Maximoff", MI = "I", DOB = new DateTime(1999, 10, 14), GenderReferenceId = 2, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 5", ref OutputString);
+            print("Adding Test Event 1 for Patient 5");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -503,13 +541,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient6(Context context, ref string OutputString)
+        private static void AddPatient6(Context context)
         {
-            print("Adding Test Patient 6", ref OutputString);
+            print("Adding Test Patient 6");
             var patient = new Patient { FirstName = "Hope", LastName = "Van Dyne", MI = "", DOB = new DateTime(1982, 10, 2), GenderReferenceId = 1, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 6", ref OutputString);
+            print("Adding Test Event 1 for Patient 6");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -517,13 +555,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient7(Context context, ref string OutputString)
+        private static void AddPatient7(Context context)
         {
-            print("Adding Test Patient 7", ref OutputString);
+            print("Adding Test Patient 7");
             var patient = new Patient { FirstName = "Nick", LastName = "Fury", MI = "V", DOB = new DateTime(1951, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 7", ref OutputString);
+            print("Adding Test Event 1 for Patient 7");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -531,13 +569,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient8(Context context, ref string OutputString)
+        private static void AddPatient8(Context context)
         {
-            print("Adding Test Patient 8", ref OutputString);
+            print("Adding Test Patient 8");
             var patient = new Patient { FirstName = "Samuel", LastName = "Wilson", MI = "T", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 8", ref OutputString);
+            print("Adding Test Event 1 for Patient 8");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -545,13 +583,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient9(Context context, ref string OutputString)
+        private static void AddPatient9(Context context)
         {
-            print("Adding Test Patient 9", ref OutputString);
+            print("Adding Test Patient 9");
             var patient = new Patient { FirstName = "Clint", LastName = "Barton", MI = "", DOB = new DateTime(1971, 12, 21), GenderReferenceId = 1, RaceReferenceId = 6, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 9", ref OutputString);
+            print("Adding Test Event 1 for Patient 9");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -559,13 +597,13 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatient10(Context context, ref string OutputString)
+        private static void AddPatient10(Context context)
         {
-            print("Adding Test Patient 10", ref OutputString);
+            print("Adding Test Patient 10");
             var patient = new Patient { FirstName = "James", LastName = "Rhodes", MI = "", DOB = new DateTime(1968, 12, 21), GenderReferenceId = 1, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", patient.FirstName, patient.LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient 10", ref OutputString);
+            print("Adding Test Event 1 for Patient 10");
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -573,7 +611,7 @@ namespace OpenTraumaRegistry.Data
             context.SaveChanges();
         }
 
-        private static void AddPatientRND(Context context, int count, ref string OutputString)
+        private static void AddPatientRND(Context context, int count)
         {
             RandomPatientGenerator ngen = new RandomPatientGenerator();
             Random rnd = new Random();
@@ -586,11 +624,11 @@ namespace OpenTraumaRegistry.Data
             string FirstName = f == 2 ? ngen.GenRandomFirstNameFemale() : ngen.GenRandomFirstNameMale();
             string LastName = ngen.GenRandomLastName();
             string MI = ngen.GenRandomMI();
-            print("Adding Test Patient " + count, ref OutputString);
+            print("Adding Test Patient " + count);
             var patient = new Patient { FirstName = FirstName, LastName = LastName, MI = MI, DOB = dob, GenderReferenceId = f, RaceReferenceId = 1, Created = System.DateTime.Now, LastUpdate = System.DateTime.Now, LastUpdatedBy = SystemId };
             patient.email = string.Format("{0}.{1}@gmail.com", FirstName, LastName);
             patient.MRN = GenerateMRN();
-            print("Adding Test Event 1 for Patient " + (count + 10).ToString(), ref OutputString); // the + 10 is to account for the first 10 patients added.
+            print("Adding Test Event 1 for Patient " + (count + 10).ToString()); // the + 10 is to account for the first 10 patients added.
             Event event1 = AddPatientEvent1();
 
             patient.Events.Add(event1);
@@ -736,10 +774,9 @@ namespace OpenTraumaRegistry.Data
             return event1;
         }
 
-        private static void print(string message, ref string outputString)
+        private static void print(string message)
         {
             Console.WriteLine(System.DateTime.Now.ToString() + " - " + message);
-            outputString += message + Environment.NewLine;
         }
         private static string GenerateMRN()
         {

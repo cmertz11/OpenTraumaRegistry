@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Blazored.SessionStorage;
 using EmbeddedBlazorContent;
+using MatBlazor;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MatBlazor; 
-using Microsoft.AspNetCore.Components.Authorization;
-using Blazored.SessionStorage;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
+using OpenTraumaRegistry.Shared;
 
 namespace OpenTraumaRegistry.UI.MD
 {
@@ -30,6 +25,15 @@ namespace OpenTraumaRegistry.UI.MD
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var EmailProvider = Configuration.GetSection("EmailSettings")["Provider"];
+            switch (EmailProvider)
+            {
+                case "SENDGRID":
+                    services.AddScoped<IEmailHelper, _SendGrid>();
+                    break;
+                default:
+                    break;
+            }
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMatToaster(config =>

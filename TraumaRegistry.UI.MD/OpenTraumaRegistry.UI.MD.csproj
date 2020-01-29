@@ -2,16 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>52524cc3-8a8b-4b8f-a84b-c021c61c2333</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="2.1.1" />
     <PackageReference Include="Blazored.SessionStorage" Version="1.0.11" />
     <PackageReference Include="EmbeddedBlazorContent" Version="1.10.0" />
-    <PackageReference Include="MatBlazor" Version="2.0.0" />
+    <PackageReference Include="MatBlazor" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
 
   </ItemGroup>
 
@@ -33,7 +34,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenTraumaRegistry.Shared\OpenTraumaRegistry.Shared.csproj" />
     <ProjectReference Include="..\TraumaRegistry.Client\OpenTraumaRegistry.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EmailTemplates\TempPassword.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\EmailConfirmation.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

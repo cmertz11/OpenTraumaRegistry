@@ -1,9 +1,10 @@
 ﻿@page "/addedituser"
 @page "/addedituser/{Id:int}"
-
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IEmailHelper  emailClient
 @inject IMatToaster Toaster
+
 
 
 <AuthorizeView Context="AuthorizedContext" Policy="SystemAdminstrator">
@@ -80,8 +81,6 @@
             mode = "edit";
             pageHeader = "Edit User: " + Id;
 
-            //TO DO:
-            //user = await client.GetPatientAsync(Id);
 
         }
         else
@@ -93,7 +92,7 @@
 
     void cancel()
     {
-        NavigationManager.NavigateTo("/patients");
+        NavigationManager.NavigateTo("/");
     }
 
     async Task saveUser()
@@ -101,32 +100,53 @@
         try
         {
             var currentuser = (await authenticationStateTask).User;
-            UsersClient client = new UsersClient();
+            UsersClient userClient = new UsersClient();
 
-            var timeStamp = System.DateTime.Now;
-
-            //TO DO:
-            user.LastUpdate = timeStamp;
-            user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
-
-                    if (mode == "add")
+            if (mode == "add")
             {
-                //TO DO:
-                //user.Created = timeStamp;
-                //var rec = client.PostPatientAsync(patient);
-                Toaster.Add("User Added Successfully!", MatToastType.Success, "Success", null, null);
+
+                PasswordHelper passwordHelper = new PasswordHelper();
+
+                if (validUser(user))
+                {
+                    var timeStamp = System.DateTime.Now;
+
+                    user.LastUpdate = timeStamp;
+                    user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
+                    user.EmailConfirmed = false;
+                    var tempPassord = passwordHelper.GenerateRandomPassword();
+                    user.Password = passwordHelper.Hash(tempPassord);
+                    user.PasswordExpires = DateTime.Now.AddHours(24); //TODO: this should be a setting
+                    user.ConfirmationToken = passwordHelper.GenerateConfirmationToken();
+                    user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(30);
+
+                    var resp = userClient.PostUserAsync(user);
+
+                    EmailObj email = new EmailObj();
+                    email.to = user.EmailAddress;
+                    email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassord, user.ConfirmationToken); // get host from settings?
+                    email.subject = "New Open Trauma Registry Account";
+                    await emailClient.SendAsync(email);
+
+                    Toaster.Add("User Added Successfully!  A temporary password has been sent to the email specified.", MatToastType.Success, "Success", null, null);
+
+                }
             }
             else
             {
-                //TODO:
-                //var rec = await client.PutPatientAsync(Id, patient);
-                //Toaster.Add("User Updated Successfully!", MatToastType.Success, "Success", null, null);
+                var msg = $"There was a problem adding user {user.EmailAddress}.  Please ensure the email address is in a valid format and unique to this system.";
+                Toaster.Add(msg, MatToastType.Danger, "Error", null, null);
             }
         }
         catch (Exception ex)
         {
             Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
         }
+    }
+
+    private bool validUser(User user)
+    {
+        return true; // TODO:
     }
 
     private async Task validateForm()

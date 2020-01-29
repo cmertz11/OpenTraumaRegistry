@@ -1,42 +1,46 @@
 ﻿@page "/login"
+@page "/login/{ConfirmationToken}"
 @inject NavigationManager NavigationManager
 @inject IMatToaster Toaster
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
- 
- 
+@inject IEmailHelper  emailClient
 
-        <MatCard Style="width: 300px; align-self: center;">
-            <div class="logo">
-                <img src="" style="width:100px;" /><br />Open Trauma Registry
-                <br />
-                <h4>Log In</h4>
 
+
+<MatCard Style="width: 300px; align-self: center;">
+    <div class="logo">
+        <img src="" style="width:100px;" /><br />Open Trauma Registry
+        <br />
+        <h4>Log In</h4> 
+    </div>
+    <EditForm Model="@loginModel" OnValidSubmit="@AuthenticateUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <fieldset>
+            <div class="form-group">
+                <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
-            <EditForm Model="@loginModel" OnValidSubmit="@AuthenticateUser">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <fieldset>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
-                    </div>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-                    </div>
-                    <div class="form-group">
-                        @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
-                        <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton> 
-                    </div>
-                    <hr />
-                    <NavLink href="account/register">
-                        <h6 class="font-weight-normal text-center">Create account</h6>
-                    </NavLink>
-                </fieldset>
-            </EditForm>
-            <label>@AuthResponse</label>
-        </MatCard>
- 
+            <div class="form-group">
+                <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+            </div>
+            <div class="form-group">
+                @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
+                <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton>
+            </div>
+            <hr />
+            <NavLink href="account/register">
+                <h6 class="font-weight-normal text-center">Create account</h6>
+            </NavLink>
+        </fieldset>
+    </EditForm>
+    <label>@AuthResponse</label>
+</MatCard>
+
 @code {
+
+    [Parameter]
+    public string ConfirmationToken { get; set; }
 
     LoginClient loginClient = new LoginClient();
     UsersClient userClient = new UsersClient();
@@ -54,6 +58,11 @@
 
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+
+    }
+
     async Task AuthenticateUser()
     {
         AuthResponse = "";
@@ -66,12 +75,32 @@
 
                 userClient.SetBearerToken(token);
                 var _user = await userClient.GetUserAsync(loginModel.Email);
-                _user.Token = token;
 
-                await sessionStorage.SetItemAsync("_otrUser", _user);
-                await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
-                NavigationManager.NavigateTo("/");
-                
+                if (_user.EmailConfirmed)
+                {
+
+                    _user.Token = token;
+
+                    await sessionStorage.SetItemAsync("_otrUser", _user);
+                    await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
+                    NavigationManager.NavigateTo("/");
+
+                }
+                else
+                {
+                    if(!string.IsNullOrEmpty(ConfirmationToken))
+                    {
+                        if(ConfirmationToken == _user.ConfirmationToken)
+                        {
+                            // set user email confirmed to true
+                        }
+                    }
+                }
+                ////if(_user.ResetPassword)
+                ////{
+                ////    NavigationManager.NavigateTo("/resetpassword"); //TODO: create resetpassword page
+                ////}
+
             }
         }
         catch (Exception ex)
