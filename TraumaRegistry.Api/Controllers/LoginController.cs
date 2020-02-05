@@ -22,14 +22,18 @@ namespace OpenTraumaRegistry.Api.Controllers
     {
         private IConfiguration config;
         private readonly Context context;
+        SecurityHelper passwordHasher;
 
         public LoginController(IConfiguration _config, Context _context)
         {
             config = _config;
             context = _context;
+            passwordHasher = new SecurityHelper(config);
         }
 
-        public async Task<ActionResult<string>> Login(string email, string password)
+        [ActionName("Login")]
+        [HttpGet("{email}/{password}/{confirmationToken}")]
+        public ActionResult<User> Login(string email, string password, string confirmationToken)
         {
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email))
@@ -38,16 +42,77 @@ namespace OpenTraumaRegistry.Api.Controllers
             Models.LoginModel login = new Models.LoginModel();
             login.Email = email;
             login.Password = password;
+            login.ConfirmationToken = confirmationToken;
 
             User user = AuthenticateUser(login);
-            if (user != null)
+            user.Password = "";
+
+            if (user != null && user.Authenticated)
             {
-                var tokenStr = GenerateJSONWebToken(user);
-                return tokenStr;
+                user.jsonToken = GenerateJSONWebToken(user);
+                return user;
             }
-             
-            return Unauthorized();
+            else
+            {
+                return Unauthorized();
+            }
         }
+        [ActionName("ResetPassword")]
+        [HttpGet("{email}/{password}/{newPassword}/{confirmationToken}")]
+        public ActionResult<User> ResetPassword(string email, string password, string newPassword, string confirmationToken = "")
+        {
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email))
+                return Unauthorized();
+
+            Models.LoginModel login = new Models.LoginModel();
+           
+            login.Email = email;
+            login.Password = password;
+            login.ConfirmationToken = confirmationToken;
+
+            User user = context.Users.Where(u => u.EmailAddress == email).FirstOrDefault();
+
+
+            if (user != null &&
+                !user.Locked &&
+                user.ConfirmationToken == confirmationToken &&
+                user.ConfirmationTokenExpires > DateTime.Now &&
+                passwordHasher.AuthenticatePassword(password, user.Password))
+            {
+                user.Authenticated = false;
+                if (passwordHasher.ValididatePasswordFormat(newPassword))
+                {
+                    user.Password = passwordHasher.Hash(newPassword);
+                    user.jsonToken = GenerateJSONWebToken(user);
+                    user.PasswordExpires = DateTime.Now.AddDays(90); //TODO: make this a setting.
+                    user.Locked = false;
+                    user.ForcePasswordReset = false;
+                    user.ConfirmationToken = "";
+                    user.LoginAttempts = 0;
+                    user.LastLogin = DateTime.Now;
+                    context.SaveChanges();
+                    user.Authenticated = true;
+                    user.message = "Password updated successfully.";
+                }
+                else
+                {
+                    user.Authenticated = false;
+                    user.message = "Invalid password format.";
+                }
+
+                return user;
+            }
+            else
+            {
+                if (user != null)
+                {
+                    FailedLoginAttempt(user);
+                }
+                return Unauthorized();
+            }
+        }
+
 
         private void FailedLoginAttempt(User user)
         {
@@ -89,29 +154,59 @@ namespace OpenTraumaRegistry.Api.Controllers
             try
             {
                 User user = null;
-                PasswordHelper passwordHasher = new PasswordHelper();
+                
  
                 user = context.Users.Where(u => u.EmailAddress == login.Email).FirstOrDefault();
-                if(user != null)
-                {      
+                if(user != null && !user.Locked)
+                {
+                    var passwordValid = passwordHasher.AuthenticatePassword(login.Password, user.Password);
                     if((!user.Locked) && 
                         (user.PasswordExpires > DateTime.Now) && 
                         (user.EmailConfirmed) && 
-                        (passwordHasher.AuthenticatePassword(login.Password, user.Password)))
-                    {
-                        user.LoginAttempts = 0;
-                        context.SaveChanges();
-                        return user; 
-                    }
+                        (!user.ForcePasswordReset) &&
+                        (string.IsNullOrEmpty(user.ConfirmationToken)) &&
+                        (passwordValid))
+                        {
+                            user.Authenticated = true;
+                            user.LoginAttempts = 0;
+                            user.LastLogin = DateTime.Now;
+                            context.SaveChanges();
+                            return user; 
+                        }
                     else
                     {
+                        if(!string.IsNullOrEmpty(login.ConfirmationToken) && passwordValid)
+                        {
+                            if(DateTime.Now < user.ConfirmationTokenExpires &&
+                                (login.ConfirmationToken == user.ConfirmationToken))
+                            {
+                                user.EmailConfirmed = true;
+                                user.ConfirmationToken = passwordHasher.GenerateConfirmationToken();
+                                user.ConfirmationTokenExpires = DateTime.Now.AddHours(24);
+                                context.SaveChanges();
+                                return user;
+                            }
+                            else
+                            {
+                                user.Locked = true;
+                                user.ConfirmationToken = "";
+                                user.ForcePasswordReset = true;
+                                user.EmailConfirmed = false;
+                            }
+                        }
+
                         user.LoginAttempts = user.LoginAttempts + 1;
+
                         if(user.LoginAttempts >= 5)
                         {
                             user.Locked = true;
                         }
                         context.SaveChanges();
-                        return null; 
+                        if (!user.Locked)
+                        {
+                            return user;
+                        }
+                        return null;
                     }
                 }
                 return null;

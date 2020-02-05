@@ -12,13 +12,14 @@ namespace OpenTraumaRegistry.Data.Models
         public int Id { get; set; }
 
         public string FirstName { get; set; }
-
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
 
         public string Password { get; set; }
 
         public DateTime PasswordExpires { get; set; }
+
+        public bool ForcePasswordReset { get; set; }
 
         public int LoginAttempts { get; set; }
 
@@ -35,5 +36,13 @@ namespace OpenTraumaRegistry.Data.Models
         public DateTime LastUpdate { get; set; }
 
         public int LastUpdatedBy { get; set; }
+
+        public DateTime LastLogin { get; set; }
+        [NotMapped]
+        public bool Authenticated { get; set; }
+        [NotMapped]
+        public string jsonToken { get; set; }
+        [NotMapped]
+        public string message { get; set; }
     }
 }

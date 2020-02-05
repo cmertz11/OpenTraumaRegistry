@@ -4,7 +4,8 @@
 @inject IMatToaster Toaster
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
-@inject IEmailHelper  emailClient
+@inject IEmailHelper emailClient
+@inject ISecurity security
 
 
 
@@ -41,6 +42,8 @@
 
     [Parameter]
     public string ConfirmationToken { get; set; }
+    [Parameter]
+    public string Email { get; set; }
 
     LoginClient loginClient = new LoginClient();
     UsersClient userClient = new UsersClient();
@@ -60,47 +63,59 @@
 
     protected override async Task OnParametersSetAsync()
     {
-
+        if(!string.IsNullOrEmpty(ConfirmationToken))
+        {
+            var decryptedToken = security.DecryptString(ConfirmationToken);
+            loginModel.Email = decryptedToken.Split("|")[0];
+        }
     }
 
     async Task AuthenticateUser()
     {
         AuthResponse = "";
-        string token = "";
         try
         {
-            token = await loginClient.LoginAsync(loginModel.Email, loginModel.Password);
-            if (!string.IsNullOrEmpty(token))
+            if(string.IsNullOrEmpty(ConfirmationToken))
             {
-
-                userClient.SetBearerToken(token);
-                var _user = await userClient.GetUserAsync(loginModel.Email);
-
-                if (_user.EmailConfirmed)
+                ConfirmationToken = "NONE";
+            }
+            var _user = await loginClient.LoginAsync(loginModel.Email, loginModel.Password, ConfirmationToken);
+            if (_user == null)
+            {
+                AuthResponse = "Invalid Email or Password.";
+                return;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(_user.JsonToken))
                 {
 
-                    _user.Token = token;
+                    userClient.SetBearerToken(_user.JsonToken);
 
-                    await sessionStorage.SetItemAsync("_otrUser", _user);
-                    await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
-                    NavigationManager.NavigateTo("/");
+                    if (_user.Authenticated)
+                    {
 
+
+                        await sessionStorage.SetItemAsync("_otrUser", _user);
+                        await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
+                        NavigationManager.NavigateTo("/");
+
+                    }
+                    else if(_user.ForcePasswordReset && _user.EmailConfirmed)
+                    {
+                        NavigationManager.NavigateTo("/resetpassword/"+_user.ConfirmationToken); //TODO: create resetpassword page 
+                    }
                 }
                 else
                 {
-                    if(!string.IsNullOrEmpty(ConfirmationToken))
+                    if (!string.IsNullOrEmpty(ConfirmationToken))
                     {
-                        if(ConfirmationToken == _user.ConfirmationToken)
+                        if (ConfirmationToken == _user.ConfirmationToken)
                         {
                             // set user email confirmed to true
                         }
                     }
                 }
-                ////if(_user.ResetPassword)
-                ////{
-                ////    NavigationManager.NavigateTo("/resetpassword"); //TODO: create resetpassword page
-                ////}
-
             }
         }
         catch (Exception ex)

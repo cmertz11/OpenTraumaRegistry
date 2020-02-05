@@ -22,17 +22,17 @@ namespace OpenTraumaRegistry.UI.MD
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
 
-            var _user = await sessionStorage.GetItemAsync<_User>("_otrUser");
+            var _user = await sessionStorage.GetItemAsync<User>("_otrUser");
             ClaimsIdentity identity;
 
             if (_user != null)
             {
                 identity = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Email, _user.Email),
+                    new Claim(ClaimTypes.Email, _user.EmailAddress),
                     new Claim(ClaimTypes.Name, _user.FirstName),
                     new Claim("SystemAdministrator", _user.SystemAdministrator.ToString()),
-                    new Claim("Id", _user.UserId.ToString())
+                    new Claim("Id", _user.Id.ToString())
                 }, "apiuth_type");
 
             }
@@ -49,14 +49,14 @@ namespace OpenTraumaRegistry.UI.MD
         public async Task SetUserAsAuthentitcatedAsync()
         {
 
-            var _user = await sessionStorage.GetItemAsync<_User>("_otrUser");
+            var _user = await sessionStorage.GetItemAsync<User>("_otrUser");
             ClaimsIdentity identity;
             identity = new ClaimsIdentity(new[]
 {
-                    new Claim(ClaimTypes.Email, _user.Email),
+                    new Claim(ClaimTypes.Email, _user.EmailAddress),
                     new Claim(ClaimTypes.Name, _user.FirstName),
                     new Claim("SystemAdministrator", _user.SystemAdministrator.ToString()),
-                    new Claim("Id", _user.UserId.ToString())
+                    new Claim("Id", _user.Id.ToString())
                 }, "apiuth_type");
 
             var user = new ClaimsPrincipal(identity);
@@ -71,9 +71,9 @@ namespace OpenTraumaRegistry.UI.MD
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
 
-        public _User GetUserFromSession()
+        public User GetUserFromSession()
         {
-            return syncSessionStorage.GetItem<_User>("_otrUser");
+            return syncSessionStorage.GetItem<User>("_otrUser");
         }
 
     }

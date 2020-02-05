@@ -34,6 +34,8 @@ namespace OpenTraumaRegistry.UI.MD
                 default:
                     break;
             }
+            services.AddScoped<ISecurity, SecurityHelper>();
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMatToaster(config =>

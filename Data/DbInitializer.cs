@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using OpenTraumaRegistry.Data.Models;
 using OpenTraumaRegistry.Shared;
 
@@ -11,10 +12,8 @@ namespace OpenTraumaRegistry.Data
     public static class DbInitializer
     {
         public static string SystemId { get; set; } = Guid.NewGuid().ToString();  //Get System Id from Identity 
-        public static void Initialize(Context context, string UserEmail, string Password, string FirstName, string LastName, string Facilityname)
+        public static void Initialize(Context context, string UserEmail, string Password, string FirstName, string LastName, string Facilityname, IConfiguration configuration)
         {
-
-
             try
             {
                 if(!context.Database.EnsureCreated())
@@ -30,8 +29,9 @@ namespace OpenTraumaRegistry.Data
                 if (!context.Users.Any())
                 {
                     print("Loading User Account");
-                    PasswordHelper passwordHasher = new PasswordHelper();
-                    var systemAdmin = new User {
+                    SecurityHelper passwordHasher = new SecurityHelper(configuration);
+                    var systemAdmin = new User
+                    {
                         Password = passwordHasher.Hash(Password),
                         EmailAddress = UserEmail,
                         FirstName = FirstName,
@@ -42,44 +42,14 @@ namespace OpenTraumaRegistry.Data
                         PasswordExpires = DateTime.Now.AddDays(90), //TODO: This may need to be a config setting.
                         SystemAdministrator = true,
                         LoginAttempts = 0,
-                        //ConfirmationToken = passwordHasher.GenerateRandomPassword(),
-                        //ConfirmationTokenExpires = DateTime.Now.AddMinutes(20),
-                        Locked = false };
+                        ForcePasswordReset = false,
+                        Locked = false
+                    };
 
-                    context.Users.Add(systemAdmin);            
+                    context.Users.Add(systemAdmin);
                     context.SaveChanges();
-
-
-
-                  //  EmailHelper emailHelper = new EmailHelper("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");
-                  //  EmailObj email = new EmailObj
-                  //  { 
-                  //      from = "cmertz11@gmail.com", //TODO: from address needs to be a setting
-                  //      fromdisplayname = "Open Trauma Registry", //TODO fromdisplayname should be a setting
-                  //      to = systemAdmin.EmailAddress,
-                  //      subject = "New Open Trauma Registry Account",
-                  //      htmlcontent = emailHelper.GenerateEmailConfirmationNonLink(systemAdmin.FirstName, systemAdmin.ConfirmationToken)
-                  //  };
-                    
-                  //emailHelper.SendAsync(email).Wait();
-
-                  //  Console.Clear();
-                  //  Console.WriteLine("An email has been sent to your account.  Please go to the email and get the confirmation code and enter it below:");
-                  //  string codeEntered = "";
-                  //  int i = 0;
-                  //  while (codeEntered != systemAdmin.ConfirmationToken)
-                  //  {
-                  //      if(i >= 5)
-                  //      {
-
-                  //      }
-                  //      codeEntered = Console.ReadLine();
-                  //  }
-                  //  Console.WriteLine("Confirmation code accepted");
                 }
-
-
-
+ 
                 if(!context.Facilities.Any())
                 {
                     print("Loading Facility");

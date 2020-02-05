@@ -24,26 +24,26 @@ namespace OpenTraumaRegistry.Data
         public static bool PasswordFormatValid { get; set; } = false;
         static void Main(string[] args)
         {
-     
+            var builder = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile("appsettings.json")
+                          .AddUserSecrets<Program>().Build();
+
+           IConfiguration Configuration = builder;
 
             if (args.Length == 3)
             {
                 UserEmail = args[0];
                 Password = args[1];
                 FacilityName = args[2];
+                //TODO: all parms aren't handled here
             }
             else
             {
-                RequestSetupInfo();
+                RequestSetupInfo(Configuration);
             }
 
-
-            var builder = new ConfigurationBuilder()
-                          .SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile("appsettings.json").Build();
-
-            IConfiguration Configuration = builder;
-
+          
             var dbProvider = Configuration.GetSection("TraumaRegistrySettings")["dbProvider"];
             var connectionString = Configuration.GetSection("TraumaRegistrySettings")["connectionString"];
 
@@ -72,14 +72,14 @@ namespace OpenTraumaRegistry.Data
             using (Context ctx = new Context(optionsBuilder.Options))
             {
                 string outputString = "";
-                 DbInitializer.Initialize(ctx, UserEmail, Password, FirstName, LastName, FacilityName);
+                 DbInitializer.Initialize(ctx, UserEmail, Password, FirstName, LastName, FacilityName, Configuration);
             }
         }
 
-        private static void RequestSetupInfo()
+        private static void RequestSetupInfo(IConfiguration configuration)
         {
             
-            PasswordHelper passwordHelper = new PasswordHelper();
+            SecurityHelper SecurityHelper = new SecurityHelper(configuration);
             while (!ArgsCorrect)
             {
                 Console.Clear();
@@ -87,7 +87,7 @@ namespace OpenTraumaRegistry.Data
                 Console.WriteLine("");
                 Console.WriteLine("Setup needs some information before it can create your database.");
 
-                while (!passwordHelper.ValidEmailFormat(UserEmail))
+                while (!SecurityHelper.ValidEmailFormat(UserEmail))
                 {
                     Console.WriteLine("");
                     Console.WriteLine("System Administrator Email:");
@@ -101,8 +101,8 @@ namespace OpenTraumaRegistry.Data
                     {
                         Console.WriteLine("");
                         Console.WriteLine("Enter System Administrator Password:");
-                        Password = passwordHelper.GetPasswordHidden();
-                        PasswordFormatValid = passwordHelper.ValididatePasswordFormat(Password);
+                        Password = SecurityHelper.GetPasswordHidden();
+                        PasswordFormatValid = SecurityHelper.ValididatePasswordFormat(Password);
                         if (!PasswordFormatValid)
                         {
                             Console.WriteLine();
@@ -112,7 +112,7 @@ namespace OpenTraumaRegistry.Data
 
                     Console.WriteLine();
                     Console.WriteLine("Re enter Password:");
-                    PasswordConfirm = passwordHelper.GetPasswordHidden();
+                    PasswordConfirm = SecurityHelper.GetPasswordHidden();
                     if (PasswordConfirm != Password)
                     {
                         Console.WriteLine("");

@@ -2,8 +2,9 @@
 @page "/addedituser/{Id:int}"
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IEmailHelper  emailClient
+@inject IEmailHelper emailClient
 @inject IMatToaster Toaster
+@inject ISecurity security
 
 
 
@@ -105,7 +106,7 @@
             if (mode == "add")
             {
 
-                PasswordHelper passwordHelper = new PasswordHelper();
+             
 
                 if (validUser(user))
                 {
@@ -114,17 +115,22 @@
                     user.LastUpdate = timeStamp;
                     user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
                     user.EmailConfirmed = false;
-                    var tempPassord = passwordHelper.GenerateRandomPassword();
-                    user.Password = passwordHelper.Hash(tempPassord);
+                    var tempPassord = security.GenerateRandomPassword();
+                    user.Password = security.Hash(tempPassord);
                     user.PasswordExpires = DateTime.Now.AddHours(24); //TODO: this should be a setting
-                    user.ConfirmationToken = passwordHelper.GenerateConfirmationToken();
+                    user.ConfirmationToken = security.GenerateConfirmationToken();
                     user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(30);
+                    user.ForcePasswordReset = true;
+                    user.Locked = false;
 
                     var resp = userClient.PostUserAsync(user);
 
                     EmailObj email = new EmailObj();
                     email.to = user.EmailAddress;
-                    email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassord, user.ConfirmationToken); // get host from settings?
+
+                    var securedToken = security.EncryptString(user.EmailAddress + "|" + user.ConfirmationToken);
+
+                    email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassord, securedToken); // get host from settings?
                     email.subject = "New Open Trauma Registry Account";
                     await emailClient.SendAsync(email);
 
