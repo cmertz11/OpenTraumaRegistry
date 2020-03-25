@@ -8,121 +8,137 @@
 @inject ISecurity security
 
 
+    <MatDialog @bind-IsOpen="@dialogIsOpen">
+        <MatDialogContent>
+            <MatCard Style="width: 300px; align-self: center;">
+                <div class="logo">
+                    <img src="" style="width:100px;" /><br />Open Trauma Registry
+                    <br />
+                    <h4>Log In</h4>
+                </div>
+                <EditForm Model="@loginModel" OnValidSubmit="@AuthenticateUser">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <fieldset>
+                        <div class="form-group">
+                            <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                        </div>
+                        <div class="form-group">
+                            <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                        </div>
+                        <div class="form-group">
+                            @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
+                            <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton>
+                        </div>
+                        <hr />
+                        <NavLink href="account/register">
+                            <h6 class="font-weight-normal text-center">Create account</h6>
+                        </NavLink>
+                    </fieldset>
+                </EditForm>
+                <label>@AuthResponse</label>
+            </MatCard>
+         </MatDialogContent>
+    </MatDialog>
+    @code {
 
-<MatCard Style="width: 300px; align-self: center;">
-    <div class="logo">
-        <img src="" style="width:100px;" /><br />Open Trauma Registry
-        <br />
-        <h4>Log In</h4> 
-    </div>
-    <EditForm Model="@loginModel" OnValidSubmit="@AuthenticateUser">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <fieldset>
-            <div class="form-group">
-                <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-            </div>
-            <div class="form-group">
-                @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
-                <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton>
-            </div>
-            <hr />
-            <NavLink href="account/register">
-                <h6 class="font-weight-normal text-center">Create account</h6>
-            </NavLink>
-        </fieldset>
-    </EditForm>
-    <label>@AuthResponse</label>
-</MatCard>
+        [Parameter]
+        public string ConfirmationToken { get; set; }
+        [Parameter]
+        public string Email { get; set; }
 
-@code {
+        bool dialogIsOpen = true;
+        LoginClient loginClient = new LoginClient();
+        UsersClient userClient = new UsersClient();
+        TokenObject tokenObject = new TokenObject();
+        LoginModel loginModel = new LoginModel();
 
-    [Parameter]
-    public string ConfirmationToken { get; set; }
-    [Parameter]
-    public string Email { get; set; }
-
-    LoginClient loginClient = new LoginClient();
-    UsersClient userClient = new UsersClient();
-    LoginModel loginModel = new LoginModel();
-    string AuthResponse = "";
-
-    class LoginModel
-    {
-        public string Email { get; set; } = "";
-        public string Password { get; set; } = "";
-    }
-
-    protected override void OnInitialized()
-    {
-
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if(!string.IsNullOrEmpty(ConfirmationToken))
+        class LoginModel
         {
-            var decryptedToken = security.DecryptString(ConfirmationToken);
-            loginModel.Email = decryptedToken.Split("|")[0];
+            public string Email { get; set; }
+            public string Password { get; set; }
         }
-    }
 
-    async Task AuthenticateUser()
-    {
-        AuthResponse = "";
-        try
+        string AuthResponse = "";
+
+
+        protected override void OnInitialized()
         {
-            if(string.IsNullOrEmpty(ConfirmationToken))
+
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            if (!string.IsNullOrEmpty(ConfirmationToken))
             {
-                ConfirmationToken = "NONE";
-            }
-            var _user = await loginClient.LoginAsync(loginModel.Email, loginModel.Password, ConfirmationToken);
-            if (_user == null)
-            {
-                AuthResponse = "Invalid Email or Password.";
-                return;
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(_user.JsonToken))
+                tokenObject = security.DecryptTokenObject(ConfirmationToken);
+
+                var response = await loginClient.PostConfirmEmailAsync(ConfirmationToken);
+
+                if (true)// response should return object with bool success message
                 {
-
-                    userClient.SetBearerToken(_user.JsonToken);
-
-                    if (_user.Authenticated)
-                    {
-
-
-                        await sessionStorage.SetItemAsync("_otrUser", _user);
-                        await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
-                        NavigationManager.NavigateTo("/");
-
-                    }
-                    else if(_user.ForcePasswordReset && _user.EmailConfirmed)
-                    {
-                        NavigationManager.NavigateTo("/resetpassword/"+_user.ConfirmationToken); //TODO: create resetpassword page 
-                    }
+                    loginModel.Email = tokenObject.EmailAddress;
+                    AuthResponse = $"Email {tokenObject.EmailAddress} has been confirmed.";
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(ConfirmationToken))
+
+                }
+            }
+        }
+
+        async Task AuthenticateUser()
+        {
+            AuthResponse = "";
+            try
+            {
+                if (string.IsNullOrEmpty(ConfirmationToken))
+                {
+                    ConfirmationToken = "NONE";
+                }
+                var _user = await loginClient.LoginAsync(loginModel.Email, loginModel.Password, ConfirmationToken);
+
+                if (_user == null)
+                {
+                    AuthResponse = "Invalid Email or Password.";
+                    return;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(_user.JsonToken))
                     {
-                        if (ConfirmationToken == _user.ConfirmationToken)
+
+                        userClient.SetBearerToken(_user.JsonToken);
+
+                        if (_user.Authenticated)
                         {
-                            // set user email confirmed to true
+                            await sessionStorage.SetItemAsync("_otrUser", _user);
+                            await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
+                            NavigationManager.NavigateTo("/");
+
+                        }
+                        else if (_user.ForcePasswordReset && _user.EmailConfirmed)
+                        {
+                            NavigationManager.NavigateTo("/resetpassword/" + _user.ConfirmationToken); //TODO: create resetpassword page
+                        }
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(ConfirmationToken))
+                        {
+                            if (ConfirmationToken == _user.ConfirmationToken)
+                            {
+                                // set user email confirmed to true
+                            }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                // Increment Login Attempts??
+                AuthResponse = "Invalid Email or Password.";
+            }
         }
-        catch (Exception ex)
-        {
-            // Increment Login Attempts??
-            AuthResponse = "Invalid Email or Password.";
-        }
-    }
 
-}
+    }

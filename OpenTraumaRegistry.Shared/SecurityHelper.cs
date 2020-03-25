@@ -14,10 +14,28 @@ namespace OpenTraumaRegistry.Shared
     {
         private IConfiguration configuration { get; }
         private string keyString { get; set; }
+
+        private double confirmationTokenExpiresMinutes { get; set; }
+        private double tempPasswordExpiresDays { get; set; }
+
+        private double passwordExpiresDays { get; set; }
         public SecurityHelper(IConfiguration _configuration)
         {
             configuration = _configuration;
             keyString = configuration.GetSection("SecuritySettings")["AESKEY"];
+            confirmationTokenExpiresMinutes = Convert.ToDouble(configuration.GetSection("SecuritySettings")["CONFIRMATIONTOKENEXPIRESMINUTES"]);
+            tempPasswordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["TEMPPASSWORDEXPIRESDAYS"]);
+            passwordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["PASSWORDEXPIRESDAYS"]);
+        }
+
+        public double TempPasswordExpiresDays()
+        {
+            return tempPasswordExpiresDays;
+        }
+
+        public double ConfirmationTokenExpiresMinutes()
+        {
+            return confirmationTokenExpiresMinutes;
         }
 
         public string Hash(string Password)
@@ -169,6 +187,7 @@ namespace OpenTraumaRegistry.Shared
                 }
             }
             text = text.Replace("+", "PLUS");
+            text = text.Replace("/", "SLASH");
             return text;
         }
 
@@ -176,6 +195,7 @@ namespace OpenTraumaRegistry.Shared
         { 
             cipherText = cipherText.Replace(" ", "+");
             cipherText = cipherText.Replace("PLUS", "+");
+            cipherText = cipherText.Replace("SLASH", "/");
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
             using (Aes encryptor = Aes.Create())
             {
@@ -195,6 +215,36 @@ namespace OpenTraumaRegistry.Shared
            
             return cipherText;
         }
- 
+
+        public string EncryptTokenObject(string email, string token)
+        {
+            try
+            {
+                return EncryptString(email + "|" + token);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public TokenObject DecryptTokenObject(string tokenString)
+        {
+            try
+            {
+                var decryptedToken = DecryptString(tokenString);
+                return new TokenObject { EmailAddress = decryptedToken.Split("|")[0], Token = decryptedToken.Split("|")[1] };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public double PasswordExpiresDays()
+        {
+            return passwordExpiresDays;
+        }
     }
 }

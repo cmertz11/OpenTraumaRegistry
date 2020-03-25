@@ -14,7 +14,13 @@ namespace OpenTraumaRegistry.Shared
     }
 
     public interface ISecurity
-    {
+    { 
+        double TempPasswordExpiresDays();
+
+        double ConfirmationTokenExpiresMinutes();
+
+        double PasswordExpiresDays();
+
         string Hash(string Password);
         bool AuthenticatePassword(string Password, string HashedPassword);
         bool ValididatePasswordFormat(string Password);
@@ -30,6 +36,10 @@ namespace OpenTraumaRegistry.Shared
         string EncryptString(string text);
 
         string DecryptString(string cipherText);
+
+        string EncryptTokenObject(string email, string token);
+
+        TokenObject DecryptTokenObject(string tokenString);
 
     }
  

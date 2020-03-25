@@ -22,13 +22,13 @@ namespace OpenTraumaRegistry.Api.Controllers
     {
         private IConfiguration config;
         private readonly Context context;
-        SecurityHelper passwordHasher;
+        SecurityHelper security;
 
         public LoginController(IConfiguration _config, Context _context)
         {
             config = _config;
             context = _context;
-            passwordHasher = new SecurityHelper(config);
+            security = new SecurityHelper(config);
         }
 
         [ActionName("Login")]
@@ -58,32 +58,27 @@ namespace OpenTraumaRegistry.Api.Controllers
             }
         }
         [ActionName("ResetPassword")]
-        [HttpGet("{email}/{password}/{newPassword}/{confirmationToken}")]
-        public ActionResult<User> ResetPassword(string email, string password, string newPassword, string confirmationToken = "")
+        [HttpGet("{confirmationToken}")]
+        public ActionResult<User> ResetPassword(string confirmationToken, string currentPassword, string newPassword)
         {
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(confirmationToken))
                 return Unauthorized();
 
-            Models.LoginModel login = new Models.LoginModel();
-           
-            login.Email = email;
-            login.Password = password;
-            login.ConfirmationToken = confirmationToken;
-
-            User user = context.Users.Where(u => u.EmailAddress == email).FirstOrDefault();
+            var decyptedToken = security.DecryptTokenObject(confirmationToken); 
+            User user = context.Users.Where(u => u.EmailAddress == decyptedToken.EmailAddress).FirstOrDefault();
 
 
             if (user != null &&
                 !user.Locked &&
                 user.ConfirmationToken == confirmationToken &&
                 user.ConfirmationTokenExpires > DateTime.Now &&
-                passwordHasher.AuthenticatePassword(password, user.Password))
+                security.AuthenticatePassword(currentPassword, user.Password))
             {
                 user.Authenticated = false;
-                if (passwordHasher.ValididatePasswordFormat(newPassword))
+                if (security.ValididatePasswordFormat(newPassword))
                 {
-                    user.Password = passwordHasher.Hash(newPassword);
+                    user.Password = security.Hash(newPassword);
                     user.jsonToken = GenerateJSONWebToken(user);
                     user.PasswordExpires = DateTime.Now.AddDays(90); //TODO: make this a setting.
                     user.Locked = false;
@@ -113,6 +108,58 @@ namespace OpenTraumaRegistry.Api.Controllers
             }
         }
 
+        // POST: api/Patients
+        [HttpPost]
+        public ActionResult<Confirmation> PostConfirmEmail(string token)
+        {
+            try
+            {
+                Confirmation confirmation = new Confirmation();
+                var decryptedToken = security.DecryptTokenObject(token); 
+
+                var user = context.Users.Where(u => u.EmailAddress == decryptedToken.EmailAddress).FirstOrDefault();
+
+                if(user.ConfirmationToken != decryptedToken.Token)
+                {
+                    confirmation.Messages.Add("Unauthorized");
+                    confirmation.Success = false;
+
+                    return confirmation;
+                }
+
+                if (user.ConfirmationToken == decryptedToken.Token && DateTime.Now < user.ConfirmationTokenExpires)
+                {
+                    user.EmailConfirmed = true;
+                    user.ConfirmationToken = security.GenerateConfirmationToken();
+                    user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes()); 
+                    context.SaveChanges();
+
+                    confirmation.Token = security.EncryptTokenObject(user.EmailAddress, user.ConfirmationToken);
+                    confirmation.Success = true;
+                    confirmation.Messages.Add("Email Confirmed");
+                    return confirmation;
+                }
+                else
+                {
+                    confirmation.Token = "";
+                    confirmation.Success = false;
+                    confirmation.Messages.Add("Link Expired");
+                    return confirmation;
+                }
+               
+            }
+            catch (Exception ex)
+            { 
+                throw;
+            }
+        }
+        public class Confirmation
+        {
+            public bool Success { get; set; } = false;
+            public string Token { get; set; }
+            public List<string> Messages { get; set; } = new List<string>();
+
+        }
 
         private void FailedLoginAttempt(User user)
         {
@@ -159,7 +206,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                 user = context.Users.Where(u => u.EmailAddress == login.Email).FirstOrDefault();
                 if(user != null && !user.Locked)
                 {
-                    var passwordValid = passwordHasher.AuthenticatePassword(login.Password, user.Password);
+                    var passwordValid = security.AuthenticatePassword(login.Password, user.Password);
                     if((!user.Locked) && 
                         (user.PasswordExpires > DateTime.Now) && 
                         (user.EmailConfirmed) && 
@@ -175,13 +222,11 @@ namespace OpenTraumaRegistry.Api.Controllers
                         }
                     else
                     {
-                        if(!string.IsNullOrEmpty(login.ConfirmationToken) && passwordValid)
+                        if(user.ForcePasswordReset && passwordValid)
                         {
-                            if(DateTime.Now < user.ConfirmationTokenExpires &&
-                                (login.ConfirmationToken == user.ConfirmationToken))
+                            if(DateTime.Now < user.ConfirmationTokenExpires)
                             {
-                                user.EmailConfirmed = true;
-                                user.ConfirmationToken = passwordHasher.GenerateConfirmationToken();
+                                user.ConfirmationToken = security.GenerateConfirmationToken();
                                 user.ConfirmationTokenExpires = DateTime.Now.AddHours(24);
                                 context.SaveChanges();
                                 return user;

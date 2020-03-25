@@ -3,158 +3,165 @@
 @inject AuthenticationStateProvider  authenticationStateProvider
 
 
-<MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@bbDrawerClass">
-    <MatDrawer @bind-Opened="@_navMenuOpened">
-        <header class="drawer-header">
-            
-            <div class="drawer-logo">
-                <i class="fa fa-medkit" aria-hidden="true"></i> &nbsp;
-                <a class="miniHover" href="/">Open Trauma Registry</a>
-            </div>
-        </header>
-        <AuthorizeView>
-            <Authorized>
-                <NavMenu />
-            </Authorized>
-            <NotAuthorized>
+    <MatThemeProvider Theme="@theme1">
+        <MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@bbDrawerClass">
+            <MatDrawer @bind-Opened="@_navMenuOpened">
+                <header class="drawer-header">
 
-            </NotAuthorized>
-        </AuthorizeView>
-       
-        <footer class="drawer-footer">
-            <MatTooltip Tooltip="Help">
-                <MatButton Icon="help" RefBack="@context" Link="https://github.com/cmertz11/OpenTraumaRegistry"><span class="miniHover">Help & Support</span></MatButton>
-            </MatTooltip>
-        </footer>
-        <footer class="drawer-footer">
-        </footer>
-    </MatDrawer>
-    <MatDrawerContent>
-        <MatAppBarContainer>
-            <MatAppBar Fixed="true">
-                <MatAppBarRow>
-                    <MatAppBarSection>
-                        <MatAppBarTitle>
-
-                        </MatAppBarTitle>
-                        <div class="hidden-mdc-down">
-                        @if (Authenticated)
-                        {
-                            <MatTooltip Tooltip="Toggle Navigation">
-                                <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
-                            </MatTooltip>
-
-                            <MatTooltip Tooltip="Minify Navigation">
-                                <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton> 
-                            </MatTooltip>
-                        }
-                        </div>
-                    </MatAppBarSection>
-                    <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                        @*<MatTooltip Tooltip="Donate to Support">
-                            <MatIconButton Link="" RefBack="@context"><i class="fa fa-cc-paypal"></i></MatIconButton>
-                        </MatTooltip>*@
-
-                    </MatAppBarSection>
-
-                    <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                        <MatTooltip Tooltip="Github Repository">
-                            <MatIconButton Link="https://github.com/cmertz11/OpenTraumaRegistry" RefBack="@context"><i class="fa fa-github" aria-hidden="true"></i></MatIconButton>
-                        </MatTooltip>
-                        <AuthorizeView>
-                            <Authorized>
-
-                                <a href="/login" @onclick="(() => Logout())">Logout</a>
-                            </Authorized>
-                            <NotAuthorized>
-                                <a href="/login">Login</a>
-                            </NotAuthorized>
-                        </AuthorizeView>
-                    </MatAppBarSection>
-                     
-                </MatAppBarRow>
-            </MatAppBar>
-            <MatAppBarContent>
-              
-                <section class="container-fluid">
-                    @Body  
-                </section>
-                @*<footer class="page-footer">
-                    <div class="flex-1">
-                        © 2019 Developed by Chris Mertz
+                    <div class="drawer-logo">
+                        <i class="fa fa-medkit" aria-hidden="true"></i> &nbsp;
+                        <a class="miniHover" href="/">Open Trauma Registry</a>
                     </div>
-                </footer>*@
-            </MatAppBarContent>
-        </MatAppBarContainer>
-    </MatDrawerContent>
-</MatDrawerContainer>
+                </header>
+                <AuthorizeView>
+                    <Authorized>
+                        <NavMenu />
+                    </Authorized>
+                    <NotAuthorized>
 
-@code {
-    bool _navMenuOpened = true;
-    bool _navMinified = false;
-    public string bbDrawerClass = "";
-    public bool Authenticated = false;
+                    </NotAuthorized>
+                </AuthorizeView>
 
-    [CascadingParameter]
-    Task<AuthenticationState> authenticationStateTask { get; set; }
+                <footer class="drawer-footer">
+                    <MatTooltip Tooltip="Help">
+                        <MatButton Icon="help" RefBack="@context" Link="https://github.com/cmertz11/OpenTraumaRegistry"><span class="miniHover">Help & Support</span></MatButton>
+                    </MatTooltip>
+                </footer>
+                <footer class="drawer-footer">
+                </footer>
+            </MatDrawer>
+            <MatDrawerContent>
+                <MatAppBarContainer>
+                    <MatAppBar Fixed="true">
+                        <MatAppBarRow>
+                            <MatAppBarSection>
+                                <MatAppBarTitle>
 
-    protected override async Task OnInitializedAsync()
-    {
+                                </MatAppBarTitle>
+                                <div class="hidden-mdc-down">
+                                    @if (Authenticated)
+                                    {
+                                        <MatTooltip Tooltip="Toggle Navigation">
+                                            <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
+                                        </MatTooltip>
 
-    }
-    protected override async Task OnParametersSetAsync()
-    {
-        var user = (await authenticationStateTask).User;
-        Authenticated = user.Identity.IsAuthenticated;
-        _navMenuOpened = Authenticated;
-    }
-    public void Logout()
-    {
-        ((_otrAuthenticationStateProvider)authenticationStateProvider).SetUserAsLoggedOut();
-        Authenticated = false;
-        this.StateHasChanged();
-    }
+                                        <MatTooltip Tooltip="Minify Navigation">
+                                            <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+                                        </MatTooltip>
+                                    }
+                                </div>
+                            </MatAppBarSection>
+                            <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                                @*<MatTooltip Tooltip="Donate to Support">
+                                    <MatIconButton Link="" RefBack="@context"><i class="fa fa-cc-paypal"></i></MatIconButton>
+                                </MatTooltip>*@
 
-    void NavToggle()
-    {
-        _navMenuOpened = !_navMenuOpened;
-        if (_navMenuOpened)
+                            </MatAppBarSection>
+
+                            <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                                <MatTooltip Tooltip="Github Repository">
+                                    <MatIconButton Link="https://github.com/cmertz11/OpenTraumaRegistry" RefBack="@context"><i class="fa fa-github" aria-hidden="true"></i></MatIconButton>
+                                </MatTooltip>
+                                <AuthorizeView>
+                                    <Authorized>
+
+                                        <a href="/login" @onclick="(() => Logout())">Logout</a>
+                                    </Authorized>
+                                    <NotAuthorized>
+                                        <a href="/login">Login</a>
+                                    </NotAuthorized>
+                                </AuthorizeView>
+                            </MatAppBarSection>
+
+                        </MatAppBarRow>
+                    </MatAppBar>
+                    <MatAppBarContent>
+
+                        <section class="container-fluid">
+                            @Body
+                        </section>
+                        @*<footer class="page-footer">
+                            <div class="flex-1">
+                                © 2019 Developed by Chris Mertz
+                            </div>
+                        </footer>*@
+                    </MatAppBarContent>
+                </MatAppBarContainer>
+            </MatDrawerContent>
+        </MatDrawerContainer>
+    </MatThemeProvider>
+    @code {
+        bool _navMenuOpened = true;
+        bool _navMinified = false;
+        public string bbDrawerClass = "";
+        public bool Authenticated = false;
+
+        [CascadingParameter]
+        Task<AuthenticationState> authenticationStateTask { get; set; }
+
+        MatTheme theme1 = new MatTheme()
         {
-            bbDrawerClass = "full";
+            Primary = "#455a64",
+            Secondary = MatThemeColors.BlueGrey._500.Value
+        };
+
+        protected override async Task OnInitializedAsync()
+        {
+
         }
-        else
+        protected override async Task OnParametersSetAsync()
         {
-            bbDrawerClass = "closed";
+            var user = (await authenticationStateTask).User;
+            Authenticated = user.Identity.IsAuthenticated;
+            _navMenuOpened = Authenticated;
+        }
+        public void Logout()
+        {
+            ((_otrAuthenticationStateProvider)authenticationStateProvider).SetUserAsLoggedOut();
+            Authenticated = false;
+            this.StateHasChanged();
         }
 
-        this.StateHasChanged();
-    }
-
-    void NavLock()
-    {
-        //Todo Lock Nav
-    }
-
-    void NavMinify()
-    {
-        _navMinified = !_navMinified;
-
-        if (!_navMenuOpened)
+        void NavToggle()
         {
-            _navMinified = true;
+            _navMenuOpened = !_navMenuOpened;
+            if (_navMenuOpened)
+            {
+                bbDrawerClass = "full";
+            }
+            else
+            {
+                bbDrawerClass = "closed";
+            }
+
+            this.StateHasChanged();
         }
 
-        if (_navMinified)
+        void NavLock()
         {
-            bbDrawerClass = "mini";
+            //Todo Lock Nav
+        }
+
+        void NavMinify()
+        {
+            _navMinified = !_navMinified;
+
+            if (!_navMenuOpened)
+            {
+                _navMinified = true;
+            }
+
+            if (_navMinified)
+            {
+                bbDrawerClass = "mini";
+                _navMenuOpened = true;
+            }
+            else if (_navMenuOpened)
+            {
+                bbDrawerClass = "full";
+            }
+
             _navMenuOpened = true;
+            this.StateHasChanged();
         }
-        else if (_navMenuOpened)
-        {
-            bbDrawerClass = "full";
-        }
-
-        _navMenuOpened = true;
-        this.StateHasChanged();
     }
-}

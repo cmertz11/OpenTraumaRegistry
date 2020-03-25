@@ -19,24 +19,33 @@
 else
 {
 
-    <MatSelect Label="Filter" Enhanced="true" @bind-Value="query.FilterColumn">
-        <MatOptionString value="Id">Id</MatOptionString>
-        <MatOptionString value="MRN">MRN</MatOptionString>
-        <MatOptionString value="FirstName">First Name</MatOptionString>
-        <MatOptionString value="LastName">Last Name</MatOptionString>
-        <MatOptionString value="MI">MI</MatOptionString>
-    </MatSelect>
-
-    <MatTextField id="searchFilter" Label="Search" @bind-Value="query.Filter" />
-    <MatButton Icon="search" @onclick="SearchAsync">Search </MatButton>
-
-
-    <MatSelect Label="Page Size" Enhanced="true" @bind-Value="pageSize">
-        <MatOptionString value="5">5</MatOptionString>
-        <MatOptionString selected="selected" value="10">10</MatOptionString>
-        <MatOptionString value="25">25</MatOptionString>
-        <MatOptionString value="50">50</MatOptionString>
-    </MatSelect>
+    <div class="mat-layout-grid mat-layout-grid-align-left">
+        <div class="mat-layout-grid-inner">
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-align-middle mat-layout-grid-cell-span-2">
+                <MatSelect Label="Filter" Enhanced="true" @bind-Value="query.FilterColumn">
+                    <MatOptionString value="Id">Id</MatOptionString>
+                    <MatOptionString value="MRN">MRN</MatOptionString>
+                    <MatOptionString value="FirstName">First Name</MatOptionString>
+                    <MatOptionString value="LastName">Last Name</MatOptionString>
+                    <MatOptionString value="MI">MI</MatOptionString>
+                </MatSelect>
+            </div>
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-align-middle mat-layout-grid-cell-span-2">
+                <MatTextField id="searchFilter" Label="Search" @bind-Value="query.Filter" />
+            </div>  
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-align-middle mat-layout-grid-cell-span-1">
+                    <MatButton Icon="search" @onclick="SearchAsync">Search </MatButton>
+            </div>
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-align-middle mat-layout-grid-cell-span-1">
+                    <MatSelect Label="Page Size" Enhanced="true" @bind-Value="pageSize">
+                        <MatOptionString value="5">5</MatOptionString>
+                        <MatOptionString selected="selected" value="10">10</MatOptionString>
+                        <MatOptionString value="25">25</MatOptionString>
+                        <MatOptionString value="50">50</MatOptionString>
+                    </MatSelect>
+             </div>
+         </div>
+    </div>
 
 
     <table class="table table-striped table-hover table-sm">

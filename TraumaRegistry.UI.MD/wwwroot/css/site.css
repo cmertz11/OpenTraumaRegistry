@@ -8,7 +8,13 @@ app {
     /*flex-direction: column;*/
 }
 
- 
+div.inline {
+    float: left;
+}
+
+.clearBoth {
+    clear: both;
+}
 
 /** scroll bar */
 ::-webkit-scrollbar {
@@ -30,20 +36,14 @@ app {
 :root {
     --mdc-theme-primary: #546e7a;
     --mdc-theme-secondary: #b0bec5;
-    /*--mdc-theme-on-primary: #495f90;
-    /*--mdc-theme-on-secondary: #ffe172;*/
-    /*--mdc-theme-text-primary: #b0bec5;*/
-    /*--mdc-theme-text-secondary: #333;*/
-    /*--mdc-theme-text-on-primary: #001037;*/
-    /*--mdc-theme-text-on-secondary: #c48003;*/*/
-    /*--mdc-theme-surface: #263238; */
 }
+
 .mdc-floating-label {
     color: #546e7a;
 }
+
 .mdc-icon-button .fa {
     font-size: 30px;
-  
 }
 
 /* Loading page */
@@ -187,7 +187,6 @@ app {
 
 .hidden-mdc-down nav a {
     color: #b0bec5;
-    
     display: block;
     padding: 0.5em 1em;
     text-decoration: none;
@@ -289,6 +288,10 @@ app {
 
 .mini .drawer-footer .mdc-button {
     min-width: 36px;
+}
+
+.mdc-button! {
+    background-color: #546e7a !important;
 }
 
 .mdc-drawer:hover,
@@ -530,7 +533,7 @@ ul.breadcrumb {
     padding: 10px 25px;
     border: 1px solid #424d5c;
     cursor: grab;
-    background: #5c6b7f; 
+    background: #5c6b7f;
     border-radius: 5px;
     width: 250px;
 }

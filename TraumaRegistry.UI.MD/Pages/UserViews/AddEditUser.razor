@@ -117,9 +117,9 @@
                     user.EmailConfirmed = false;
                     var tempPassord = security.GenerateRandomPassword();
                     user.Password = security.Hash(tempPassord);
-                    user.PasswordExpires = DateTime.Now.AddHours(24); //TODO: this should be a setting
+                    user.PasswordExpires = DateTime.Now.AddDays(security.TempPasswordExpiresDays()); //TODO: this should be a setting
                     user.ConfirmationToken = security.GenerateConfirmationToken();
-                    user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(30);
+                    user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
                     user.ForcePasswordReset = true;
                     user.Locked = false;
 
@@ -128,7 +128,7 @@
                     EmailObj email = new EmailObj();
                     email.to = user.EmailAddress;
 
-                    var securedToken = security.EncryptString(user.EmailAddress + "|" + user.ConfirmationToken);
+                    var securedToken = security.EncryptTokenObject(user.EmailAddress, user.ConfirmationToken);
 
                     email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassord, securedToken); // get host from settings?
                     email.subject = "New Open Trauma Registry Account";
