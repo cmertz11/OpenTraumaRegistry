@@ -1,5 +1,5 @@
 ﻿@page "/addedituser"
-@page "/addedituser/{Id:int}"
+@page "/addedituser/{email}"
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IEmailHelper emailClient
@@ -14,10 +14,11 @@
             <div class="row">
                 <div class="col-4">
                     <h3><MatIcon>people</MatIcon>@pageHeader</h3>
+
                     <EditForm Model="@user" OnValidSubmit="@validateForm">
                         <DataAnnotationsValidator />
                         <p>
-                            <MatTextField id="patientEmail" Label="E-mail" FullWidth="true" @bind-Value=@user.EmailAddress /> <br />
+                            <MatTextField id="patientEmail" Label="E-mail" FullWidth="true" @bind-Value=@user.EmailAddress />
                             <ValidationMessage For="@(() => user.EmailAddress)" />
                         </p>
                         <p>
@@ -31,9 +32,10 @@
                         <p>
                             <MatCheckbox @bind-Value=@user.SystemAdministrator Label="System Administrator"></MatCheckbox>
                         </p>
-                        <MatButton Icon="cancel" @onclick="@cancel">Cancel</MatButton>
-                        <MatButton type="submit" Icon="save">Save</MatButton>
                     </EditForm>
+                        <MatButton type="submit" Icon="save">Save</MatButton>
+
+                        <MatButton Icon="cancel" @onclick="@(() => cancel())">Cancel</MatButton>
                 </div>
             </div>
         </div>
@@ -49,15 +51,15 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public string email { get; set; }
 
     int genderId;
     int raceId;
-    User user = new User();
+    _dtoUser user = new _dtoUser();
     bool success = false;
     string mode = "add";
     string pageHeader = "Add Patient";
-    PatientsClient client = new PatientsClient();
+    UsersClient client = new UsersClient();
     [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
 
     int SelectedGenderId { get; set; } = 0;
@@ -77,11 +79,11 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Id > 0)
+        if (!string.IsNullOrEmpty(email))
         {
             mode = "edit";
-            pageHeader = "Edit User: " + Id;
-
+            pageHeader = "Edit User";
+            user = await client.GetUserByEmailAddressAsync(email);
 
         }
         else
@@ -93,7 +95,7 @@
 
     void cancel()
     {
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/Users");
     }
 
     async Task saveUser()
@@ -105,8 +107,6 @@
 
             if (mode == "add")
             {
-
-             
 
                 if (validUser(user))
                 {
@@ -150,7 +150,7 @@
         }
     }
 
-    private bool validUser(User user)
+    private bool validUser(_dtoUser user)
     {
         return true; // TODO:
     }

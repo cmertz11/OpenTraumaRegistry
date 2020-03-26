@@ -57,7 +57,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                 return Unauthorized();
             }
         }
-        [ActionName("ResetPassword")]
+        [ActionName("ResetPassword")] //<-- Probably needs all parms
         [HttpGet("{confirmationToken}")]
         public ActionResult<User> ResetPassword(string confirmationToken, string currentPassword, string newPassword)
         {
