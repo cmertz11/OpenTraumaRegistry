@@ -30,6 +30,7 @@ namespace OpenTraumaRegistry.UI.MD
                 identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Email, _user.EmailAddress),
+                    new Claim("EmailAddress", _user.EmailAddress),
                     new Claim(ClaimTypes.Name, _user.FirstName),
                     new Claim("SystemAdministrator", _user.SystemAdministrator.ToString()),
                     new Claim("Id", _user.Id.ToString())
@@ -54,6 +55,7 @@ namespace OpenTraumaRegistry.UI.MD
             identity = new ClaimsIdentity(new[]
 {
                     new Claim(ClaimTypes.Email, _user.EmailAddress),
+                    new Claim("EmailAddress", _user.EmailAddress),
                     new Claim(ClaimTypes.Name, _user.FirstName),
                     new Claim("SystemAdministrator", _user.SystemAdministrator.ToString()),
                     new Claim("Id", _user.Id.ToString())
@@ -87,6 +89,7 @@ namespace OpenTraumaRegistry.UI.MD
                 try
                 {
                     IsSystemAdministrator = Convert.ToBoolean(context.User.FindFirst(c => c.Type == requirement.role).Value);
+                
                 }
                 catch(Exception ex)
                 { }
