@@ -27,10 +27,10 @@
                             <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
                         </div>
                         <div class="form-group">
-                            @*<MatCheckbox @bind-Checked="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>*@
                             <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton>
                         </div>
                         <hr />
+                        <MatProgressBar Indeterminate="@querying"></MatProgressBar>
                         <NavLink href="account/register">
                             <h6 class="font-weight-normal text-center">Create account</h6>
                         </NavLink>
@@ -48,6 +48,7 @@
         public string Email { get; set; }
 
         bool dialogIsOpen = true;
+        bool querying = false;
         LoginClient loginClient = new LoginClient();
         UsersClient userClient = new UsersClient();
         TokenObject tokenObject = new TokenObject();
@@ -89,6 +90,7 @@
 
         async Task AuthenticateUser()
         {
+            querying = true;
             AuthResponse = "";
             try
             {
@@ -97,7 +99,7 @@
                     ConfirmationToken = "NONE";
                 }
                 var _user = await loginClient.LoginAsync(loginModel.Email, loginModel.Password, ConfirmationToken);
-
+                querying = false;
                 if (_user == null)
                 {
                     AuthResponse = "Invalid Email or Password.";

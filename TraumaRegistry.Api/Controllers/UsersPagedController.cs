@@ -30,7 +30,7 @@ namespace OpenTraumaRegistry.Api.Controllers
             tableName = AdjustDBEntityNameForProvider(tableName);
             pagedUserData data = new pagedUserData();
             var pageNumber = Convert.ToInt32(urlQuery.PageNumber);
-            data.recordCount = _context.Patients.Count();
+            data.recordCount = _context.Users.Count();
             string sql = GenerateSql(urlQuery, tableName, data); 
             data.records = _context.Users.FromSqlRaw(sql).ToList();
             return data;

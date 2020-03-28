@@ -124,9 +124,15 @@
         }
 
         <MatDialog @bind-IsOpen="@lockAccountModal">
-            <MatDialogTitle>Lock User Account</MatDialogTitle>
+            <MatDialogTitle> @(GetLockLabel(accountToLock.Locked)) User Account</MatDialogTitle>
             <MatDialogContent>
-                <p>Are you sure you want to @(GetLockLabel(accountToLock.Locked)) User Account @accountToLock.EmailAddress?</p>
+                <p>
+                    Are you sure you want to @(GetLockLabel(accountToLock.Locked)) User Account?
+                    <br /><br />
+                    <b>Email:</b> @accountToLock.EmailAddress
+                    <br />
+                    <b>Name: </b>@accountToLock.FirstName @accountToLock.LastName
+                </p>
             </MatDialogContent>
             <MatDialogActions>
                 <MatButton OnClick="@(e => { lockAccountModal = false; })">Cancel</MatButton>

@@ -18,7 +18,7 @@
                     <EditForm Model="@user" OnValidSubmit="@validateForm">
                         <DataAnnotationsValidator />
                         <p>
-                            <MatTextField id="patientEmail" Label="E-mail" FullWidth="true" @bind-Value=@user.EmailAddress />
+                            <MatTextField id="patientEmail" Label="E-mail" Disabled="true" FullWidth="true" @bind-Value=@user.EmailAddress />
                             <ValidationMessage For="@(() => user.EmailAddress)" />
                         </p>
                         <p>
@@ -30,10 +30,18 @@
                             <ValidationMessage For="@(() => user.LastName)" />
                         </p>
                         <p>
+                            <MatTextField id="patientCellPhone" Label="Mobile:" FullWidth="true" @bind-Value=@user.CellPhone />
+                            <ValidationMessage For="@(() => user.LastName)" />
+                        </p>
+                        <p>
+                            <MatTextField id="patientOfficePhone" Label="Office Phone:" FullWidth="true" @bind-Value=@user.OfficePhone />
+                            <ValidationMessage For="@(() => user.LastName)" />
+                        </p>
+                        <p>
                             <MatCheckbox @bind-Value=@user.SystemAdministrator Label="System Administrator"></MatCheckbox>
                         </p>
                     </EditForm>
-                        <MatButton type="submit" Icon="save">Save</MatButton>
+                        <MatButton type="submit" Icon="save" @onclick="@(() => saveUser())">Save</MatButton>
 
                         <MatButton Icon="cancel" @onclick="@(() => cancel())">Cancel</MatButton>
                 </div>
@@ -46,8 +54,6 @@
     </NotAuthorized>
 
 </AuthorizeView>
-
-
 
 @code {
     [Parameter]
@@ -105,15 +111,15 @@
             var currentuser = (await authenticationStateTask).User;
             UsersClient userClient = new UsersClient();
 
+            var timeStamp = System.DateTime.Now;
+            user.LastUpdate = timeStamp;
+            user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
+
             if (mode == "add")
             {
 
                 if (validUser(user))
                 {
-                    var timeStamp = System.DateTime.Now;
-
-                    user.LastUpdate = timeStamp;
-                    user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
                     user.EmailConfirmed = false;
                     var tempPassord = security.GenerateRandomPassword();
                     user.Password = security.Hash(tempPassord);
@@ -140,8 +146,9 @@
             }
             else
             {
-                var msg = $"There was a problem adding user {user.EmailAddress}.  Please ensure the email address is in a valid format and unique to this system.";
-                Toaster.Add(msg, MatToastType.Danger, "Error", null, null);
+                var resp = userClient.PutUserAsync(user.Id, user);
+                var msg = $"User {user.EmailAddress} updated successfully.";
+                Toaster.Add(msg, MatToastType.Success, "Update Complete", null, null);
             }
         }
         catch (Exception ex)

@@ -15,6 +15,8 @@ namespace OpenTraumaRegistry.Api.Models
             public string LastName { get; set; }
             public string EmailAddress { get; set; }
 
+            public string OfficePhone { get; set; }
+            public string CellPhone { get; set; }
             public string Password { get; set; }
 
             public DateTime PasswordExpires { get; set; }

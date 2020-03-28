@@ -55,8 +55,8 @@ namespace OpenTraumaRegistry.Api.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(user).State = EntityState.Modified;
+            
+            _context.Entry(Translate_dtoUserToUser(user)).State = EntityState.Modified;
 
             try
             {
@@ -133,6 +133,8 @@ namespace OpenTraumaRegistry.Api.Controllers
             dtoUser.Id = user.Id;
             dtoUser.FirstName = user.FirstName;
             dtoUser.LastName = user.LastName;
+            dtoUser.OfficePhone = user.OfficePhone;
+            dtoUser.CellPhone = user.CellPhone;
             dtoUser.EmailAddress = user.EmailAddress;
             dtoUser.SystemAdministrator = user.SystemAdministrator;
             dtoUser.ConfirmationToken = user.ConfirmationToken;
@@ -145,15 +147,17 @@ namespace OpenTraumaRegistry.Api.Controllers
         private User Translate_dtoUserToUser(_dtoUser _dtoUser)
         {
             User user = new User();
-            user.Id = user.Id;
-            user.FirstName = user.FirstName;
-            user.LastName = user.LastName;
-            user.EmailAddress = user.EmailAddress;
-            user.SystemAdministrator = user.SystemAdministrator;
-            user.ConfirmationToken = user.ConfirmationToken;
-            user.ConfirmationTokenExpires = user.ConfirmationTokenExpires;
-            user.PasswordExpires = user.PasswordExpires;
-            user.EmailConfirmed = user.EmailConfirmed;
+            user.Id = _dtoUser.Id;
+            user.FirstName = _dtoUser.FirstName;
+            user.LastName = _dtoUser.LastName;
+            user.EmailAddress = _dtoUser.EmailAddress;
+            user.OfficePhone = _dtoUser.OfficePhone;
+            user.CellPhone = _dtoUser.CellPhone;
+            user.SystemAdministrator = _dtoUser.SystemAdministrator;
+            user.ConfirmationToken = _dtoUser.ConfirmationToken;
+            user.ConfirmationTokenExpires = _dtoUser.ConfirmationTokenExpires;
+            user.PasswordExpires = _dtoUser.PasswordExpires;
+            user.EmailConfirmed = _dtoUser.EmailConfirmed;
             return user;
         }
 
