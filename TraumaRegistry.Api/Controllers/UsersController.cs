@@ -55,8 +55,14 @@ namespace OpenTraumaRegistry.Api.Controllers
             {
                 return BadRequest();
             }
+            var currentUserRecord = _context.Users.Where(u => u.Id == id).FirstOrDefault();
             
-            _context.Entry(Translate_dtoUserToUser(user)).State = EntityState.Modified;
+            currentUserRecord.FirstName = user.FirstName;
+            currentUserRecord.LastName = user.LastName;
+            currentUserRecord.CellPhone = user.CellPhone;
+            currentUserRecord.OfficePhone = user.OfficePhone;
+            currentUserRecord.LastUpdate = user.LastUpdate;
+            currentUserRecord.LastUpdatedBy = user.LastUpdatedBy;
 
             try
             {

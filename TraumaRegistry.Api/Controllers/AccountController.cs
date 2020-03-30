@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenTraumaRegistry.Data;
 using OpenTraumaRegistry.Data.Models;
+using OpenTraumaRegistry.Shared;
 
 namespace OpenTraumaRegistry.Api.Controllers
 {
@@ -15,6 +16,7 @@ namespace OpenTraumaRegistry.Api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly Context _context;
+        SecurityHelper security;
         public AccountController(Context context)
         {
             _context = context;
@@ -42,6 +44,20 @@ namespace OpenTraumaRegistry.Api.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("{emailAddress}")]
+        public bool ValidateEmail(string emailAddress)
+        {
+            try
+            {
+                return !_context.Users.Where(u => u.EmailAddress == emailAddress).Any();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

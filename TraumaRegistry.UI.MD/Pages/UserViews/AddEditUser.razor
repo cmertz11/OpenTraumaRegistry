@@ -1,12 +1,11 @@
 ﻿@page "/addedituser"
 @page "/addedituser/{email}"
+@using System.ComponentModel.DataAnnotations
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IEmailHelper emailClient
 @inject IMatToaster Toaster
 @inject ISecurity security
-
-
 
 <AuthorizeView Context="AuthorizedContext" Policy="SystemAdminstrator">
     <Authorized>
@@ -15,40 +14,65 @@
                 <div class="col-4">
                     <h3><MatIcon>people</MatIcon>@pageHeader</h3>
 
-                    <EditForm Model="@user" OnValidSubmit="@validateForm">
+                    <EditForm Model="@userValidated" OnValidSubmit="@validateForm">
                         <DataAnnotationsValidator />
                         <p>
-                            <MatTextField id="patientEmail" Label="E-mail" Disabled="true" FullWidth="true" @bind-Value=@user.EmailAddress />
-                            <ValidationMessage For="@(() => user.EmailAddress)" />
+                            <MatTextField id="patientEmail" Label="E-mail" Disabled="@IsEmailDisabled()" FullWidth="true" @bind-Value=@userValidated.EmailAddress />
+                            <ValidationMessage For="@(() => userValidated.EmailAddress)" />
                         </p>
                         <p>
-                            <MatTextField id="patientFirstName" Label="First Name" FullWidth="true" @bind-Value=@user.FirstName />
-                            <ValidationMessage For="@(() => user.FirstName)" />
+                            <MatTextField id="patientFirstName" Label="First Name" FullWidth="true" @bind-Value=@userValidated.FirstName />
+                            <ValidationMessage For="@(() => userValidated.FirstName)" />
                         </p>
                         <p>
-                            <MatTextField id="patientLastName" Label="Last Name" FullWidth="true" @bind-Value=@user.LastName />
-                            <ValidationMessage For="@(() => user.LastName)" />
+                            <MatTextField id="patientLastName" Label="Last Name" FullWidth="true" @bind-Value=@userValidated.LastName />
+                            <ValidationMessage For="@(() => userValidated.LastName)" />
                         </p>
                         <p>
-                            <MatTextField id="patientCellPhone" Label="Mobile:" FullWidth="true" @bind-Value=@user.CellPhone />
-                            <ValidationMessage For="@(() => user.LastName)" />
+                            <MatTextField id="patientCellPhone" Label="Cell Phone:" FullWidth="true" @bind-Value=@userValidated.CellPhone />
+                            <ValidationMessage For="@(() => userValidated.CellPhone)" />
                         </p>
                         <p>
-                            <MatTextField id="patientOfficePhone" Label="Office Phone:" FullWidth="true" @bind-Value=@user.OfficePhone />
-                            <ValidationMessage For="@(() => user.LastName)" />
+                            <MatTextField id="patientOfficePhone" Label="Office Phone:" FullWidth="true" @bind-Value=@userValidated.OfficePhone />
+                            <ValidationMessage For="@(() => userValidated.OfficePhone)" />
                         </p>
                         <p>
-                            <MatCheckbox @bind-Value=@user.SystemAdministrator Label="System Administrator"></MatCheckbox>
+                            <MatCheckbox @bind-Value=@userValidated.SystemAdministrator Label="System Administrator"></MatCheckbox>
                         </p>
-                    </EditForm>
-                        <MatButton type="submit" Icon="save" @onclick="@(() => saveUser())">Save</MatButton>
 
-                        <MatButton Icon="cancel" @onclick="@(() => cancel())">Cancel</MatButton>
+                        <MatButton type="submit" Icon="save">Save</MatButton>
+                    </EditForm>
+                    <MatButton type="submit" Icon="save" @onclick="@(() => saveUser())">Save</MatButton>
+                    <MatButton Icon="cancel" @onclick="@(() => cancel())">Cancel</MatButton>
                 </div>
             </div>
         </div>
-    </Authorized>
 
+        <MatDialog @bind-IsOpen="@emailValidated.VerifyEmailModalOpen">
+            <MatDialogTitle> Enter unique Email Address</MatDialogTitle>
+            <MatDialogContent>
+                <p>
+                    <MatTextField @bind-Value="@emailValidated.NewEmailAddress" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    <label>@emailValidated.EmailValidationMessage</label>
+                </p>
+            </MatDialogContent>
+            <MatDialogActions>
+                <MatButton OnClick="@(() => cancel())">Cancel</MatButton>
+
+                @if (emailValidated.EmailValid)
+                {
+                    <MatButton @onclick="@(() => SetNewEmail())">Ok</MatButton>
+                }
+                else
+                {
+                   <MatButton @onclick="@(() => VerifyEmail())">Verify Email</MatButton>
+                }
+
+
+            </MatDialogActions>
+        </MatDialog>
+
+    </Authorized>
     <NotAuthorized>
         <RedirectToError />
     </NotAuthorized>
@@ -59,29 +83,19 @@
     [Parameter]
     public string email { get; set; }
 
-    int genderId;
-    int raceId;
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+
     _dtoUser user = new _dtoUser();
+    userValidatedidationModel userValidated= new userValidatedidationModel();
+    EmailValidationModel emailValidated = new EmailValidationModel();
+
     bool success = false;
     string mode = "add";
     string pageHeader = "Add Patient";
+
     UsersClient client = new UsersClient();
-    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+    AccountClient accountClient = new AccountClient();
 
-    int SelectedGenderId { get; set; } = 0;
-    int SelectedRaceId { get; set; } = 0;
-
-    string genderIdStr { get; set; }
-    string raceIdStr { get; set; }
-
-
-    RefTableDTO RefSexTable = new RefTableDTO();
-    RefTableDTO refRaceTable = new RefTableDTO();
-
-    protected override async Task OnInitializedAsync()
-    {
-
-    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -90,18 +104,56 @@
             mode = "edit";
             pageHeader = "Edit User";
             user = await client.GetUserByEmailAddressAsync(email);
-
+            userValidated.EmailAddress = user.EmailAddress;
+            userValidated.FirstName = user.FirstName;
+            userValidated.LastName = user.LastName;
+            userValidated.CellPhone = user.CellPhone;
+            userValidated.OfficePhone = user.OfficePhone;
+            userValidated.SystemAdministrator = user.SystemAdministrator;
         }
         else
         {
             mode = "add";
             pageHeader = "Add New User";
+            emailValidated.VerifyEmailModalOpen = true;
+        }
+    }
+
+    bool IsEmailDisabled()
+    {
+        if (mode == "edit")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
     void cancel()
     {
         NavigationManager.NavigateTo("/Users");
+    }
+
+    async Task VerifyEmail()
+    {
+        emailValidated.EmailValid = await accountClient.ValidateEmailAsync(emailValidated.NewEmailAddress);
+
+        if(emailValidated.EmailValid)
+        {
+            emailValidated.EmailValidationMessage = "Email Address is Valid.";
+        }
+        else
+        {
+            emailValidated.EmailValidationMessage = "Email Address has already been taken.";
+        }
+    }
+
+    async Task SetNewEmail()
+    {
+        userValidated.EmailAddress = emailValidated.NewEmailAddress;
+        emailValidated.VerifyEmailModalOpen = false;
     }
 
     async Task saveUser()
@@ -165,5 +217,30 @@
     private async Task validateForm()
     {
         await saveUser();
+    }
+
+    public class userValidatedidationModel
+    {
+        [Required(ErrorMessage = "Email Address is Required")]
+        [DataType(DataType.EmailAddress)]
+        [MaxLength(50)]
+        public string EmailAddress { get; set; }
+        [Required(ErrorMessage = "First Name is Required")]
+        public string FirstName { get; set; }
+        [Required(ErrorMessage = "Last Name is Required")]
+        public string LastName { get; set; }
+        [Required(ErrorMessage = "Cell Phone is Required")]
+        public string CellPhone { get; set; }
+        public string OfficePhone { get; set; }
+        public bool SystemAdministrator { get; set; }
+    }
+
+    public class EmailValidationModel
+    {
+        [Required(ErrorMessage = "Email Address is Required")]
+        public string NewEmailAddress { get; set; } = "";
+        public bool EmailValid { get; set; } = false;
+        public bool VerifyEmailModalOpen { get; set; } = false;
+        public string EmailValidationMessage { get; set; }
     }
 }
