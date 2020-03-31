@@ -17,7 +17,7 @@
                     <EditForm Model="@userValidated" OnValidSubmit="@validateForm">
                         <DataAnnotationsValidator />
                         <p>
-                            <MatTextField id="patientEmail" Label="E-mail" Disabled="@IsEmailDisabled()" FullWidth="true" @bind-Value=@userValidated.EmailAddress />
+                            <MatTextField id="patientEmail" Label="E-mail" Disabled="@IsEmailDisabled" FullWidth="true" @bind-Value=@userValidated.EmailAddress />
                             <ValidationMessage For="@(() => userValidated.EmailAddress)" />
                         </p>
                         <p>
@@ -52,7 +52,7 @@
             <MatDialogTitle> Enter unique Email Address</MatDialogTitle>
             <MatDialogContent>
                 <p>
-                    <MatTextField @bind-Value="@emailValidated.NewEmailAddress" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    <MatTextField @bind-Value="@emailValidated.NewEmailAddress" OnInput="@OnEmailInputHandler" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                     <label>@emailValidated.EmailValidationMessage</label>
                 </p>
             </MatDialogContent>
@@ -65,7 +65,10 @@
                 }
                 else
                 {
+                    if (emailValidated.EmailFormatValid)
+                    {
                    <MatButton @onclick="@(() => VerifyEmail())">Verify Email</MatButton>
+                    }
                 }
 
 
@@ -93,6 +96,8 @@
     string mode = "add";
     string pageHeader = "Add Patient";
 
+    bool IsEmailDisabled = true;
+
     UsersClient client = new UsersClient();
     AccountClient accountClient = new AccountClient();
 
@@ -119,18 +124,6 @@
         }
     }
 
-    bool IsEmailDisabled()
-    {
-        if (mode == "edit")
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     void cancel()
     {
         NavigationManager.NavigateTo("/Users");
@@ -142,11 +135,27 @@
 
         if(emailValidated.EmailValid)
         {
-            emailValidated.EmailValidationMessage = "Email Address is Valid.";
+            emailValidated.EmailValidationMessage = "Email Address is Valid.  Click 'OK' to continue.";
         }
         else
         {
             emailValidated.EmailValidationMessage = "Email Address has already been taken.";
+        }
+    }
+
+    void OnEmailInputHandler(ChangeEventArgs e)
+    {
+        emailValidated.EmailValid = false;
+        emailValidated.EmailValidationMessage = "";
+        if(!security.ValidEmailFormat(e.Value.ToString()))
+        {
+            emailValidated.EmailValidationMessage = "Incorrect Email Address format.";
+            emailValidated.EmailFormatValid = false;
+        }
+        else
+        {
+            emailValidated.EmailValidationMessage = "Valid Format.";
+            emailValidated.EmailFormatValid = true;
         }
     }
 
@@ -240,6 +249,7 @@
         [Required(ErrorMessage = "Email Address is Required")]
         public string NewEmailAddress { get; set; } = "";
         public bool EmailValid { get; set; } = false;
+        public bool EmailFormatValid { get; set; } = false;
         public bool VerifyEmailModalOpen { get; set; } = false;
         public string EmailValidationMessage { get; set; }
     }
