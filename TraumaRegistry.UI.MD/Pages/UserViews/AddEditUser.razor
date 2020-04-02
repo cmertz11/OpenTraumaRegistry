@@ -1,6 +1,8 @@
 ﻿@page "/addedituser"
 @page "/addedituser/{email}"
 @using System.ComponentModel.DataAnnotations
+@using OpenTraumaRegistry.Shared
+@using OpenTraumaRegistry.UI.MD.ValidationModels
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IEmailHelper emailClient
@@ -89,8 +91,10 @@
     [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
 
     _dtoUser user = new _dtoUser();
-    userValidatedidationModel userValidated= new userValidatedidationModel();
-    EmailValidationModel emailValidated = new EmailValidationModel();
+    v_User userValidated= new v_User();
+    v_Email emailValidated = new v_Email();
+
+    ObjectMapper mapper = new ObjectMapper();
 
     bool success = false;
     string mode = "add";
@@ -109,12 +113,8 @@
             mode = "edit";
             pageHeader = "Edit User";
             user = await client.GetUserByEmailAddressAsync(email);
-            userValidated.EmailAddress = user.EmailAddress;
-            userValidated.FirstName = user.FirstName;
-            userValidated.LastName = user.LastName;
-            userValidated.CellPhone = user.CellPhone;
-            userValidated.OfficePhone = user.OfficePhone;
-            userValidated.SystemAdministrator = user.SystemAdministrator;
+
+            userValidated = (v_User)mapper.MapObjects(user, userValidated);
         }
         else
         {
@@ -190,6 +190,8 @@
                     user.ForcePasswordReset = true;
                     user.Locked = false;
 
+                    user = (_dtoUser)mapper.MapObjects(userValidated, user);
+
                     var resp = userClient.PostUserAsync(user);
 
                     EmailObj email = new EmailObj();
@@ -207,6 +209,7 @@
             }
             else
             {
+                user = (_dtoUser)mapper.MapObjects(userValidated, user);
                 var resp = userClient.PutUserAsync(user.Id, user);
                 var msg = $"User {user.EmailAddress} updated successfully.";
                 Toaster.Add(msg, MatToastType.Success, "Update Complete", null, null);
@@ -226,31 +229,5 @@
     private async Task validateForm()
     {
         await saveUser();
-    }
-
-    public class userValidatedidationModel
-    {
-        [Required(ErrorMessage = "Email Address is Required")]
-        [DataType(DataType.EmailAddress)]
-        [MaxLength(50)]
-        public string EmailAddress { get; set; }
-        [Required(ErrorMessage = "First Name is Required")]
-        public string FirstName { get; set; }
-        [Required(ErrorMessage = "Last Name is Required")]
-        public string LastName { get; set; }
-        [Required(ErrorMessage = "Cell Phone is Required")]
-        public string CellPhone { get; set; }
-        public string OfficePhone { get; set; }
-        public bool SystemAdministrator { get; set; }
-    }
-
-    public class EmailValidationModel
-    {
-        [Required(ErrorMessage = "Email Address is Required")]
-        public string NewEmailAddress { get; set; } = "";
-        public bool EmailValid { get; set; } = false;
-        public bool EmailFormatValid { get; set; } = false;
-        public bool VerifyEmailModalOpen { get; set; } = false;
-        public string EmailValidationMessage { get; set; }
     }
 }
