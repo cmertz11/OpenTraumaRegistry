@@ -110,11 +110,11 @@ namespace OpenTraumaRegistry.Api.Controllers
 
         // POST: api/Patients
         [HttpPost]
-        public ActionResult<Confirmation> PostConfirmEmail(string token)
+        public ActionResult<EmailConfirmationResponse> PostConfirmEmail(string token)
         {
             try
             {
-                Confirmation confirmation = new Confirmation();
+                EmailConfirmationResponse confirmation = new EmailConfirmationResponse();
                 var decryptedToken = security.DecryptTokenObject(token); 
 
                 var user = context.Users.Where(u => u.EmailAddress == decryptedToken.EmailAddress).FirstOrDefault();
@@ -143,7 +143,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                 {
                     confirmation.Token = "";
                     confirmation.Success = false;
-                    confirmation.Messages.Add("Link Expired");
+                    confirmation.Messages.Add("Link Expired.  Please contact the system Administrator.");
                     return confirmation;
                 }
                
@@ -152,13 +152,6 @@ namespace OpenTraumaRegistry.Api.Controllers
             { 
                 throw;
             }
-        }
-        public class Confirmation
-        {
-            public bool Success { get; set; } = false;
-            public string Token { get; set; }
-            public List<string> Messages { get; set; } = new List<string>();
-
         }
 
         private void FailedLoginAttempt(User user)

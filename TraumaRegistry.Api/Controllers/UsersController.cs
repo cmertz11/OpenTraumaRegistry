@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using OpenTraumaRegistry.Data;
 using OpenTraumaRegistry.Data.Models;
 using static OpenTraumaRegistry.Api.Models.UserModels;
+using OpenTraumaRegistry.Shared;
 
 namespace OpenTraumaRegistry.Api.Controllers
 {
@@ -16,6 +17,7 @@ namespace OpenTraumaRegistry.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly Context _context;
+        private readonly ObjectMapper _objectMapper = new ObjectMapper();
         public UsersController(Context context)
         {
             _context = context;
@@ -28,7 +30,7 @@ namespace OpenTraumaRegistry.Api.Controllers
             var userList = await _context.Users.ToListAsync();
             foreach (var item in userList)
             {
-                dtoUsers.Add(TranslateUserTo_dtoUser(item));
+                dtoUsers.Add((_dtoUser)_objectMapper.MapObjects(item, new _dtoUser()));
             }
             return dtoUsers;
         }
@@ -37,8 +39,10 @@ namespace OpenTraumaRegistry.Api.Controllers
         public async Task<ActionResult<_dtoUser>> PostUser(_dtoUser _dtoUser)
         { 
             try 
-	        {	        
-		        _context.Users.Add(Translate_dtoUserToUser(_dtoUser));
+	        {
+                User user = new User();
+                user = (User)_objectMapper.MapObjects(_dtoUser, user);
+		        _context.Users.Add(user);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("GetUser", new { id = _dtoUser.Id }, _dtoUser);
 	        }
@@ -49,20 +53,14 @@ namespace OpenTraumaRegistry.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, _dtoUser user)
+        public async Task<IActionResult> PutUser(int id, _dtoUser dtoUser)
         {
-            if (id != user.Id)
+            if (id != dtoUser.Id)
             {
                 return BadRequest();
             }
             var currentUserRecord = _context.Users.Where(u => u.Id == id).FirstOrDefault();
-            
-            currentUserRecord.FirstName = user.FirstName;
-            currentUserRecord.LastName = user.LastName;
-            currentUserRecord.CellPhone = user.CellPhone;
-            currentUserRecord.OfficePhone = user.OfficePhone;
-            currentUserRecord.LastUpdate = user.LastUpdate;
-            currentUserRecord.LastUpdatedBy = user.LastUpdatedBy;
+            currentUserRecord = (User)_objectMapper.MapObjects(dtoUser, currentUserRecord);
 
             try
             {
@@ -91,7 +89,7 @@ namespace OpenTraumaRegistry.Api.Controllers
             {
                 _dtoUser dtoUser = new _dtoUser();
                 var user = await _context.Users.Where(u => u.EmailAddress == emailAddress).FirstOrDefaultAsync();
-                dtoUser = TranslateUserTo_dtoUser(user);
+                dtoUser = (_dtoUser)_objectMapper.MapObjects(user, new _dtoUser());
 
                 var recs = await _context.UserFacilities.
                     Where(u => u.UserId == user.Id)
@@ -132,41 +130,6 @@ namespace OpenTraumaRegistry.Api.Controllers
         {
             return _context.Users.Any(e => e.Id == id);
         }
-
-        private _dtoUser TranslateUserTo_dtoUser(User user)
-        {
-            _dtoUser dtoUser = new _dtoUser();
-            dtoUser.Id = user.Id;
-            dtoUser.FirstName = user.FirstName;
-            dtoUser.LastName = user.LastName;
-            dtoUser.OfficePhone = user.OfficePhone;
-            dtoUser.CellPhone = user.CellPhone;
-            dtoUser.EmailAddress = user.EmailAddress;
-            dtoUser.SystemAdministrator = user.SystemAdministrator;
-            dtoUser.ConfirmationToken = user.ConfirmationToken;
-            dtoUser.ConfirmationTokenExpires = user.ConfirmationTokenExpires;
-            dtoUser.PasswordExpires = user.PasswordExpires;
-            dtoUser.EmailConfirmed = user.EmailConfirmed;
-            return dtoUser;
-        }
-
-        private User Translate_dtoUserToUser(_dtoUser _dtoUser)
-        {
-            User user = new User();
-            user.Id = _dtoUser.Id;
-            user.FirstName = _dtoUser.FirstName;
-            user.LastName = _dtoUser.LastName;
-            user.EmailAddress = _dtoUser.EmailAddress;
-            user.OfficePhone = _dtoUser.OfficePhone;
-            user.CellPhone = _dtoUser.CellPhone;
-            user.SystemAdministrator = _dtoUser.SystemAdministrator;
-            user.ConfirmationToken = _dtoUser.ConfirmationToken;
-            user.ConfirmationTokenExpires = _dtoUser.ConfirmationTokenExpires;
-            user.PasswordExpires = _dtoUser.PasswordExpires;
-            user.EmailConfirmed = _dtoUser.EmailConfirmed;
-            return user;
-        }
-
 
     }
 

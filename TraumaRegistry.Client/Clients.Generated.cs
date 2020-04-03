@@ -1347,14 +1347,14 @@ namespace OpenTraumaRegistry.Client
         }
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<Confirmation> PostConfirmEmailAsync(string token)
+        public System.Threading.Tasks.Task<EmailConfirmationResponse> PostConfirmEmailAsync(string token)
         {
             return PostConfirmEmailAsync(token, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<Confirmation> PostConfirmEmailAsync(string token, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<EmailConfirmationResponse> PostConfirmEmailAsync(string token, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Login?");
@@ -1393,7 +1393,7 @@ namespace OpenTraumaRegistry.Client
                         var status_ = ((int)response_.StatusCode).ToString();
                         if (status_ == "200") 
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<Confirmation>(response_, headers_).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<EmailConfirmationResponse>(response_, headers_).ConfigureAwait(false);
                             return objectResponse_.Object;
                         }
                         else
@@ -1403,7 +1403,7 @@ namespace OpenTraumaRegistry.Client
                             throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
             
-                        return default(Confirmation);
+                        return default(EmailConfirmationResponse);
                     }
                     finally
                     {
@@ -6772,7 +6772,7 @@ namespace OpenTraumaRegistry.Client
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.11.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Confirmation 
+    public partial class EmailConfirmationResponse 
     {
         [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
         public bool Success { get; set; }

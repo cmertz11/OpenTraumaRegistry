@@ -3,8 +3,12 @@
 @using System.Threading
 @using OpenTraumaRegistry.Client;
 @using Microsoft.AspNetCore.Components.Authorization
+@using OpenTraumaRegistry.Shared
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IEmailHelper emailClient
+@inject IMatToaster Toaster
+@inject ISecurity security
 
 <AuthorizeView Context="AuthorizedContext" Policy="SystemAdminstrator">
 
@@ -93,8 +97,12 @@
                             <td>@user.EmailAddress</td>
                             <td>@user.LoginAttempts</td>
                             <td>@user.SystemAdministrator</td>
-                            <td><MatButton Icon="edit"  @onclick="@(() => EditUser(user.EmailAddress))">Edit</MatButton></td>
-                            <td><MatButton Icon="@(GetLockIcon(user.Locked))" Disabled="@(IsLockDisabled(user.EmailAddress))" @onclick="@(() => ShowLockUserModal(user))">@GetLockLabel(user.Locked)</MatButton></td>   
+                            <td><MatButton Icon="edit" @onclick="@(() => EditUser(user.EmailAddress))">Edit</MatButton></td>
+                            <td><MatButton Icon="@(GetLockIcon(user.Locked))" Disabled="@(IsLockDisabled(user.EmailAddress))" @onclick="@(() => ShowLockUserModal(user))">@GetLockLabel(user.Locked)</MatButton></td>
+                            @if (!user.EmailConfirmed)
+                            {
+                                <td><MatButton Icon="email" @onclick="@(() => ResendEmailConfirmation(user))"></MatButton></td>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -151,6 +159,10 @@
     UsersPagedClient usersPagedClient = new UsersPagedClient();
     AccountClient accountClient = new AccountClient();
 
+    private readonly ObjectMapper _objectMapper;
+
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+
     string sortIcon = "keyboard_arrow_up";
     string metrics = "";
     string pageSize = "10";
@@ -194,7 +206,7 @@
 
     string GetLockIcon(bool userLocked)
     {
-        if(userLocked)
+        if (userLocked)
         {
             return "lock";
         }
@@ -220,6 +232,51 @@
     {
         return (user == currentUser);
     }
+
+    protected async Task ResendEmailConfirmation(User user)
+    {
+        try
+        {
+
+            var currentuser = (await authenticationStateTask).User;
+            UsersClient userClient = new UsersClient();
+
+            var timeStamp = System.DateTime.Now;
+            user.LastUpdate = timeStamp;
+            user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
+            user.EmailConfirmed = false;
+            var tempPassord = security.GenerateRandomPassword();
+            user.Password = security.Hash(tempPassord);
+            user.PasswordExpires = DateTime.Now.AddDays(security.TempPasswordExpiresDays()); //TODO: this should be a setting
+            user.ConfirmationToken = security.GenerateConfirmationToken();
+            user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
+            user.ForcePasswordReset = true;
+            user.Locked = false;
+
+            _dtoUser dtoUser = new _dtoUser();
+            dtoUser = (_dtoUser)_objectMapper.MapObjects(user, dtoUser);
+
+            var resp = userClient.PutUserAsync(user.Id, dtoUser);
+
+            EmailObj email = new EmailObj();
+            email.to = user.EmailAddress;
+
+            var securedToken = security.EncryptTokenObject(user.EmailAddress, user.ConfirmationToken);
+
+            email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassord, securedToken); // get host from settings?
+            email.subject = "New Open Trauma Registry Account";
+            await emailClient.SendAsync(email);
+
+            Toaster.Add("User Updated!  A new temporary password has been sent to the email specified.", MatToastType.Success, "Success", null, null);
+
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+
     protected async Task EditUser(string EmailAddress)
     {
         NavigationManager.NavigateTo("/addedituser/" + EmailAddress);
