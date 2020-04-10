@@ -16,21 +16,22 @@ namespace OpenTraumaRegistry.Shared
         private string keyString { get; set; }
 
         private double confirmationTokenExpiresMinutes { get; set; }
-        private double tempPasswordExpiresDays { get; set; }
-
+   
         private double passwordExpiresDays { get; set; }
+
+        private double tempPasswordExpiresDays { get; set; }
         public SecurityHelper(IConfiguration _configuration)
         {
             configuration = _configuration;
             keyString = configuration.GetSection("SecuritySettings")["AESKEY"];
             confirmationTokenExpiresMinutes = Convert.ToDouble(configuration.GetSection("SecuritySettings")["CONFIRMATIONTOKENEXPIRESMINUTES"]);
-            tempPasswordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["TEMPPASSWORDEXPIRESDAYS"]);
             passwordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["PASSWORDEXPIRESDAYS"]);
+            tempPasswordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["TEMPPASSWORDEXPIRESDAYS"]);
         }
 
-        public double TempPasswordExpiresDays()
+        public double PasswordExpiresDays()
         {
-            return tempPasswordExpiresDays;
+            return passwordExpiresDays;
         }
 
         public double ConfirmationTokenExpiresMinutes()
@@ -242,9 +243,9 @@ namespace OpenTraumaRegistry.Shared
             }
         }
 
-        public double PasswordExpiresDays()
+        public double TempPasswordExpiresDays()
         {
-            return passwordExpiresDays;
+            return tempPasswordExpiresDays;
         }
     }
 }

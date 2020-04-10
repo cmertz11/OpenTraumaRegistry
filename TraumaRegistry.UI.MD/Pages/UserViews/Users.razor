@@ -99,10 +99,7 @@
                             <td>@user.SystemAdministrator</td>
                             <td><MatButton Icon="edit" @onclick="@(() => EditUser(user.EmailAddress))">Edit</MatButton></td>
                             <td><MatButton Icon="@(GetLockIcon(user.Locked))" Disabled="@(IsLockDisabled(user.EmailAddress))" @onclick="@(() => ShowLockUserModal(user))">@GetLockLabel(user.Locked)</MatButton></td>
-                            @if (!user.EmailConfirmed)
-                            {
-                                <td><MatButton Icon="email" @onclick="@(() => ResendEmailConfirmation(user))"></MatButton></td>
-                            }
+
                         </tr>
                     }
                 </tbody>
@@ -178,7 +175,6 @@
     protected async Task SearchAsync()
     {
         usersPagedClient.SetBearerToken(token);
-
 
         Stopwatch sw = new Stopwatch();
         sw.Start();

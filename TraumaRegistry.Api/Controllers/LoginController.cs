@@ -195,7 +195,6 @@ namespace OpenTraumaRegistry.Api.Controllers
             {
                 User user = null;
                 
- 
                 user = context.Users.Where(u => u.EmailAddress == login.Email).FirstOrDefault();
                 if(user != null && !user.Locked)
                 {
@@ -220,7 +219,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                             if(DateTime.Now < user.ConfirmationTokenExpires)
                             {
                                 user.ConfirmationToken = security.GenerateConfirmationToken();
-                                user.ConfirmationTokenExpires = DateTime.Now.AddHours(24);
+                                user.ConfirmationTokenExpires = DateTime.Now.AddHours(security.ConfirmationTokenExpiresMinutes());
                                 context.SaveChanges();
                                 return user;
                             }
@@ -230,6 +229,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                                 user.ConfirmationToken = "";
                                 user.ForcePasswordReset = true;
                                 user.EmailConfirmed = false;
+                                return user;
                             }
                         }
 

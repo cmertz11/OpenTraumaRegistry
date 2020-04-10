@@ -46,6 +46,10 @@
                     </EditForm>
                     <MatButton type="submit" Icon="save" @onclick="@(() => saveUser())">Save</MatButton>
                     <MatButton Icon="cancel" @onclick="@(() => cancel())">Cancel</MatButton>
+                    @if (!user.EmailConfirmed)
+                    {
+                        <MatButton Icon="email" @onclick="@(() => ResendEmailConfirmation())"></MatButton>
+                    }
                 </div>
             </div>
         </div>
@@ -69,11 +73,9 @@
                 {
                     if (emailValidated.EmailFormatValid)
                     {
-                   <MatButton @onclick="@(() => VerifyEmail())">Verify Email</MatButton>
+                        <MatButton @onclick="@(() => VerifyEmail())">Verify Email</MatButton>
                     }
                 }
-
-
             </MatDialogActions>
         </MatDialog>
 
@@ -86,12 +88,12 @@
 
 @code {
     [Parameter]
-    public string email { get; set; }
+    public string email { get; set; } = "";
 
     [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
 
     _dtoUser user = new _dtoUser();
-    v_User userValidated= new v_User();
+    v_User userValidated = new v_User();
     v_Email emailValidated = new v_Email();
 
     ObjectMapper mapper = new ObjectMapper();
@@ -133,7 +135,7 @@
     {
         emailValidated.EmailValid = await accountClient.ValidateEmailAsync(emailValidated.NewEmailAddress);
 
-        if(emailValidated.EmailValid)
+        if (emailValidated.EmailValid)
         {
             emailValidated.EmailValidationMessage = "Email Address is Valid.  Click 'OK' to continue.";
         }
@@ -147,7 +149,7 @@
     {
         emailValidated.EmailValid = false;
         emailValidated.EmailValidationMessage = "";
-        if(!security.ValidEmailFormat(e.Value.ToString()))
+        if (!security.ValidEmailFormat(e.Value.ToString()))
         {
             emailValidated.EmailValidationMessage = "Incorrect Email Address format.";
             emailValidated.EmailFormatValid = false;
@@ -204,7 +206,6 @@
                     await emailClient.SendAsync(email);
 
                     Toaster.Add("User Added Successfully!  A temporary password has been sent to the email specified.", MatToastType.Success, "Success", null, null);
-
                 }
             }
             else
@@ -220,6 +221,52 @@
             Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
         }
     }
+
+    protected async Task ResendEmailConfirmation()
+    {
+        try
+        {
+
+            var currentuser = (await authenticationStateTask).User;
+            UsersClient userClient = new UsersClient();
+
+            var timeStamp = System.DateTime.Now;
+            user.LastUpdate = timeStamp;
+            user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
+            user.EmailConfirmed = false;
+            var tempPassord = security.GenerateRandomPassword();
+            user.Password = security.Hash(tempPassord);
+            user.PasswordExpires = DateTime.Now.AddDays(security.TempPasswordExpiresDays()); //TODO: this should be a setting
+            user.ConfirmationToken = security.GenerateConfirmationToken();
+            user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
+            user.ForcePasswordReset = true;
+            user.Locked = false;
+
+            //_dtoUser dtoUser = new _dtoUser();
+            //dtoUser = (_dtoUser)mapper.MapObjects(user, dtoUser);
+
+            var resp = userClient.PutUserAsync(user.Id, user);
+
+            EmailObj email = new EmailObj();
+            email.to = user.EmailAddress;
+
+            var securedToken = security.EncryptTokenObject(user.EmailAddress, user.ConfirmationToken);
+
+            email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassord, securedToken); // get host from settings?
+            email.subject = "New Open Trauma Registry Account";
+            await emailClient.SendAsync(email);
+
+            Toaster.Add("User Updated!  A new temporary password has been sent to the email specified.", MatToastType.Success, "Success", null, null);
+
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+
+
 
     private bool validUser(_dtoUser user)
     {
