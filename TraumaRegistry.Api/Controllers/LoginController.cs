@@ -52,6 +52,13 @@ namespace OpenTraumaRegistry.Api.Controllers
                 user.jsonToken = GenerateJSONWebToken(user);
                 return user;
             }
+            else if(user != null && user.ForcePasswordReset)
+            {
+                user.ConfirmationToken = security.GenerateConfirmationToken();
+                user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
+                context.SaveChanges();
+                return user;
+            }
             else
             {
                 return Unauthorized();
@@ -219,7 +226,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                             if(DateTime.Now < user.ConfirmationTokenExpires)
                             {
                                 user.ConfirmationToken = security.GenerateConfirmationToken();
-                                user.ConfirmationTokenExpires = DateTime.Now.AddHours(security.ConfirmationTokenExpiresMinutes());
+                                user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
                                 context.SaveChanges();
                                 return user;
                             }
