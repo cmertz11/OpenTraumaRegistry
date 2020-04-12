@@ -45,11 +45,11 @@ namespace OpenTraumaRegistry.Api.Controllers
             login.ConfirmationToken = confirmationToken;
 
             User user = AuthenticateUser(login);
-            user.Password = "";
-
+            
             if (user != null && user.Authenticated)
             {
                 user.jsonToken = GenerateJSONWebToken(user);
+                user.Password = "";
                 return user;
             }
             else if(user != null && user.ForcePasswordReset)
@@ -57,6 +57,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                 user.ConfirmationToken = security.GenerateConfirmationToken();
                 user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
                 context.SaveChanges();
+                user.Password = "";
                 return user;
             }
             else
@@ -66,14 +67,13 @@ namespace OpenTraumaRegistry.Api.Controllers
         }
         [ActionName("ResetPassword")] //<-- Probably needs all parms
         [HttpGet("{confirmationToken}")]
-        public ActionResult<User> ResetPassword(string confirmationToken, string currentPassword, string newPassword)
+        public ActionResult<User> ResetPassword(string email, string confirmationToken, string currentPassword, string newPassword)
         {
 
             if (string.IsNullOrEmpty(confirmationToken))
                 return Unauthorized();
-
-            var decyptedToken = security.DecryptTokenObject(confirmationToken); 
-            User user = context.Users.Where(u => u.EmailAddress == decyptedToken.EmailAddress).FirstOrDefault();
+             
+            User user = context.Users.Where(u => u.EmailAddress == email).FirstOrDefault();
 
 
             if (user != null &&
@@ -87,7 +87,7 @@ namespace OpenTraumaRegistry.Api.Controllers
                 {
                     user.Password = security.Hash(newPassword);
                     user.jsonToken = GenerateJSONWebToken(user);
-                    user.PasswordExpires = DateTime.Now.AddDays(90); //TODO: make this a setting.
+                    user.PasswordExpires = DateTime.Now.AddDays(security.PasswordExpiresDays()); //TODO: make this a setting.
                     user.Locked = false;
                     user.ForcePasswordReset = false;
                     user.ConfirmationToken = "";

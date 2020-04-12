@@ -177,7 +177,7 @@
                         await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
                         NavigationManager.NavigateTo("/");
                     }
- 
+
                 }
                 else
                 {
@@ -202,13 +202,28 @@
     {
         try
         {
-            var response = await loginClient.ResetPasswordAsync(ConfirmationToken, loginModel.Password, loginModel.NewPassword);
+            var _user = await loginClient.ResetPasswordAsync(loginModel.Email, ConfirmationToken, loginModel.Password, loginModel.NewPassword);
+            if (!string.IsNullOrEmpty(_user.JsonToken))
+            {
 
+                userClient.SetBearerToken(_user.JsonToken);
+
+                if (_user.Authenticated)
+                {
+                    await sessionStorage.SetItemAsync("_otrUser", _user);
+                    await ((_otrAuthenticationStateProvider)AuthenticationStateProvider).SetUserAsAuthentitcatedAsync();
+                    NavigationManager.NavigateTo("/");
+                }
+            }
+            else
+            {
+                AuthResponse = _user.Message;
+            }
         }
         catch (Exception ex)
         {
 
-            throw;
+            AuthResponse = ex.ToString();
         }
     }
 

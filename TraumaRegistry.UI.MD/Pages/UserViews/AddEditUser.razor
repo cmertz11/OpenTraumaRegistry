@@ -44,12 +44,8 @@
 
                         <MatButton type="submit" Icon="save">Save</MatButton>
                     </EditForm>
-                    <MatButton type="submit" Icon="save" @onclick="@(() => saveUser())">Save</MatButton>
+                    @*<MatButton type="submit" Icon="save" @onclick="@(() => saveUser())">Save</MatButton>*@
                     <MatButton Icon="cancel" @onclick="@(() => cancel())">Cancel</MatButton>
-                    @if (!user.EmailConfirmed)
-                    {
-                        <MatButton Icon="email" @onclick="@(() => ResendEmailConfirmation())"></MatButton>
-                    }
                 </div>
             </div>
         </div>

@@ -1270,18 +1270,22 @@ namespace OpenTraumaRegistry.Client
         }
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<User> ResetPasswordAsync(string confirmationToken, string currentPassword, string newPassword)
+        public System.Threading.Tasks.Task<User> ResetPasswordAsync(string email, string confirmationToken, string currentPassword, string newPassword)
         {
-            return ResetPasswordAsync(confirmationToken, currentPassword, newPassword, System.Threading.CancellationToken.None);
+            return ResetPasswordAsync(email, confirmationToken, currentPassword, newPassword, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<User> ResetPasswordAsync(string confirmationToken, string currentPassword, string newPassword, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<User> ResetPasswordAsync(string email, string confirmationToken, string currentPassword, string newPassword, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Login/{confirmationToken}?");
             urlBuilder_.Replace("{confirmationToken}", System.Uri.EscapeDataString(ConvertToString(confirmationToken, System.Globalization.CultureInfo.InvariantCulture)));
+            if (email != null) 
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("email") + "=").Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             if (currentPassword != null) 
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("currentPassword") + "=").Append(System.Uri.EscapeDataString(ConvertToString(currentPassword, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
@@ -4858,14 +4862,14 @@ namespace OpenTraumaRegistry.Client
         }
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<FileResponse> PutUserAsync(int id, _dtoUser user)
+        public System.Threading.Tasks.Task<FileResponse> PutUserAsync(int id, _dtoUser dtoUser)
         {
-            return PutUserAsync(id, user, System.Threading.CancellationToken.None);
+            return PutUserAsync(id, dtoUser, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<FileResponse> PutUserAsync(int id, _dtoUser user, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<FileResponse> PutUserAsync(int id, _dtoUser dtoUser, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -4879,7 +4883,7 @@ namespace OpenTraumaRegistry.Client
             {
                 using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var content_ = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(user, _settings.Value));
+                    var content_ = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(dtoUser, _settings.Value));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
