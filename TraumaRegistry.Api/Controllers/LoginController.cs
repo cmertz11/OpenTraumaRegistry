@@ -36,8 +36,8 @@ namespace OpenTraumaRegistry.Api.Controllers
         public ActionResult<User> Login(string email, string password, string confirmationToken)
         {
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email))
-                return Unauthorized();
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(email)) 
+                 return null; 
 
             Models.LoginModel login = new Models.LoginModel();
             login.Email = email;
@@ -62,7 +62,7 @@ namespace OpenTraumaRegistry.Api.Controllers
             }
             else
             {
-                return Unauthorized();
+                return null;
             }
         }
         [ActionName("ResetPassword")] //<-- Probably needs all parms
@@ -83,9 +83,10 @@ namespace OpenTraumaRegistry.Api.Controllers
                 security.AuthenticatePassword(currentPassword, user.Password))
             {
                 user.Authenticated = false;
-                if (security.ValididatePasswordFormat(newPassword))
+                if (security.ValididatePasswordFormat(newPassword) && !PasswordRecentlyUsed(email, security.Hash(newPassword)))
                 {
                     user.Password = security.Hash(newPassword);
+                    context.UserPasswordHistory.Add(new UserPasswordHistory { EmailAddress = email, Password = user.Password, DateAdded = System.DateTime.Now });
                     user.jsonToken = GenerateJSONWebToken(user);
                     user.PasswordExpires = DateTime.Now.AddDays(security.PasswordExpiresDays()); //TODO: make this a setting.
                     user.Locked = false;
@@ -159,6 +160,28 @@ namespace OpenTraumaRegistry.Api.Controllers
             { 
                 throw;
             }
+        }
+
+        private bool PasswordRecentlyUsed(string email, string newPasswordHashed)
+        {
+            RemoveOldPasswordHistoryRecords();
+            int PasswordFoundCount = context.UserPasswordHistory.Where(p => p.EmailAddress == email && p.Password == newPasswordHashed).Count();
+
+            if(PasswordFoundCount > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void RemoveOldPasswordHistoryRecords()
+        {
+            var oldPasswordHistRecs = context.UserPasswordHistory.Where(p => p.DateAdded < DateTime.Now.AddYears(security.AllowPasswordReuseAfterYears()));
+            context.UserPasswordHistory.RemoveRange(oldPasswordHistRecs);
+            context.SaveChanges();
         }
 
         private void FailedLoginAttempt(User user)

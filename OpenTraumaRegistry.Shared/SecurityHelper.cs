@@ -20,6 +20,8 @@ namespace OpenTraumaRegistry.Shared
         private double passwordExpiresDays { get; set; }
 
         private double tempPasswordExpiresDays { get; set; }
+
+        private int allowPasswordReuseAfterYears { get; set; } = 1;
         public SecurityHelper(IConfiguration _configuration)
         {
             configuration = _configuration;
@@ -27,6 +29,14 @@ namespace OpenTraumaRegistry.Shared
             confirmationTokenExpiresMinutes = Convert.ToDouble(configuration.GetSection("SecuritySettings")["CONFIRMATIONTOKENEXPIRESMINUTES"]);
             passwordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["PASSWORDEXPIRESDAYS"]);
             tempPasswordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["TEMPPASSWORDEXPIRESDAYS"]);
+
+
+            int tempPasswordAge;
+            if (Int32.TryParse(configuration.GetSection("SecuritySettings")["ALLOWPASSWORDREUSEAFTERYEARS"], out tempPasswordAge))
+            {
+                allowPasswordReuseAfterYears = tempPasswordAge;
+            }
+
         }
 
         public double PasswordExpiresDays()
@@ -37,6 +47,11 @@ namespace OpenTraumaRegistry.Shared
         public double ConfirmationTokenExpiresMinutes()
         {
             return confirmationTokenExpiresMinutes;
+        }
+
+        public int AllowPasswordReuseAfterYears()
+        {
+            return allowPasswordReuseAfterYears;
         }
 
         public string Hash(string Password)
@@ -66,6 +81,8 @@ namespace OpenTraumaRegistry.Shared
             //no match return false
             return false; 
         }
+
+
 
         public bool ValididatePasswordFormat(string Password)
         {

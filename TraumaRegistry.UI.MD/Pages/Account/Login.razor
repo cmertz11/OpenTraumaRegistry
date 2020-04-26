@@ -12,34 +12,38 @@
     <MatDialogContent>
         @if (!disableForm)
         {
-            <MatCard Style="width: 300px; align-self: center;">
-                <div class="logo">
-                    <img src="" style="width:100px;" /><br />Open Trauma Registry
-                    <br />
-                    <h4>Log In</h4>
+        <MatCard Style="width: 300px; align-self: center;">
+            <div class="logo">
+                <img src="" style="width:100px;" /><br />Open Trauma Registry
+                <br />
+                <h4>Log In</h4>
+            </div>
+
+            <EditForm Model="@loginModel" OnValidSubmit="@AuthenticateUser">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <fieldset>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton>
+                    </div>
+                    <MatProgressBar Indeterminate="@querying"></MatProgressBar>
+                </fieldset>
+            </EditForm>
+                @if (showAlert)
+                {
+                <div class="@alertType" role="alert">
+                    @AuthResponse
                 </div>
-
-                <EditForm Model="@loginModel" OnValidSubmit="@AuthenticateUser">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    <fieldset>
-                        <div class="form-group">
-                            <MatTextField @bind-Value="@loginModel.Email" Label="Email" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
-                        </div>
-                        <div class="form-group">
-                            <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-                        </div>
-                        <div class="form-group">
-                            <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton>
-                        </div>
-                        <hr />
-                        <MatProgressBar Indeterminate="@querying"></MatProgressBar>
-                    </fieldset>
-                </EditForm>
-
-            </MatCard>
+                }
+        </MatCard>
         }
-        <p>@AuthResponse</p>
+       
     </MatDialogContent>
 </MatDialog>
 
@@ -94,6 +98,10 @@
     bool resetDialogIsOpen = false;
     bool querying = false;
     bool disableForm = false;
+
+    bool showAlert = false;
+    string alertType = "";
+
     LoginClient loginClient = new LoginClient();
     UsersClient userClient = new UsersClient();
     TokenObject tokenObject = new TokenObject();
@@ -150,6 +158,8 @@
             querying = false;
             if (_user == null)
             {
+                showAlert = true;
+                alertType = "alert alert-warning";
                 AuthResponse = "Invalid Email or Password.";
                 return;
             }
@@ -160,6 +170,8 @@
                     ConfirmationToken = _user.ConfirmationToken;
                     querying = false;
                     dialogIsOpen = false;
+                    showAlert = true;
+                    alertType = "alert alert-primary";
                     AuthResponse = "Password Expired.  Please reset.";
                     loginModel.Password = "";
                     loginModel.NewPassword = "";

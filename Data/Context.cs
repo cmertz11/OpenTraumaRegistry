@@ -47,15 +47,11 @@ namespace OpenTraumaRegistry.Data
         public DbSet<DrugScreen> DrugScreens { get; set; }
         public DbSet<AlcoholScreenResult> AlcoholScreenResults { get; set; }
         public DbSet<RefEthnicity> RefEthnicity { get; set; }
-
         public DbSet<RefAgeUnits> RefAgeUnits { get; set; }
-
         public DbSet<User> Users {get; set;}
         public DbSet<Facility> Facilities {get; set;}
         public DbSet<UserFacility> UserFacilities{get; set;}
-
-
- 
+        public DbSet<UserPasswordHistory> UserPasswordHistory { get; set; }
         public Context() {}
         public Context(DbContextOptions<Context> options) : base(options) { }
 

@@ -57,7 +57,7 @@
     public bool Authenticated = false;
     public bool IsSystemAdministrator = false;
 
-    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; } 
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
 
     ReferenceTableClient client = new ReferenceTableClient();
     ICollection<ReferenceTables>
@@ -93,10 +93,14 @@
 
         try
         {
-            IsSystemAdministrator = Convert.ToBoolean(user.FindFirst(c => c.Type == "SystemAdministrator").Value);
+            var role = user.FindFirst(c => c.Type == "SystemAdministrator");
+
+            if(role != null)
+            Boolean.TryParse(role.Value, out IsSystemAdministrator);
+
+       
         }
         catch { }
-
 
         if (user.Identity.IsAuthenticated)
         {
