@@ -47,6 +47,8 @@ namespace OpenTraumaRegistry.Api.Controllers
                 .ThenInclude(events => events.Risks)
                 .Include(events => events.Events)
                 .ThenInclude(events => events.Consults)
+                .Include(events => events.Events)
+                .ThenInclude(events => events.HomeResidences)
 
                 .FirstOrDefaultAsync();
 

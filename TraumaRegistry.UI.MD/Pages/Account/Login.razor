@@ -12,7 +12,7 @@
     <MatDialogContent>
         @if (!disableForm)
         {
-        <MatCard Style="width: 300px; align-self: center;">
+        <MatCard Style="width: 350px; align-self: center; padding:20px">
             <div class="logo">
                 <img src="" style="width:100px;" /><br />Open Trauma Registry
                 <br />
@@ -30,9 +30,12 @@
                         <MatTextField @bind-Value="@loginModel.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
                     </div>
                     <div class="form-group">
-                        <MatButton class="float-right" Style="padding-right: 20px;" Raised="true">Login</MatButton>
+                        <MatButton class="float-right" Style="width: 100%;" Raised="true">Login</MatButton>
                     </div>
+                    @if (querying)
+                    {
                     <MatProgressBar Indeterminate="@querying"></MatProgressBar>
+                    }
                 </fieldset>
             </EditForm>
                 @if (showAlert)

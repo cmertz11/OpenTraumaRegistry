@@ -45,7 +45,7 @@
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@RefProtectiveDevice" />
+                <OptionSelectorComponent refTable="@refProtectiveDevice" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -59,7 +59,7 @@
                 <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
             </MatExpansionPanelSummary>
             <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@RefTraumaTypeTable" />
+                <OptionSelectorComponent refTable="@refTraumaTypeTable" />
             </MatExpansionPanelDetails>
         </MatExpansionPanel>
     </MatAccordion>
@@ -148,8 +148,8 @@
 
         Vitals vitalsObj = new Vitals();
         RefTableDTO refHomeResidence = new RefTableDTO();
-        RefTableDTO RefTraumaTypeTable = new RefTableDTO();
-        RefTableDTO RefProtectiveDevice = new RefTableDTO();
+        RefTableDTO refTraumaTypeTable = new RefTableDTO();
+        RefTableDTO refProtectiveDevice = new RefTableDTO();
         RefTableDTO refRiskData = new RefTableDTO();
         RefTableDTO refArrivedFrom = new RefTableDTO();
         RefTableDTO refTransport = new RefTableDTO();
@@ -163,6 +163,8 @@
 
 
         EventsClient EventClient = new EventsClient();
+
+        HomeResidencesClient homeResidencesClient = new HomeResidencesClient();
         SafetyDevicesClient safetyDevicesClient = new SafetyDevicesClient();
         ReferenceTableClient RefTableClient = new ReferenceTableClient();
         RiskDataClient riskDataClient = new RiskDataClient();
@@ -176,8 +178,8 @@
         {
 
             refHomeResidence = await RefTableClient.GetRefTableDataAsync("RefHomeResidence");
-            RefTraumaTypeTable = await RefTableClient.GetRefTableDataAsync("RefTraumaType");
-            RefProtectiveDevice = await RefTableClient.GetRefTableDataAsync("RefProtectiveDevice");
+            refTraumaTypeTable = await RefTableClient.GetRefTableDataAsync("RefTraumaType");
+            refProtectiveDevice = await RefTableClient.GetRefTableDataAsync("RefProtectiveDevice");
             refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
             refArrivedFrom = await RefTableClient.GetRefTableDataAsync("RefArrivedFrom");
             refTransport = await RefTableClient.GetRefTableDataAsync("RefTransport");
@@ -226,17 +228,17 @@
 
                     foreach (var safetyDevice in eventObj.SafetyDevices)
                     {
-                        RefProtectiveDevice.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
+                        refProtectiveDevice.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
                     }
 
                     foreach (var injuryType in eventObj.InjuryTypes)
                     {
-                        RefTraumaTypeTable.TableData.Where(i => i.Id == injuryType.RefTraumaTypeId).FirstOrDefault().Selected = true;
+                        refTraumaTypeTable.TableData.Where(i => i.Id == injuryType.RefTraumaTypeId).FirstOrDefault().Selected = true;
                     }
 
                     foreach (var homeResidence in eventObj.HomeResidences)
                     {
-                       refHomeResidence.TableData.Where(i => i.Id == homeResidence.RefHomeResidenceId).FirstOrDefault().Selected = true;
+                        refHomeResidence.TableData.Where(i => i.Id == homeResidence.RefHomeResidenceId).FirstOrDefault().Selected = true;
                     }
                 }
             }
@@ -251,6 +253,7 @@
         {
             try
             {
+                await SaveHomeofResidence();
                 await SaveSafetyDevices();
                 await SaveRiskData();
                 await SaveInjuryTypes();
@@ -294,7 +297,7 @@
                 {
                     await safetyDevicesClient.DeleteSafetyDevicesAsync(item.Id);
                 }
-                foreach (var item in RefProtectiveDevice.TableData.Where(s => s.Selected == true))
+                foreach (var item in refProtectiveDevice.TableData.Where(s => s.Selected == true))
                 {
                     await safetyDevicesClient.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
                 }
@@ -314,9 +317,29 @@
                 {
                     await injuryTypesClient.DeleteInjuryTypesAsync(item.Id);
                 }
-                foreach (var item in RefTraumaTypeTable.TableData.Where(s => s.Selected == true))
+                foreach (var item in refTraumaTypeTable.TableData.Where(s => s.Selected == true))
                 {
                     await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefTraumaTypeId = item.Id });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        async Task SaveHomeofResidence()
+        {
+            try
+            {
+                foreach (var item in eventObj.HomeResidences)
+                {
+                    await homeResidencesClient.DeleteHomeResidenceAsync(item.Id);
+                }
+                foreach (var item in refHomeResidence.TableData.Where(s => s.Selected == true))
+                {
+                    await homeResidencesClient.PostHomeResidenceAsync(new HomeResidence { EventId = eventObj.Id, RefHomeResidenceId = item.Id });
                 }
             }
             catch (Exception)
