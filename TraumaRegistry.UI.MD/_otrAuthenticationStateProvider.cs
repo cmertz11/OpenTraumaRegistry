@@ -79,7 +79,7 @@ namespace OpenTraumaRegistry.UI.MD
         }
 
     }
-        public class _otrAuthorizationHandler : AuthorizationHandler<_otrSystemRoleRequirement>
+    public class _otrAuthorizationHandler : AuthorizationHandler<_otrSystemRoleRequirement>
     {
 
             protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, _otrSystemRoleRequirement requirement)

@@ -83,8 +83,7 @@ namespace OpenTraumaRegistry.Api.Controllers
             _context.HomeResidences.Add(homeResidence);
             await _context.SaveChangesAsync();
 
-            // return CreatedAtAction("GetHomeResidence", new { id = homeResidence.Id }, homeResidence);
-            return Ok(homeResidence);
+            return CreatedAtAction("GetHomeResidence", new { id = homeResidence.Id }, homeResidence);
         }
 
         // DELETE: api/HomeResidences/5

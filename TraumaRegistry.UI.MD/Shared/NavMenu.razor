@@ -39,7 +39,7 @@
                         {
                             var local_Table = item;
 
-                            <MatNavItem Href="@NavigationManager.ToAbsoluteUri("referencetables/" + local_Table.Code).AbsoluteUri">
+                            <MatNavItem Href="@NavigationManager.ToAbsoluteUri("referencetables/" + local_Table.Code + "/" + local_Table.Description).AbsoluteUri">
                                 <MatIcon>settings</MatIcon> <span class="miniHover">@item.Description</span>
                             </MatNavItem>
                         }

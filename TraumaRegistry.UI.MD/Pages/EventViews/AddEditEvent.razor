@@ -4,358 +4,353 @@
 @inject IMatToaster Toaster
 @using OpenTraumaRegistry.UI.MD.Pages.Components
 
- 
-    <div style="width: 100%; overflow: hidden;">
-        <div style="width: 600px; float: left;">
-            <h3>@mode.ToUpper() Event</h3>
-        </div>
-        <div style="margin-left: 620px;">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">@mode.ToUpper() Event</a>
+        <div class="form-inline">
             <MatButton Icon="cancel" Style="float: right;" @onclick="@cancel">Cancel</MatButton>
             <MatButton Icon="save" Style="float: right;" OnClick="@SaveEvent">Save</MatButton>
         </div>
-    </div> 
-<hr />
-<EditForm Model="@eventObj" OnValidSubmit="@validateForm">
+    </nav>
+        <div style="overflow-y: scroll; overflow-x: hidden; height: 85vh; width: 82vw">
+            <EditForm Model="@eventObj" OnValidSubmit="@validateForm">
 
-    <MatDatePicker Label="Injury Date" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value=@eventObj.InjuryDateTime></MatDatePicker>
-    <br />
-    <MatTextField Label="Place of Occurance/ZIP" @bind-Value=@eventObj.OccuranceZipCode />
-    <br />
-    <br />
-    <MatAccordion>
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>
-                    Home Residence
-                </MatExpansionPanelHeader>
-                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@refHomeResidence" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
-    </MatAccordion>
-    <br />
-    <MatAccordion>
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>
-                    Safety Devices
-                </MatExpansionPanelHeader>
-                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@refProtectiveDevice" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
-    </MatAccordion>
-    <br />
-    <MatAccordion>
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>
-                    Injury Type(s)
-                </MatExpansionPanelHeader>
-                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@refTraumaTypeTable" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
-    </MatAccordion>
-    <br />
-    <MatAccordion>
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>Vitals</MatExpansionPanelHeader>
-                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <VitalsComponent eventId="@eventId" vitals="@vitals" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
-    </MatAccordion>
-    <br />
-    <MatAccordion>
-        <MatExpansionPanel>
-            <MatExpansionPanelSummary>
-                <MatExpansionPanelHeader>
-                    Risk Data (Comorbids)
-                </MatExpansionPanelHeader>
-                <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
-            </MatExpansionPanelSummary>
-            <MatExpansionPanelDetails>
-                <OptionSelectorComponent refTable="@refRiskData" />
-            </MatExpansionPanelDetails>
-        </MatExpansionPanel>
-    </MatAccordion>
-    <br />
-    <MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true" FullWidth="true"></MatTextField>
-    <br />
-    <MatDatePicker Label="Agency Distpatch Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDispatchDateTime"></MatDatePicker>
-    <br />
-    <MatDatePicker Label="Agnecy Arrive Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyArriveSceneDateTime"></MatDatePicker>
-    <br />
-    <MatDatePicker Label="Agnecy Depart Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
-    <br />
-    <RefTableDropDown Id="@eventObj.ArrivedFromId" labelText="Arrived From:" refTable="@refArrivedFrom" IdChanged="arrivedFromIdChanged" />
-    <br />
-    <RefTableDropDown Id="@eventObj.TransportId" labelText="Transport:" refTable="@refTransport" IdChanged="transportIdChanged" />
-    <br />
-    <RefTableDropDown Id="@Convert.ToInt32(eventObj.TraumaLevelId)" labelText="Trauma Level:" refTable="@refTraumaLevel" IdChanged="traumaLevelIdChanged" />
-    <br />
-    <MatDatePicker Label="Activation Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.ActivationDateTime"></MatDatePicker>
-    <br />
-    <MatCheckbox @bind-Value="@eventObj.FastExam" Label="Fast Exam"></MatCheckbox>
-    <br />
-    <MatCheckbox @bind-Value=@eventObj.FastExamPositive Label="Fast Exam Positive"></MatCheckbox>
-    <br />
-    <MatCheckbox @bind-Value=@eventObj.TimeInERHolder Label="Time In ER Holder"></MatCheckbox>
-    <br />
-    <MatTextField @bind-Value="@eventObj.HospitalDischargeOrder" Label="Hospital Discharge Order" TextArea="true" FullWidth="true"></MatTextField>
-    <br />
-    <MatDatePicker Label="ED Arrival Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdArrivalDateTime"></MatDatePicker>
-    <br />
-    <MatDatePicker Label="ED Discharge Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdDischargeDateTime"></MatDatePicker>
-    <br />
-    <MatDatePicker Label="Anesthesia Arrival Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
-    <br />
-    <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts FullWidth="true" />
-    <br />
-    <MatDatePicker Label="Blood Products Start Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStartTime"></MatDatePicker>
-    <br />
-    <MatDatePicker Label="Blood Products Stop Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStopTime"></MatDatePicker>
-    <br />
+                <MatDatePicker Label="Injury Date" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value=@eventObj.InjuryDateTime></MatDatePicker>
+                <br />
+                <MatTextField Label="Place of Occurance/ZIP" @bind-Value=@eventObj.OccuranceZipCode />
+                <br />
+                <br />
+                <MatAccordion>
+                    <MatExpansionPanel>
+                        <MatExpansionPanelSummary>
+                            <MatExpansionPanelHeader>
+                                Home Residence
+                            </MatExpansionPanelHeader>
+                            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+                        </MatExpansionPanelSummary>
+                        <MatExpansionPanelDetails>
+                            <OptionSelectorComponent refTable="@refHomeResidence" />
+                        </MatExpansionPanelDetails>
+                    </MatExpansionPanel>
+                </MatAccordion>
+                <br />
+                <MatAccordion>
+                    <MatExpansionPanel>
+                        <MatExpansionPanelSummary>
+                            <MatExpansionPanelHeader>
+                                Safety Devices
+                            </MatExpansionPanelHeader>
+                            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+                        </MatExpansionPanelSummary>
+                        <MatExpansionPanelDetails>
+                            <OptionSelectorComponent refTable="@refProtectiveDevice" />
+                        </MatExpansionPanelDetails>
+                    </MatExpansionPanel>
+                </MatAccordion>
+                <br />
+                <MatAccordion>
+                    <MatExpansionPanel>
+                        <MatExpansionPanelSummary>
+                            <MatExpansionPanelHeader>
+                                Injury Type(s)
+                            </MatExpansionPanelHeader>
+                            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+                        </MatExpansionPanelSummary>
+                        <MatExpansionPanelDetails>
+                            <OptionSelectorComponent refTable="@refTraumaTypeTable" />
+                        </MatExpansionPanelDetails>
+                    </MatExpansionPanel>
+                </MatAccordion>
+                <br />
+                <MatAccordion>
+                    <MatExpansionPanel>
+                        <MatExpansionPanelSummary>
+                            <MatExpansionPanelHeader>Vitals</MatExpansionPanelHeader>
+                            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+                        </MatExpansionPanelSummary>
+                        <MatExpansionPanelDetails>
+                            <VitalsComponent eventId="@eventId" vitals="@vitals" />
+                        </MatExpansionPanelDetails>
+                    </MatExpansionPanel>
+                </MatAccordion>
+                <br />
+                <MatAccordion>
+                    <MatExpansionPanel>
+                        <MatExpansionPanelSummary>
+                            <MatExpansionPanelHeader>
+                                Risk Data (Comorbids)
+                            </MatExpansionPanelHeader>
+                            <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
+                        </MatExpansionPanelSummary>
+                        <MatExpansionPanelDetails>
+                            <OptionSelectorComponent refTable="@refRiskData" />
+                        </MatExpansionPanelDetails>
+                    </MatExpansionPanel>
+                </MatAccordion>
+                <br />
+                <MatTextField @bind-Value="@eventObj.InjuryDetailsNarrative" Label="Injury Details/Narrative" TextArea="true" FullWidth="true"></MatTextField>
+                <br />
+                <MatDatePicker Label="Agency Distpatch Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDispatchDateTime"></MatDatePicker>
+                <br />
+                <MatDatePicker Label="Agnecy Arrive Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyArriveSceneDateTime"></MatDatePicker>
+                <br />
+                <MatDatePicker Label="Agnecy Depart Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
+                <br />
+                <RefTableDropDown Id="@eventObj.ArrivedFromId" labelText="Arrived From:" refTable="@refArrivedFrom" IdChanged="arrivedFromIdChanged" />
+                <br />
+                <RefTableDropDown Id="@eventObj.TransportId" labelText="Transport:" refTable="@refTransport" IdChanged="transportIdChanged" />
+                <br />
+                <RefTableDropDown Id="@Convert.ToInt32(eventObj.TraumaLevelId)" labelText="Trauma Level:" refTable="@refTraumaLevel" IdChanged="traumaLevelIdChanged" />
+                <br />
+                <MatDatePicker Label="Activation Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.ActivationDateTime"></MatDatePicker>
+                <br />
+                <MatCheckbox @bind-Value="@eventObj.FastExam" Label="Fast Exam"></MatCheckbox>
+                <br />
+                <MatCheckbox @bind-Value=@eventObj.FastExamPositive Label="Fast Exam Positive"></MatCheckbox>
+                <br />
+                <MatCheckbox @bind-Value=@eventObj.TimeInERHolder Label="Time In ER Holder"></MatCheckbox>
+                <br />
+                <MatDatePicker Label="Hospital Discharge Order" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.HospitalDischargeOrder"></MatDatePicker>
+                <br />
+                <MatDatePicker Label="ED Arrival Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdArrivalDateTime"></MatDatePicker>
+                <br />
+                <MatDatePicker Label="ED Discharge Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.EdDischargeDateTime"></MatDatePicker>
+                <br />
+                <MatDatePicker Label="Anesthesia Arrival Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.AgencyDepartSceneDateTime"></MatDatePicker>
+                <br />
+                <MatTextField Label="Blood Products" @bind-Value=@eventObj.BloodProducts FullWidth="true" />
+                <br />
+                <MatDatePicker Label="Blood Products Start Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStartTime"></MatDatePicker>
+                <br />
+                <MatDatePicker Label="Blood Products Stop Date/Time" DateFormat="Y-m-d H:i" EnableTime="true" FullWidth="true" @bind-Value="@eventObj.BloodProductsStopTime"></MatDatePicker>
+                <br />
 
-    <MatButton Icon="cancel" Style="float: right;" @onclick="@cancel">Cancel</MatButton>
-    <MatButton Icon="save" Style="float: right;" OnClick="@SaveEvent">Save</MatButton>
-    @*
+                <MatButton Icon="cancel" Style="float: right;" @onclick="@cancel">Cancel</MatButton>
+                <MatButton Icon="save" Style="float: right;" OnClick="@SaveEvent">Save</MatButton>
+                @*
 
-    *@
-</EditForm>
-    
-   
+                *@
+            </EditForm>
+        </div>
 
+        @code {
+            [Parameter]
+            public int PatientId { get; set; } = 0;
+            [Parameter]
+            public int eventId { get; set; } = 0;
 
-    @code {
-        [Parameter]
-        public int PatientId { get; set; } = 0;
-        [Parameter]
-        public int eventId { get; set; } = 0;
-
-        string mode = "add";
+            string mode = "add";
 
 
-        Vitals vitalsObj = new Vitals();
-        RefTableDTO refHomeResidence = new RefTableDTO();
-        RefTableDTO refTraumaTypeTable = new RefTableDTO();
-        RefTableDTO refProtectiveDevice = new RefTableDTO();
-        RefTableDTO refRiskData = new RefTableDTO();
-        RefTableDTO refArrivedFrom = new RefTableDTO();
-        RefTableDTO refTransport = new RefTableDTO();
-        RefTableDTO refTraumaLevel = new RefTableDTO();
-        ICollection<Vitals> vitals;
+            Vitals vitalsObj = new Vitals();
+            RefTableDTO refHomeResidence = new RefTableDTO();
+            RefTableDTO refTraumaTypeTable = new RefTableDTO();
+            RefTableDTO refProtectiveDevice = new RefTableDTO();
+            RefTableDTO refRiskData = new RefTableDTO();
+            RefTableDTO refArrivedFrom = new RefTableDTO();
+            RefTableDTO refTransport = new RefTableDTO();
+            RefTableDTO refTraumaLevel = new RefTableDTO();
+            ICollection<Vitals> vitals;
 
-        int SelectedArrivedFromID { get; set; } = 0;
-        int SelectedInjuryTypeId { get; set; } = 0;
-        int SelectedTransportId { get; set; } = 0;
-        int SelectedTraumaLevelId { get; set; } = 0;
+            int SelectedArrivedFromID { get; set; } = 0;
+            int SelectedInjuryTypeId { get; set; } = 0;
+            int SelectedTransportId { get; set; } = 0;
+            int SelectedTraumaLevelId { get; set; } = 0;
 
 
-        EventsClient EventClient = new EventsClient();
+            EventsClient EventClient = new EventsClient();
 
-        HomeResidencesClient homeResidencesClient = new HomeResidencesClient();
-        SafetyDevicesClient safetyDevicesClient = new SafetyDevicesClient();
-        ReferenceTableClient RefTableClient = new ReferenceTableClient();
-        RiskDataClient riskDataClient = new RiskDataClient();
-        InjuryTypesClient injuryTypesClient = new InjuryTypesClient();
-        VitalsClient vitalsClient = new VitalsClient();
+            HomeResidencesClient homeResidencesClient = new HomeResidencesClient();
+            SafetyDevicesClient safetyDevicesClient = new SafetyDevicesClient();
+            ReferenceTableClient RefTableClient = new ReferenceTableClient();
+            RiskDataClient riskDataClient = new RiskDataClient();
+            InjuryTypesClient injuryTypesClient = new InjuryTypesClient();
+            VitalsClient vitalsClient = new VitalsClient();
 
-        Patient patientObj = new Patient();
-        Event eventObj = new Event();
+            Patient patientObj = new Patient();
+            Event eventObj = new Event();
 
-        protected override async Task OnInitializedAsync()
-        {
-
-            refHomeResidence = await RefTableClient.GetRefTableDataAsync("RefHomeResidence");
-            refTraumaTypeTable = await RefTableClient.GetRefTableDataAsync("RefTraumaType");
-            refProtectiveDevice = await RefTableClient.GetRefTableDataAsync("RefProtectiveDevice");
-            refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
-            refArrivedFrom = await RefTableClient.GetRefTableDataAsync("RefArrivedFrom");
-            refTransport = await RefTableClient.GetRefTableDataAsync("RefTransport");
-            refTraumaLevel = await RefTableClient.GetRefTableDataAsync("RefTraumaLevel");
-        }
-
-        #region RefTableDropDownControl Callbacks
-
-        void arrivedFromIdChanged(int newId)
-        {
-            eventObj.ArrivedFromId = newId;
-        }
-
-        void transportIdChanged(int newId)
-        {
-            eventObj.TransportId = newId;
-        }
-
-        void traumaLevelIdChanged(int newId)
-        {
-            eventObj.TraumaLevelId = newId;
-        }
-
-        #endregion
-
-        protected override async Task OnParametersSetAsync()
-        {
-            try
+            protected override async Task OnInitializedAsync()
             {
-                if (PatientId > 0)
-                {
-                    mode = "add";
-                }
-                else if (eventId > 0)
-                {
-                    mode = "edit";
-                    patientObj = await EventClient.GetPatientWithEventsAsync(1);
-                    eventObj = patientObj.Events.Where(e => e.Id == eventId).FirstOrDefault();
 
-                    vitals = eventObj.Vitals;
+                refHomeResidence = await RefTableClient.GetRefTableDataAsync("RefHomeResidence");
+                refTraumaTypeTable = await RefTableClient.GetRefTableDataAsync("RefTraumaType");
+                refProtectiveDevice = await RefTableClient.GetRefTableDataAsync("RefProtectiveDevice");
+                refRiskData = await RefTableClient.GetRefTableDataAsync("RefRiskData");
+                refArrivedFrom = await RefTableClient.GetRefTableDataAsync("RefArrivedFrom");
+                refTransport = await RefTableClient.GetRefTableDataAsync("RefTransport");
+                refTraumaLevel = await RefTableClient.GetRefTableDataAsync("RefTraumaLevel");
+            }
 
-                    foreach (var risk in eventObj.Risks)
+            #region RefTableDropDownControl Callbacks
+
+            void arrivedFromIdChanged(int newId)
+            {
+                eventObj.ArrivedFromId = newId;
+            }
+
+            void transportIdChanged(int newId)
+            {
+                eventObj.TransportId = newId;
+            }
+
+            void traumaLevelIdChanged(int newId)
+            {
+                eventObj.TraumaLevelId = newId;
+            }
+
+            #endregion
+
+            protected override async Task OnParametersSetAsync()
+            {
+                try
+                {
+                    if (PatientId > 0)
                     {
-                        refRiskData.TableData.Where(r => r.Id == risk.RefRiskDataId).FirstOrDefault().Selected = true;
+                        mode = "add";
+                    }
+                    else if (eventId > 0)
+                    {
+                        mode = "edit";
+                        patientObj = await EventClient.GetPatientWithEventsAsync(1);
+                        eventObj = patientObj.Events.Where(e => e.Id == eventId).FirstOrDefault();
+
+                        vitals = eventObj.Vitals;
+
+                        foreach (var risk in eventObj.Risks)
+                        {
+                            refRiskData.TableData.Where(r => r.Id == risk.RefRiskDataId).FirstOrDefault().Selected = true;
+                        }
+
+                        foreach (var safetyDevice in eventObj.SafetyDevices)
+                        {
+                            refProtectiveDevice.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
+                        }
+
+                        foreach (var injuryType in eventObj.InjuryTypes)
+                        {
+                            refTraumaTypeTable.TableData.Where(i => i.Id == injuryType.RefTraumaTypeId).FirstOrDefault().Selected = true;
+                        }
+
+                        foreach (var homeResidence in eventObj.HomeResidences)
+                        {
+                            refHomeResidence.TableData.Where(i => i.Id == homeResidence.RefHomeResidenceId).FirstOrDefault().Selected = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+            }
+
+            async Task SaveEvent()
+            {
+                try
+                {
+                    await SaveHomeofResidence();
+                    await SaveSafetyDevices();
+                    await SaveRiskData();
+                    await SaveInjuryTypes();
+
+                    await EventClient.PutEventAsync(eventObj.Id, eventObj);
+                    Toaster.Add("Record Saved.", MatToastType.Success, "Record Saved", null, null);
+                }
+                catch (Exception ex)
+                {
+                    Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
+                }
+
+            }
+
+            async Task SaveRiskData()
+            {
+                try
+                {
+                    foreach (var item in eventObj.Risks)
+                    {
+                        await riskDataClient.DeleteRiskDataAsync(item.Id);
+                    }
+                    foreach (var item in refRiskData.TableData.Where(s => s.Selected == true))
+                    {
+                        var newRiskDataRecord = await riskDataClient.PostRiskDataAsync(new RiskData { EventId = eventObj.Id, RefRiskDataId = item.Id });
                     }
 
-                    foreach (var safetyDevice in eventObj.SafetyDevices)
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+            }
+
+            async Task SaveSafetyDevices()
+            {
+                try
+                {
+                    foreach (var item in eventObj.SafetyDevices)
                     {
-                        refProtectiveDevice.TableData.Where(r => r.Id == safetyDevice.RefSafetyDeviceId).FirstOrDefault().Selected = true;
+                        await safetyDevicesClient.DeleteSafetyDevicesAsync(item.Id);
                     }
-
-                    foreach (var injuryType in eventObj.InjuryTypes)
+                    foreach (var item in refProtectiveDevice.TableData.Where(s => s.Selected == true))
                     {
-                        refTraumaTypeTable.TableData.Where(i => i.Id == injuryType.RefTraumaTypeId).FirstOrDefault().Selected = true;
+                        await safetyDevicesClient.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
                     }
+                }
+                catch (Exception ex)
+                {
 
-                    foreach (var homeResidence in eventObj.HomeResidences)
+                    throw;
+                }
+            }
+
+            async Task SaveInjuryTypes()
+            {
+                try
+                {
+                    foreach (var item in eventObj.InjuryTypes)
                     {
-                        refHomeResidence.TableData.Where(i => i.Id == homeResidence.RefHomeResidenceId).FirstOrDefault().Selected = true;
+                        await injuryTypesClient.DeleteInjuryTypesAsync(item.Id);
+                    }
+                    foreach (var item in refTraumaTypeTable.TableData.Where(s => s.Selected == true))
+                    {
+                        await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefTraumaTypeId = item.Id });
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
-        async Task SaveEvent()
-        {
-            try
-            {
-                await SaveHomeofResidence();
-                await SaveSafetyDevices();
-                await SaveRiskData();
-                await SaveInjuryTypes();
-
-                await EventClient.PutEventAsync(eventObj.Id, eventObj);
-                Toaster.Add("Record Saved.", MatToastType.Success, "Record Saved", null, null);
-            }
-            catch (Exception ex)
-            {
-                Toaster.Add(ex.ToString(), MatToastType.Danger, "Error", null, null);
-            }
-
-        }
-
-        async Task SaveRiskData()
-        {
-            try
-            {
-                foreach (var item in eventObj.Risks)
+                catch (Exception)
                 {
-                    await riskDataClient.DeleteRiskDataAsync(item.Id);
-                }
-                foreach (var item in refRiskData.TableData.Where(s => s.Selected == true))
-                {
-                    var newRiskDataRecord = await riskDataClient.PostRiskDataAsync(new RiskData { EventId = eventObj.Id, RefRiskDataId = item.Id });
-                }
 
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
-        async Task SaveSafetyDevices()
-        {
-            try
-            {
-                foreach (var item in eventObj.SafetyDevices)
-                {
-                    await safetyDevicesClient.DeleteSafetyDevicesAsync(item.Id);
-                }
-                foreach (var item in refProtectiveDevice.TableData.Where(s => s.Selected == true))
-                {
-                    await safetyDevicesClient.PostSafetyDevicesAsync(new SafetyDevices { EventId = eventObj.Id, RefSafetyDeviceId = item.Id });
+                    throw;
                 }
             }
-            catch (Exception ex)
-            {
 
-                throw;
-            }
-        }
-
-        async Task SaveInjuryTypes()
-        {
-            try
+            async Task SaveHomeofResidence()
             {
-                foreach (var item in eventObj.InjuryTypes)
+                try
                 {
-                    await injuryTypesClient.DeleteInjuryTypesAsync(item.Id);
+                    foreach (var item in eventObj.HomeResidences)
+                    {
+                        await homeResidencesClient.DeleteHomeResidenceAsync(item.Id);
+                    }
+                    foreach (var item in refHomeResidence.TableData.Where(s => s.Selected == true))
+                    {
+                        await homeResidencesClient.PostHomeResidenceAsync(new HomeResidence { EventId = eventObj.Id, RefHomeResidenceId = item.Id });
+                    }
                 }
-                foreach (var item in refTraumaTypeTable.TableData.Where(s => s.Selected == true))
+                catch (Exception)
                 {
-                    await injuryTypesClient.PostInjuryTypesAsync(new InjuryTypes { EventId = eventObj.Id, RefTraumaTypeId = item.Id });
-                }
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
-        }
-
-        async Task SaveHomeofResidence()
-        {
-            try
-            {
-                foreach (var item in eventObj.HomeResidences)
-                {
-                    await homeResidencesClient.DeleteHomeResidenceAsync(item.Id);
-                }
-                foreach (var item in refHomeResidence.TableData.Where(s => s.Selected == true))
-                {
-                    await homeResidencesClient.PostHomeResidenceAsync(new HomeResidence { EventId = eventObj.Id, RefHomeResidenceId = item.Id });
+                    throw;
                 }
             }
-            catch (Exception)
+
+            private async Task validateForm()
             {
-
-                throw;
             }
-        }
 
-        private async Task validateForm()
-        {
-        }
+            void cancel()
+            {
+                NavigationManager.NavigateTo("/patients");
+            }
 
-        void cancel()
-        {
-            NavigationManager.NavigateTo("/patients");
         }
-
-    }
