@@ -137,8 +137,7 @@
                     try
                     {
                         PatientsClient client = new PatientsClient();
-                        patient.GenderReferenceId = Convert.ToInt32(genderIdStr);
-                        patient.RaceReferenceId = Convert.ToInt32(raceIdStr);
+
 
                         var timeStamp = System.DateTime.Now;
                         patient.LastUpdate = timeStamp;
