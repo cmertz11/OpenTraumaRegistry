@@ -12,11 +12,25 @@ namespace OpenTraumaRegistry.UI.MD.ValidationModels
         [DataType(DataType.EmailAddress)]
         [MaxLength(50)]
         public string EmailAddress { get; set; }
-        [Required(ErrorMessage = "First Name is Required")]
+
+
+        [Required(ErrorMessage = "Password is Required")]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Passwords do not match.")]
+        [Compare("Password")]
+        public string PasswordConfirm { get; set; }
+      
+
+        [Required(ErrorMessage = "First Name is Required")] 
         public string FirstName { get; set; }
+       
+        
         [Required(ErrorMessage = "Last Name is Required")]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Cell Phone is Required")]
+        
+        
         public string CellPhone { get; set; }
         public string OfficePhone { get; set; }
         public bool SystemAdministrator { get; set; }

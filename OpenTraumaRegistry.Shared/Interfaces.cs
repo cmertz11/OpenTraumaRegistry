@@ -41,6 +41,8 @@ namespace OpenTraumaRegistry.Shared
 
         TokenObject DecryptTokenObject(string tokenString);
 
+        string Mode();
+
     }
  
 }

@@ -22,6 +22,9 @@ namespace OpenTraumaRegistry.Shared
         private double tempPasswordExpiresDays { get; set; }
 
         private int allowPasswordReuseAfterYears { get; set; } = 1;
+
+        private string mode { get; set; } = "PRODUCTION";
+
         public SecurityHelper(IConfiguration _configuration)
         {
             configuration = _configuration;
@@ -29,7 +32,7 @@ namespace OpenTraumaRegistry.Shared
             confirmationTokenExpiresMinutes = Convert.ToDouble(configuration.GetSection("SecuritySettings")["CONFIRMATIONTOKENEXPIRESMINUTES"]);
             passwordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["PASSWORDEXPIRESDAYS"]);
             tempPasswordExpiresDays = Convert.ToDouble(configuration.GetSection("SecuritySettings")["TEMPPASSWORDEXPIRESDAYS"]);
-
+            mode = configuration.GetSection("SecuritySettings")["MODE"];
 
             int tempPasswordAge;
             if (Int32.TryParse(configuration.GetSection("SecuritySettings")["ALLOWPASSWORDREUSEAFTERYEARS"], out tempPasswordAge))
@@ -37,6 +40,11 @@ namespace OpenTraumaRegistry.Shared
                 allowPasswordReuseAfterYears = tempPasswordAge;
             }
 
+        }
+
+        public string Mode()
+        {
+            return mode;
         }
 
         public double PasswordExpiresDays()

@@ -88,8 +88,12 @@ namespace OpenTraumaRegistry.UI.MD
 
                 try
                 {
-                    IsSystemAdministrator = Convert.ToBoolean(context.User.FindFirst(c => c.Type == requirement.role).Value);
-                
+                    var reqclaim = context.User.FindFirst(c => c.Type == requirement.role);
+
+                    if(reqclaim != null)
+                    {  
+                        IsSystemAdministrator = Convert.ToBoolean(reqclaim.Value);
+                    } 
                 }
                 catch(Exception ex)
                 { }

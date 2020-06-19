@@ -44,8 +44,16 @@ namespace OpenTraumaRegistry.Api.Controllers
             login.Password = password;
             login.ConfirmationToken = confirmationToken;
 
-            User user = AuthenticateUser(login);
-            
+            User user;
+            if (security.Mode() == "DEVELOPMENT")
+            {
+                user = AuthenticateUserDevelopment(login);
+            }
+            else
+            {
+                user = AuthenticateUser(login);
+            }
+
             if (user != null && user.Authenticated)
             {
                 user.jsonToken = GenerateJSONWebToken(user);
@@ -285,5 +293,53 @@ namespace OpenTraumaRegistry.Api.Controllers
                 return null;
             }
         }
+
+        private User AuthenticateUserDevelopment(LoginModel login)
+        {
+            try
+            {
+                User user = null;
+
+                user = context.Users.Where(u => u.EmailAddress == login.Email).FirstOrDefault();
+                if (user != null && !user.Locked)
+                {
+                    var passwordValid = security.AuthenticatePassword(login.Password, user.Password);
+                    if ((!user.Locked) && 
+                        (passwordValid))
+                    {
+                        user.Authenticated = true;
+                        user.EmailConfirmed = true;
+                        user.ForcePasswordReset = false;
+                        user.LoginAttempts = 0;
+                        user.LastLogin = DateTime.Now;
+                        context.SaveChanges();
+                        return user;
+                    }
+                    else
+                    {
+
+                        user.LoginAttempts = user.LoginAttempts + 1;
+
+                        if (user.LoginAttempts >= 5)
+                        {
+                            user.Locked = true;
+                        }
+                        context.SaveChanges();
+                        if (!user.Locked)
+                        {
+                            return user;
+                        }
+                        return null;
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                return null;
+            }
+        }
+
     }
 }

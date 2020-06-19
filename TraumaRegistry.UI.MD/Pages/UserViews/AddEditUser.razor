@@ -22,6 +22,19 @@
                             <MatTextField id="patientEmail" Label="E-mail" Disabled="@IsEmailDisabled" FullWidth="true" @bind-Value=@userValidated.EmailAddress />
                             <ValidationMessage For="@(() => userValidated.EmailAddress)" />
                         </p>
+
+                            @if (security.Mode() == "DEVELOPMENT")
+                            {
+                                <p>
+                                    <MatTextField id="password" Label="Password" FullWidth="true" @bind-Value=@userValidated.Password Required="true" Type="password"/>
+                                    <ValidationMessage For="@(() => userValidated.Password)" />
+                                </p>
+                                <p>
+                                    <MatTextField id="passwordConfirm" Label="Confirm Password" FullWidth="true" @bind-Value=@userValidated.PasswordConfirm Required="true" Type="password" />
+                                    <ValidationMessage For="@(() => userValidated.PasswordConfirm)" />
+                                </p>
+                            }
+
                         <p>
                             <MatTextField id="patientFirstName" Label="First Name" FullWidth="true" @bind-Value=@userValidated.FirstName />
                             <ValidationMessage For="@(() => userValidated.FirstName)" />
@@ -169,7 +182,7 @@
         {
             var currentuser = (await authenticationStateTask).User;
             UsersClient userClient = new UsersClient();
-
+            user = (_dtoUser)mapper.MapObjects(userValidated, user);
             var timeStamp = System.DateTime.Now;
             user.LastUpdate = timeStamp;
             user.LastUpdatedBy = Convert.ToInt32(currentuser.FindFirst(c => c.Type == "Id").Value);
@@ -180,28 +193,44 @@
                 if (validUser(user))
                 {
                     user.EmailConfirmed = false;
-                    var tempPassord = security.GenerateRandomPassword();
-                    user.Password = security.Hash(tempPassord);
+                    string tempPassword = "";
+                    if(security.Mode() == "DEVELOPMENT")
+                    {
+                        user.Password = security.Hash(user.Password);
+                    }
+                    else
+                    {
+                        tempPassword = security.GenerateRandomPassword();
+                        user.Password = security.Hash(tempPassword);
+                        user.ForcePasswordReset = true;
+                        user.ConfirmationToken = security.GenerateConfirmationToken();
+                        user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
+                    }
+
                     user.PasswordExpires = DateTime.Now.AddDays(security.TempPasswordExpiresDays()); //TODO: this should be a setting
-                    user.ConfirmationToken = security.GenerateConfirmationToken();
-                    user.ConfirmationTokenExpires = DateTime.Now.AddMinutes(security.ConfirmationTokenExpiresMinutes());
-                    user.ForcePasswordReset = true;
                     user.Locked = false;
-
-                    user = (_dtoUser)mapper.MapObjects(userValidated, user);
-
+                  //  user = (_dtoUser)mapper.MapObjects(userValidated, user);
                     var resp = userClient.PostUserAsync(user);
 
-                    EmailObj email = new EmailObj();
-                    email.to = user.EmailAddress;
 
-                    var securedToken = security.EncryptTokenObject(user.EmailAddress, user.ConfirmationToken);
+                    if(security.Mode() != "DEVELOPMENT")
+                    {
+                        EmailObj email = new EmailObj();
+                        email.to = user.EmailAddress;
 
-                    email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassord, securedToken); // get host from settings?
-                    email.subject = "New Open Trauma Registry Account";
-                    await emailClient.SendAsync(email);
+                        var securedToken = security.EncryptTokenObject(user.EmailAddress, user.ConfirmationToken);
 
-                    Toaster.Add("User Added Successfully!  A temporary password has been sent to the email specified.", MatToastType.Success, "Success", null, null);
+                        email.htmlContent = emailClient.GenerateEmailConfirmationRequest(user.FirstName, tempPassword, securedToken); // get host from settings?
+                        email.subject = "New Open Trauma Registry Account";
+                        await emailClient.SendAsync(email);
+
+                        Toaster.Add("User Added Successfully!  A temporary password has been sent to the email specified.", MatToastType.Success, "Success", null, null);
+                    }
+                    else
+                    {
+                        Toaster.Add("User Added Successfully!", MatToastType.Success, "Success", null, null);
+                    }
+
                 }
             }
             else
@@ -261,8 +290,6 @@
             throw;
         }
     }
-
-
 
     private bool validUser(_dtoUser user)
     {
