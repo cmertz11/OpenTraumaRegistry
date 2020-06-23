@@ -71,7 +71,7 @@ else
 
     void EditEvent(int EventId)
     {
-         NavigationManager.NavigateTo("/editEvent/" + EventId);
+         NavigationManager.NavigateTo("/editEvent/" + EventId + "/" + PatientId);
     }
 
     protected override async Task OnInitializedAsync()

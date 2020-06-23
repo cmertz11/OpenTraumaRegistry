@@ -1,5 +1,5 @@
 ﻿@page "/addEvent/{PatientId:int}"
-@page "/editEvent/{eventId:int}"
+@page "/editEvent/{eventId:int}/{PatientId:int}"
 @inject NavigationManager NavigationManager
 @inject IMatToaster Toaster
 @using OpenTraumaRegistry.UI.MD.Pages.Components
@@ -204,17 +204,18 @@
             {
                 try
                 {
-                    if (PatientId > 0)
+                    if (eventId == 0)
                     {
                         mode = "add";
                     }
                     else if (eventId > 0)
                     {
                         mode = "edit";
-                        patientObj = await EventClient.GetPatientWithEventsAsync(1);
+
+                        patientObj = await EventClient.GetPatientWithEventsAsync(PatientId);
                         eventObj = patientObj.Events.Where(e => e.Id == eventId).FirstOrDefault();
 
-                        vitals = eventObj.Vitals;
+                        vitals = eventObj.Vitals ?? null;
 
                         foreach (var risk in eventObj.Risks)
                         {

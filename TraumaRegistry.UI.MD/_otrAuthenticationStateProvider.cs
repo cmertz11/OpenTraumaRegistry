@@ -103,6 +103,10 @@ namespace OpenTraumaRegistry.UI.MD
                 {
                     context.Succeed(requirement);
                 }
+                else
+                {
+                    context.Fail();
+                }
 
                 return Task.CompletedTask;
             }
